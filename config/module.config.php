@@ -16,9 +16,46 @@ return [
                         'action' => 'show',
                         'envId' => '0',
                     ],
-                ],
+                ],		
             ],
+            'mcollective_history' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '[/env/:envId]/mcollective/history[/[:id]]',
+                    'constraints' => [
+                        'envId' => '[0-9]+',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-fA-F0-9]+',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Index',
+                        'action' => 'history',
+                        'envId' => '0',
+			'id' => '0',
+                    ],
+                ],
+            
+            ],
+
         ],
+    ],
+    'zenddb_repositories' => [
+        'McollectiveLogRepository' => [
+            'aggregate_root_class' => 'KmbMcollective\Model\McollectiveLog',
+            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveLogHydrator',
+            'table_name' => 'mcollective_logs',
+            'table_sequence_name' => 'mcollective_logs_id_seq',
+            'repository_class' => 'KmbMcollective\Service\McollectiveLogRepository',
+            ],
+	 'McollectiveHistoryRepository' => [
+            'aggregate_root_class' => 'KmbMcollective\Model\McollectiveHistory',
+            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveHistoryHydrator',
+            'table_name' => 'mcollective_actions_logs',
+            'table_sequence_name' => 'mcollective_actions_logs_id_seq',
+            'repository_class' => 'KmbMcollective\Service\McollectiveHistoryRepository',
+        ],
+
     ],
     'translator' => [
         'translation_file_patterns' => [
@@ -47,11 +84,32 @@ return [
             'ZfcRbac\Guard\ControllerGuard' => [
                 [
                     'controller' => 'KmbMcollective\Controller\Index',
-                    'actions' => ['show', 'agents', 'run'],
+                    'actions' => ['show', 'agents', 'run', 'logs', 'history'],
                     'roles' => ['user']
                 ]
             ]
         ],
+    ],
+    'datatables' => [
+        'historyDatatable' => [
+            'id' => 'mcollective_logs',
+            'classes' => ['table', 'table-striped', 'table-hover', 'table-condensed', 'bootstrap-datatable'],
+            'collectorFactory' => 'KmbMcollective\Service\McollectiveLogCollectorFactory',
+            'columns' => [
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\FilterDecorator',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\ActionDecorator',
+                ],
+            ]
+        ]
     ],
     'asset_manager' => [
         'resolver_configs' => [

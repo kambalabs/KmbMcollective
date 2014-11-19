@@ -12,3 +12,5 @@ clover.xml
 php-cs-fixer.phar
 composer.lock
 *~
+*#
+.#*

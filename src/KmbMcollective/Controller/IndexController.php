@@ -20,20 +20,36 @@
  */
 namespace KmbMcollective\Controller;
 
+use GtnDataTables\Service\DataTable;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use KmbMcProxy\Service;
+use KmbMcollective\Model\McollectiveLog;
+use KmbMcollective\Model\McollectiveHistory;
+use KmbDomain\Model\EnvironmentInterface;
+use KmbDomain\Model\EnvironmentRepositoryInterface;
 
 class IndexController extends AbstractActionController
 {
+    protected $acceptCriteria = array(
+        'Zend\View\Model\JsonModel' => array(
+            'application/json',
+        ),
+        'Zend\View\Model\ViewModel' => array(
+            'text/html',
+        ),
+    );
+
     public function showAction()
     {
         $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
         $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
         $this->debug('KmbMcollective/IndexController::showAction(' . $environment .')');
 
+
+        $log = $this->getServiceLocator()->get('McollectiveLogRepository')->getLast(5);
         if ($environment == null) {
             return new ViewModel(['error' => $this->translate('You have to select an environment first !'), 'environment' => $environment]);
         }
@@ -64,7 +80,7 @@ class IndexController extends AbstractActionController
     {
         $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
         $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
-  
+        $user = $this->identity();
         $actionid = md5($_SERVER['cuid'] . time());
         $params = $this->getRequest()->getPost();
         $this->debug('KmbMcollective/IndexController::runAction(' . $environment .')');
@@ -73,8 +89,67 @@ class IndexController extends AbstractActionController
         {
             $args[$argname] = $params[$argname];
         }
-        $actionResult = $mcProxyAgentService->doRequest($params['agent'],$params['action'],$params['filter'],$environment->getNormalizedName(), 'nxlm5803',$args);
-        return new JsonModel((array)$actionResult);
+        $actionResult = $mcProxyAgentService->doRequest($params['agent'],$params['action'],$params['filter'],$environment->getNormalizedName(), $user->getLogin() ,$args);
+        try {
+            $mcoLog = new McollectiveLog();
+            $this->debug('KmbMcollective/IndexController::log(' . $user->getName() . '/'. $actionResult->actionid .')');
+            $mcoLog->setActionid($actionResult->actionid);
+            $mcoLog->setUser($user->getLogin());
+            $mcoLog->setFullName($user->getName() );
+            $mcoLog->setAgent($params['agent'] . '::' . $params['action']);
+            $mcoLog->setFilter($params['filter']);
+            $mcoLog->setDiscoveredNodes($actionResult->discovered_nodes);
+            $mcoLog->setPf($environment->getNormalizedName());
+            $classRepository = $this->getServiceLocator()->get('McollectiveLogRepository');
+            $classRepository->add($mcoLog);
+        }catch(Exception $e){
+        }
+        $resultUrl = (string)$this->url()->fromRoute('mcollective',['action' => 'history', 'id' => $actionResult->actionid], [], true);
+        $actionResult->resultUrl = $resultUrl;
+        return new JsonModel((array)$actionResult  );
+    }
+
+    public function historyAction()
+    {
+        $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);        
+        $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
+        if(!empty($this->params()->fromRoute('id'))) {
+            $actionid = $this->params()->fromRoute('id');
+            $historyClass = $this->getServiceLocator()->get('McollectiveHistoryRepository');
+            $result = $historyClass->getByActionid($actionid);
+            $resultList = array();
+            $errorcount = 0;
+            foreach($result as $res) {
+                if($res->getStatusCode() != 0) {
+                    $errorcount++;
+                }
+                $resultList[$res->getHostname()][] = $res->toArray();
+            }
+            $this->debug( \Zend\Serializer\Serializer::factory('phpserialize')->serialize($resultList));
+            if ($viewModel instanceof JsonModel) {
+                return new JsonModel($resultList,[],true);
+            }
+            elseif($viewModel instanceof ViewModel)
+            {
+                return new ViewModel(['environment' => $environment, 'actionid' => $actionid, 'logs' => $resultList, 'errorcount' => $errorcount]);
+            }
+        } else {
+            $variables = [];
+            if ($viewModel instanceof JsonModel) {
+                /** @var DataTable $datatable */
+                $datatable = $this->getServiceLocator()->get('historyDatatable');
+                $params = $this->params()->fromQuery();
+                $result = $datatable->getResult($params);
+                $variables = [
+                    'draw' => $result->getDraw(),
+                    'recordsTotal' => $result->getRecordsTotal(),
+                    'recordsFiltered' => $result->getRecordsFiltered(),
+                    'data' => $result->getData(),
+                ];
+            }
+            $viewModel->setVariables($variables);
+            return $viewModel;
+        }
     }
     
     /**
