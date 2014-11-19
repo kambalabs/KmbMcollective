@@ -28,39 +28,41 @@ class McollectiveLogHydrator implements HydratorInterface
     /**
      * Extract values from an object
      *
-     * @param  UserInterface $object
+     * @param  McollectiveLogInterface $object
      * @return array
      */
     public function extract($object)
     {
         $data = [
-            'actionid' => $object->getActionid(),
-            'username' => $object->getUser(),
+            'actionid' => $object->getActionId(),
+            'login'    => $object->getLogin(),
             'fullname' => $object->getFullName(),
-            'agent' => $object->getAgent(),
-            'filter' => $object->getFilter(),
-            'discoverednodes' => $object->getDiscoveredNodes(),
-            'pf' => $object->getPf(),
+            'agent'    => $object->getAgent(),
+            'filter'   => $object->getFilter(),
+            'pf'       => $object->getPf(),
         ];
+        if ($object->getId() != null) {
+            $data['id'] = $object->getId();
+        }
         return $data;
     }
 
     /**
      * Hydrate $object with the provided $data.
      *
-     * @param  array  $data
-     * @param  UserInterface $object
-     * @return UserInterface
+     * @param  array                   $data
+     * @param  McollectiveLogInterface $object
+     * @return McollectiveLogInterface
      */
     public function hydrate(array $data, $object)
     {
+        $object->setId($data['id']);
         $object->setActionid($data['actionid']);
-        $object->setUser($data['username']);
+        $object->setLogin($data['login']);
         $object->setFullName($data['fullname']);
         $object->setAgent($data['agent']);
         $object->setFilter($data['filter']);
         $object->setPf($data['pf']);
-        $object->setDiscoveredNodes($data['discoverednodes']);
         return $object;
     }
 }

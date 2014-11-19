@@ -22,28 +22,43 @@ namespace KmbMcollective\Model;
 
 use GtnPersistBase\Model\AggregateRootInterface;
 
-interface McollectiveLogInterface extends  AggregateRootInterface
+interface McollectiveLogInterface extends AggregateRootInterface
 {
     /**
-     * Set User.
+     * Set Action Id.
      *
-     * @param string $login
-     * @return UserInterface
+     * @param string $actionid
+     * @return McollectiveLogInterface
      */
-    public function setUser($login);
+    public function setActionid($actionid);
 
     /**
-     * Get User.
+     * Get Action Id.
      *
      * @return string
      */
-    public function getUser();
+    public function getActionid();
+
+    /**
+     * Set User login.
+     *
+     * @param string $login
+     * @return McollectiveLogInterface
+     */
+    public function setLogin($login);
+
+    /**
+     * Get User login.
+     *
+     * @return string
+     */
+    public function getLogin();
 
     /**
      * Set FullName.
      *
      * @param string $name
-     * @return UserInterface
+     * @return McollectiveLogInterface
      */
     public function setFullName($name);
 
@@ -58,7 +73,7 @@ interface McollectiveLogInterface extends  AggregateRootInterface
      * Set Agent.
      *
      * @param string $mcoagent
-     * @return UserInterface
+     * @return McollectiveLogInterface
      */
     public function setAgent($mcoagent);
 
@@ -73,7 +88,7 @@ interface McollectiveLogInterface extends  AggregateRootInterface
      * Set Filter.
      *
      * @param string $filter
-     * @return UserInterface
+     * @return McollectiveLogInterface
      */
     public function setFilter($filter);
 
@@ -83,27 +98,40 @@ interface McollectiveLogInterface extends  AggregateRootInterface
      * @return string
      */
     public function getFilter();
-    
-/**
- * Set DiscoveredNodes.
+
+    /**
+     * Set DiscoveredNodes.
      *
-     * @param string[] discoveredNodes
-     * @return UserInterface
+     * @param string[] $discoveredNodes
+     * @return McollectiveLogInterface
      */
     public function setDiscoveredNodes($discoveredNodes);
 
     /**
+     * Add a DiscoveredNode.
+     *
+     * @param string $discoveredNode
+     * @return McollectiveLogInterface
+     */
+    public function addDiscoveredNode($discoveredNode);
+
+    /**
      * Get DiscoveredNodes.
      *
-     * @return string
+     * @return string[]
      */
     public function getDiscoveredNodes();
 
     /**
+     * @return bool
+     */
+    public function hasDiscoveredNodes();
+
+    /**
      * Set PF.
      *
-     * @param string pf
-     * @return UserInterface
+     * @param string $pf
+     * @return McollectiveLogInterface
      */
     public function setPf($pf);
 

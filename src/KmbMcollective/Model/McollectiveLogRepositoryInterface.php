@@ -32,14 +32,13 @@ interface McollectiveLogRepositoryInterface extends RepositoryInterface
 
     /**
      * @param integer $nlogs
-     * @return array
+     * @return McollectiveLogInterface[]
      */
     public function getLast($nlogs);
 
     /**
-     * @param string $user
-     * @return array
+     * @param string $login
+     * @return McollectiveLogInterface[]
      */
-    public function getAllByUser($user);
-
+    public function getAllByLogin($login);
 }

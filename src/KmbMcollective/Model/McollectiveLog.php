@@ -23,10 +23,13 @@ namespace KmbMcollective\Model;
 class McollectiveLog implements McollectiveLogInterface
 {
     /** @var int */
+    protected $id;
+
+    /** @var string */
     protected $actionid;
 
     /** @var string */
-    protected $user;
+    protected $login;
 
     /** @var string */
     protected $fullName;
@@ -38,25 +41,24 @@ class McollectiveLog implements McollectiveLogInterface
     protected $filter;
 
     /** @var string */
-    protected $discoveredNodes;
+    protected $discoveredNodes = [];
 
     /** @var string */
     protected $pf;
 
-    
-
     /**
-     * @param string $actionid
-     * @param string $user
-     * @param string $fullname
-     * @param string $agent
-     * @param string $filter
+     * @param string   $actionid
+     * @param string   $login
+     * @param string   $fullname
+     * @param string   $agent
+     * @param string   $filter
      * @param string[] $discoveredNodes
+     * @param string   $pf
      */
-    public function __construct($actionid = null, $user = null, $fullname = null, $agent = null, $filter = null, $discoveredNodes = null, $pf = null)
+    public function __construct($actionid = null, $login = null, $fullname = null, $agent = null, $filter = null, $discoveredNodes = [], $pf = null)
     {
         $this->setActionid($actionid);
-        $this->setUser($user);
+        $this->setLogin($login);
         $this->setFullName($fullname);
         $this->setAgent($agent);
         $this->setFilter($filter);
@@ -67,36 +69,12 @@ class McollectiveLog implements McollectiveLogInterface
     /**
      * Set Id.
      *
-     * @param string $id
-     * @return User
-     */
-    public function setActionid($actionid)
-    {
-        $this->actionid = $actionid;
-        return $this;
-    }
-
-    /**
-     * Get Id.
-     *
-     * @return string
-     */
-    public function getActionid()
-    {
-        return $this->actionid;
-    }
-
-
-
-    /**
-     * Set Id.
-     *
      * @param int $id
-     * @return User
+     * @return McollectiveLog
      */
     public function setId($id)
     {
-        $this->actionid = $id;
+        $this->id = $id;
         return $this;
     }
 
@@ -107,41 +85,62 @@ class McollectiveLog implements McollectiveLogInterface
      */
     public function getId()
     {
-        return $this->actionid;
+        return $this->id;
     }
 
-    
     /**
-     * Set user.
+     * Set Action Id.
      *
-     * @param string $user
+     * @param string $actionid
      * @return McollectiveLog
      */
-    public function setUser($user)
+    public function setActionid($actionid)
     {
-        $this->user = $user;
+        $this->actionid = $actionid;
         return $this;
     }
 
     /**
-     * Get user.
+     * Get Action Id.
      *
      * @return string
      */
-    public function getUser()
+    public function getActionid()
     {
-        return $this->user;
+        return $this->actionid;
+    }
+
+    /**
+     * Set login.
+     *
+     * @param string $login
+     * @return McollectiveLog
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+        return $this;
+    }
+
+    /**
+     * Get login.
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
     }
 
     /**
      * Set FullName.
      *
-     * @param string $name
+     * @param string $fullname
      * @return McollectiveLog
      */
     public function setFullName($fullname)
     {
-        $this->fullname = $fullname;
+        $this->fullName = $fullname;
         return $this;
     }
 
@@ -152,7 +151,7 @@ class McollectiveLog implements McollectiveLogInterface
      */
     public function getFullName()
     {
-        return $this->fullname;
+        return $this->fullName;
     }
 
     /**
@@ -212,6 +211,18 @@ class McollectiveLog implements McollectiveLogInterface
     }
 
     /**
+     * Add a DiscoveredNode.
+     *
+     * @param string $discoveredNode
+     * @return McollectiveLogInterface
+     */
+    public function addDiscoveredNode($discoveredNode)
+    {
+        $this->discoveredNodes[] = $discoveredNode;
+        return $this;
+    }
+
+    /**
      * Get DiscoveredNodes.
      *
      * @return string
@@ -221,6 +232,13 @@ class McollectiveLog implements McollectiveLogInterface
         return $this->discoveredNodes;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasDiscoveredNodes()
+    {
+        return !empty($this->discoveredNodes);
+    }
 
     /**
      * @return string
@@ -240,10 +258,11 @@ class McollectiveLog implements McollectiveLogInterface
         return $this->pf;
     }
 
-
     /**
      * Set Pf
-     * @return string
+     *
+     * @param  string $pf
+     * @return McollectiveLog
      */
     public function setPf($pf)
     {

@@ -20,28 +20,38 @@
  */
 namespace KmbMcollective\Service;
 
-use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use GtnPersistBase\Model\AggregateRootInterface;
-use GtnPersistBase\Model\RepositoryInterface;
+use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
 use KmbMcollective\Model\McollectiveLogInterface;
 use KmbMcollective\Model\McollectiveLogRepositoryInterface;
+use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\Exception\ExceptionInterface;
 use Zend\Db\Sql\Predicate\Predicate;
+use Zend\Db\Sql\Select;
 
 class McollectiveLogRepository extends Repository implements McollectiveLogRepositoryInterface
 {
+    /** @var string */
+    protected $discoveredNodesTableName = 'mcollective_logs_discovered';
 
     /**
      * @param AggregateRootInterface $aggregateRoot
-     * @return McollectiveLogInterface
+     * @return McollectiveLogRepository
      * @throws \Zend\Db\Exception\ExceptionInterface
      */
     public function add(AggregateRootInterface $aggregateRoot)
     {
-        /** @var EnvironmentInterface $aggregateRoot */
         $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
         try {
-            /** @var RevisionInterface $aggregateRoot */
+            /** @var McollectiveLogInterface $aggregateRoot */
             parent::add($aggregateRoot);
+            foreach ($aggregateRoot->getDiscoveredNodes() as $hostname) {
+                $insert = $this->getMasterSql()->insert($this->discoveredNodesTableName)->values([
+                    'log_id' => $aggregateRoot->getId(),
+                    'hostname' => $hostname,
+                ]);
+                $this->performWrite($insert);
+            }
             $connection->commit();
         } catch (ExceptionInterface $e) {
             $connection->rollback();
@@ -50,7 +60,7 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
 
         return $this;
     }
-    
+
     /**
      * @param $actionid
      * @return McollectiveLogInterface
@@ -72,13 +82,43 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
     }
 
     /**
-     * @param $user
+     * @param $login
      * @return array
      */
-    public function getAllByUser($user)
+    public function getAllByLogin($login)
     {
         $criteria = new Predicate();
-        return $this->getAllBy($criteria->equalTo('user', $user));
+        return $this->getAllBy($criteria->equalTo('login', $login));
     }
 
+    protected function getSelect()
+    {
+        return parent::getSelect()->join(
+            ['dn' => $this->discoveredNodesTableName],
+            $this->tableName . '.id = dn.log_id',
+            ['dn.hostname' => 'hostname'],
+            Select::JOIN_LEFT
+        );
+    }
+
+    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    {
+        $aggregateRootClassName = $this->getAggregateRootClass();
+        $aggregateRoots = [];
+        foreach ($result as $row) {
+            $id = $row['id'];
+            /** @var McollectiveLogInterface $aggregateRoot */
+            if (!array_key_exists($id, $aggregateRoots)) {
+                $aggregateRoot = new $aggregateRootClassName;
+                $aggregateRoots[$id] = $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+            } else {
+                $aggregateRoot = $aggregateRoots[$id];
+            }
+
+            if (isset($row['hostname'])) {
+                $aggregateRoot->addDiscoveredNode($row['hostname']);
+            }
+        }
+        return array_values($aggregateRoots);
+    }
 }

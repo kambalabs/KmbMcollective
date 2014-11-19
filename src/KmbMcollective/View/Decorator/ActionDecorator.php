@@ -21,7 +21,7 @@
 namespace KmbMcollective\View\Decorator;
 
 use GtnDataTables\View\AbstractDecorator;
-use KmbMcollective\Model\McollectiveLog;
+use KmbMcollective\Model\McollectiveLogInterface;
 
 class ActionDecorator extends AbstractDecorator
 {
@@ -34,16 +34,16 @@ class ActionDecorator extends AbstractDecorator
     }
 
     /**
-     * @param Node $object
+     * @param McollectiveLogInterface $object
      * @return string
      */
     public function decorateValue($object)
     {
         return
             '
-<div class="btn-group btn-group-lg"> 
+<div class="btn-group btn-group-lg">
   <span class="label label-info">
-    <a href="'. $this->url('mcollective_history', ['action' => 'history', 'id' => $object->getActionId()],[],true) . '">
+    <a href="' . $this->url('mcollective_history', ['action' => 'history', 'id' => $object->getActionId()], [], true) . '">
       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
     </a>
   </span>

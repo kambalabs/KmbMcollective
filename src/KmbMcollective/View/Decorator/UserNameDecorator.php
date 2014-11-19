@@ -21,7 +21,7 @@
 namespace KmbMcollective\View\Decorator;
 
 use GtnDataTables\View\AbstractDecorator;
-use KmbMcollective\Model\McollectiveLog;
+use KmbMcollective\Model\McollectiveLogInterface;
 
 class UserNameDecorator extends AbstractDecorator
 {
@@ -34,11 +34,11 @@ class UserNameDecorator extends AbstractDecorator
     }
 
     /**
-     * @param Node $object
+     * @param McollectiveLogInterface $object
      * @return string
      */
     public function decorateValue($object)
     {
-        return $this->escapeHtml($object->getUser());
+        return $this->escapeHtml($object->getLogin());
     }
 }

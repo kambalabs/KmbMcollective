@@ -21,7 +21,7 @@
 namespace KmbMcollective\View\Decorator;
 
 use GtnDataTables\View\AbstractDecorator;
-use KmbMcollective\Model\McollectiveLog;
+use KmbMcollective\Model\McollectiveLogInterface;
 
 class FilterDecorator extends AbstractDecorator
 {
@@ -34,11 +34,11 @@ class FilterDecorator extends AbstractDecorator
     }
 
     /**
-     * @param Node $object
+     * @param McollectiveLogInterface $object
      * @return string
      */
     public function decorateValue($object)
     {
-        return '<kbd>' . $this->escapeHtml($object->getFilter()). '</kbd>';
+        return '<kbd>' . $this->escapeHtml($object->getFilter()) . '</kbd>';
     }
 }
