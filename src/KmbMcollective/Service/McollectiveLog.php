@@ -60,8 +60,10 @@ class McollectiveLog implements McollectiveLogInterface
     public function getAll($query = null, $offset = null, $limit = null, $orderBy = null)
     {
         $logs = $this->mcollectiveLogRepository->getFilteredLogs($query, $offset, $limit, $orderBy);
-        $this->logger->debug($logs);
-        return Collection::factory($logs,sizeof($logs),sizeof($logs));
+        $logsCount = $this->mcollectiveLogRepository->getNumberOfRows($query);
+        $this->logger->debug("Request logs with : ".$query.",".$offset.",".$limit.",".$orderBy);
+        $this->logger->debug("Returns : ".print_r($logsCount->current()['number'],true));
+        return Collection::factory($logs,sizeof($logs),$logsCount->current()['number']);
     }
 
     /**

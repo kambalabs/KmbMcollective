@@ -37,6 +37,10 @@ class McollectiveLogCollector implements CollectorInterface
         $offset = isset($params['start']) ? $params['start'] : null;
         $limit = isset($params['length']) ? $params['length'] : null;
         $query = null;
+        error_log(print_r($params['search'],true));
+        if (isset($params['search']['value']) && !empty($params['search']['value'])) {
+            $query = $params['search']['value'];
+        }
         $orderBy = [];
         if (isset($params['order'])) {
             foreach ($params['order'] as $clause) {

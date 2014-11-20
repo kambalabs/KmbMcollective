@@ -87,18 +87,18 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
      */
     public function getNumberOfRows($query)
     {
-        // $select = parent::getSelect()->
-        //     ->where
-        //     ->nest
-        //         ->like('agent',$query)
-        //         ->or
-        //         ->like('filter',$query)
-        //         ->or
-        //         ->like('fullname', $query)
-        //         ->or
-        //         ->like('login',$query)
-        //         ->unnest;
-        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName)->columns(array('number' => new \Zend\Db\Sql\Expression('COUNT(*)')));;
+        if($query != null) {
+                $selectLogs->where
+                ->like('agent','%'.$query.'%')
+                ->or
+                ->like('filter','%'.$query.'%')
+                ->or
+                ->like('fullname', '%'.$query.'%')
+                ->or
+                ->like('login','%'.$query.'%');
+        }
+        return $this->performRead($selectLogs);
     }
 
     /**
@@ -113,41 +113,44 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
             $offset = $query;
             $query = null;
         }
-//        $select = $this->getSelect();
+
         $selectLogs = $this->getSlaveSql()->select()->from($this->tableName);
         if($query != null) {
-            $selectLogs = $selectLogs->where
-                ->nest
-                ->like('agent',$query)
+//            $selectLogs =
+                $selectLogs->where
+                ->like('agent','%'.$query.'%')
                 ->or
-                ->like('filter',$query)
+                ->like('filter','%'.$query.'%')
                 ->or
-                ->like('fullname', $query)
+                ->like('fullname', '%'.$query.'%')
                 ->or
-                ->like('login',$query)
-                ->unnest;
+                ->like('login','%'.$query.'%');
         }
         if($offset != null) {
-            $selectLogs = $selectLogs->offset($offset);
+            //$selectLogs =
+                $selectLogs->offset($offset);
         }
         if($limit != null) {
-            $selectLogs = $selectLogs->limit($limit);
+            //$selectLogs =
+            $selectLogs->limit($limit);
         } 
-        if($orderBy != null) {
-            $selectLogs = $selectLogs->order($order);
-        }
 
-        // $select = $this
-        //     ->getSlaveSql()
-        //     ->select('hostname')
-        $select = new Select('hostname');
-            $select->from($this->discoveredNodesTableName)
+        $select = $this
+            ->getSlaveSql()
+            ->select()
+            ->from($this->discoveredNodesTableName)
             ->join(
                 ['log' => $selectLogs],
-                'log.id = '.$this->discoveredNodesTableName.'.id',
-                 ['*' => '*'],
+                'log.id = '.$this->discoveredNodesTableName.'.log_id',
+                ['*' => '*'],
                 Select::JOIN_RIGHT
         );
+
+        if($orderBy != null) {
+            //$select =
+            $select->order($order);
+        }
+
 //        error_log($select->getSqlString());
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }

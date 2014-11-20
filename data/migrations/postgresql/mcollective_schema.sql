@@ -1,12 +1,13 @@
 DROP TABLE IF EXISTS mcollective_logs CASCADE;
 CREATE TABLE mcollective_logs (
-  id       SERIAL PRIMARY KEY,
-  actionid VARCHAR(33)  NOT NULL,
-  login    VARCHAR(50)  NOT NULL,
-  fullname VARCHAR(256) NOT NULL,
-  agent    VARCHAR(50)  NOT NULL,
-  filter   VARCHAR(256) NOT NULL,
-  pf       VARCHAR(256) NOT NULL
+  id          SERIAL PRIMARY KEY,
+  actionid    VARCHAR(33)  NOT NULL,
+  login       VARCHAR(50)  NOT NULL,
+  fullname    VARCHAR(256) NOT NULL,
+  agent       VARCHAR(50)  NOT NULL,
+  filter      VARCHAR(256) NOT NULL,
+  pf          VARCHAR(256) NOT NULL,
+  received_at TIMESTAMP    NOT NULL
 );
 CREATE INDEX mcollective_logs_actionid ON mcollective_logs (actionid);
 CREATE INDEX mcollective_logs_username ON mcollective_logs (login);
