@@ -23,14 +23,14 @@ namespace KmbMcollective\View\Decorator;
 use GtnDataTables\View\AbstractDecorator;
 use KmbMcollective\Model\McollectiveLogInterface;
 
-class TimeDecorator extends AbstractDecorator
+class ServersDecorator extends AbstractDecorator
 {
     /**
      * @return string
      */
     public function decorateTitle()
     {
-        return $this->translate('Date');
+        return $this->translate('Nombre de serveurs');
     }
 
     /**
@@ -39,12 +39,6 @@ class TimeDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        $time = strtotime($object->getReceivedAt());
-        $now = time();
-        if(abs($now - $time) <= 300 ) {
-            return $this->escapeHtml($object->getReceivedAt()).'<span class="label label-info pull-right">NEW</span>';
-        } else {
-            return $this->escapeHtml($object->getReceivedAt());
-        }
+        return '<a href="'.$this->url('mcollective_history',['action' => 'history','id' => $object->getActionId()],[],true) .'"><span class="label label-success">'.sizeof($object->getDiscoveredNodes()).' serveurs</span></a>';
     }
 }

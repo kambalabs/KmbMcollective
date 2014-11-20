@@ -39,6 +39,6 @@ class FilterDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return '<kbd>' . $this->escapeHtml($object->getFilter()) . '</kbd>';
+        return $this->escapeHtml($object->getFilter());
     }
 }

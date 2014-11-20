@@ -109,6 +109,9 @@ return [
 		    'key'       => 'filter',
                 ],
 		[
+                    'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
+                ],  
+		[
                     'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
 		    'key'       => 'received_at',
                 ],
