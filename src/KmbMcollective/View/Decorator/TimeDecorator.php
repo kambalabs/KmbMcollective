@@ -23,14 +23,14 @@ namespace KmbMcollective\View\Decorator;
 use GtnDataTables\View\AbstractDecorator;
 use KmbMcollective\Model\McollectiveLogInterface;
 
-class UserNameDecorator extends AbstractDecorator
+class TimeDecorator extends AbstractDecorator
 {
     /**
      * @return string
      */
     public function decorateTitle()
     {
-        return $this->translate('Login');
+        return $this->translate('Date');
     }
 
     /**
@@ -39,6 +39,12 @@ class UserNameDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return $this->escapeHtml($object->getLogin());
+        $time = strtotime($object->getReceivedAt());
+        $now = date('Y-m-d G:i:s');
+        if(round(abs($now - $time),2) <= 300 ) {                
+            return $this->escapeHtml($object->getReceivedAt()).'<span class="label label-info">NEW</span>';
+        } else {
+            return $this->escapeHtml($object->getReceivedAt());
+        }
     }
 }

@@ -98,15 +98,19 @@ return [
             'columns' => [
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
+		    'key'       => 'fullname',
                 ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
+    		    'key'       => 'agent',	
                 ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\FilterDecorator',
+		    'key'       => 'filter',
                 ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\ActionDecorator',
+		[
+                    'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
+		    'key'       => 'received_at',
                 ],
             ]
         ]

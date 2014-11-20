@@ -116,7 +116,11 @@ class IndexController extends AbstractActionController
         if (!empty($id)) {
             $actionid = $this->params()->fromRoute('id');
             $historyClass = $this->getServiceLocator()->get('McollectiveHistoryRepository');
-            $result = $historyClass->getByActionid($actionid);
+            if(!empty($this->params()->fromQuery('state'))) {
+                $result = $historyClass->getByActionid($actionid,pg_escape_string($this->params()->fromQuery('state')));
+            } else {
+                $result = $historyClass->getByActionid($actionid);
+            }
             $resultList = array();
             $errorcount = 0;
             foreach ($result as $res) {

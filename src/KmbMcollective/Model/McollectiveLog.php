@@ -46,6 +46,9 @@ class McollectiveLog implements McollectiveLogInterface
     /** @var string */
     protected $pf;
 
+    /** @var int */
+    protected $receivedAt;
+
     /**
      * @param string   $actionid
      * @param string   $login
@@ -55,7 +58,7 @@ class McollectiveLog implements McollectiveLogInterface
      * @param string[] $discoveredNodes
      * @param string   $pf
      */
-    public function __construct($actionid = null, $login = null, $fullname = null, $agent = null, $filter = null, $discoveredNodes = [], $pf = null)
+     public function __construct($actionid = null, $login = null, $fullname = null, $agent = null, $filter = null, $discoveredNodes = [], $pf = null)
     {
         $this->setActionid($actionid);
         $this->setLogin($login);
@@ -64,6 +67,7 @@ class McollectiveLog implements McollectiveLogInterface
         $this->setFilter($filter);
         $this->setDiscoveredNodes($discoveredNodes);
         $this->setPf($pf);
+        $this->setReceivedAt();
     }
 
     /**
@@ -267,6 +271,37 @@ class McollectiveLog implements McollectiveLogInterface
     public function setPf($pf)
     {
         $this->pf = $pf;
+        return $this;
+    }
+
+
+
+
+
+    
+    /**
+     * Get Received date
+     *
+     * @return int
+     */
+    public function getReceivedAt()
+    {
+        return $this->receivedAt;
+    }
+
+    /**
+     * Set Log receive date
+     *
+     * @param  string $timestamp
+     * @return McollectiveLog
+     */
+    public function setReceivedAt($timestamp = null)
+    {
+        if($timestamp != null) {
+            $this->receivedAt = $timestamp;
+        } else {
+            $this->receivedAt = date('Y-m-d G:i:s');
+        }
         return $this;
     }
 }

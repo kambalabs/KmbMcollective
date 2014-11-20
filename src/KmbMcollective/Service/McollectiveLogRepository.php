@@ -116,7 +116,6 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
 
         $selectLogs = $this->getSlaveSql()->select()->from($this->tableName);
         if($query != null) {
-//            $selectLogs =
                 $selectLogs->where
                 ->like('agent','%'.$query.'%')
                 ->or
@@ -127,14 +126,15 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
                 ->like('login','%'.$query.'%');
         }
         if($offset != null) {
-            //$selectLogs =
                 $selectLogs->offset($offset);
         }
         if($limit != null) {
-            //$selectLogs =
             $selectLogs->limit($limit);
         } 
-
+        
+        if($orderBy != null) {
+            $selectLogs->order($orderBy);
+        }
         $select = $this
             ->getSlaveSql()
             ->select()
@@ -146,12 +146,7 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
                 Select::JOIN_RIGHT
         );
 
-        if($orderBy != null) {
-            //$select =
-            $select->order($order);
-        }
 
-//        error_log($select->getSqlString());
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 

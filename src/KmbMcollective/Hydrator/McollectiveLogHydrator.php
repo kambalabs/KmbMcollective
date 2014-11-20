@@ -34,12 +34,13 @@ class McollectiveLogHydrator implements HydratorInterface
     public function extract($object)
     {
         $data = [
-            'actionid' => $object->getActionId(),
-            'login'    => $object->getLogin(),
-            'fullname' => $object->getFullName(),
-            'agent'    => $object->getAgent(),
-            'filter'   => $object->getFilter(),
-            'pf'       => $object->getPf(),
+            'actionid'    => $object->getActionId(),
+            'login'       => $object->getLogin(),
+            'fullname'    => $object->getFullName(),
+            'agent'       => $object->getAgent(),
+            'filter'      => $object->getFilter(),
+            'pf'          => $object->getPf(),
+            'received_at' => $object->getReceivedAt(),
         ];
         if ($object->getId() != null) {
             $data['id'] = $object->getId();
@@ -63,6 +64,7 @@ class McollectiveLogHydrator implements HydratorInterface
         $object->setAgent($data['agent']);
         $object->setFilter($data['filter']);
         $object->setPf($data['pf']);
+        $object->setReceivedAt($data['received_at']);
         return $object;
     }
 }
