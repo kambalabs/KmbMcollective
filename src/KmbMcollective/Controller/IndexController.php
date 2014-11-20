@@ -103,7 +103,7 @@ class IndexController extends AbstractActionController
             $this->debug($e->getMessage());
             $this->debug($e->getTraceAsString());
         }
-        $resultUrl = $this->url()->fromRoute('mcollective', ['action' => 'history', 'id' => $actionResult->actionid], [], true);
+        $resultUrl = (string)$this->url()->fromRoute('mcollective_history', ['action' => 'history', 'id' => $actionResult->actionid ], [], true);
         $actionResult->resultUrl = $resultUrl;
         return new JsonModel((array)$actionResult);
     }

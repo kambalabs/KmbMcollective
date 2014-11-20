@@ -38,17 +38,14 @@ class McollectiveLogCollectorFactory implements FactoryInterface
     {
         $service = new McollectiveLogCollector();
 
-
-        $historyRepositoryService = $serviceLocator->get('McollectiveLogRepository');
+        try {
+        $historyRepositoryService = $serviceLocator->get('KmbMcollective\Service\McollectiveLog');
+        } catch (\Exception $e) {
+            do {
+                var_dump($e->getMessage());
+            } while ($e = $e->getPrevious());
+        }
         $service->setHistoryRepositoryService($historyRepositoryService);
-
-        // /** @var EnvironmentsQueryBuilderInterface $nodesEnvironmentsQueryBuilder */
-        // $nodesEnvironmentsQueryBuilder = $serviceLocator->get('KmbPuppetDb\Query\NodesEnvironmentsQueryBuilder');
-        // $service->setNodesEnvironmentsQueryBuilder($nodesEnvironmentsQueryBuilder);
-
-        // /** @var EnvironmentInterface $permissionEnvironmentService */
-        // $permissionEnvironmentService = $serviceLocator->get('KmbPermission\Service\Environment');
-        // $service->setPermissionEnvironmentService($permissionEnvironmentService);
 
         return $service;
     }

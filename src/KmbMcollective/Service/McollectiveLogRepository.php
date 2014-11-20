@@ -22,7 +22,7 @@ namespace KmbMcollective\Service;
 
 use GtnPersistBase\Model\AggregateRootInterface;
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
-use KmbMcollective\Model\McollectiveLogInterface;
+//use KmbMcollective\Model\McollectiveLogInterface;
 use KmbMcollective\Model\McollectiveLogRepositoryInterface;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Exception\ExceptionInterface;
@@ -82,6 +82,77 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
     }
 
     /**
+     * @param integer $nlogs
+     * @return array
+     */
+    public function getNumberOfRows($query)
+    {
+        // $select = parent::getSelect()->
+        //     ->where
+        //     ->nest
+        //         ->like('agent',$query)
+        //         ->or
+        //         ->like('filter',$query)
+        //         ->or
+        //         ->like('fullname', $query)
+        //         ->or
+        //         ->like('login',$query)
+        //         ->unnest;
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+
+    /**
+     * @param integer $nlogs
+     * @return array
+     */
+    public function getFilteredLogs($query = null, $offset = null, $limit = null, $orderBy = null)
+    {
+        if (is_int($query)) {
+            $orderBy = $limit;
+            $limit = $offset;
+            $offset = $query;
+            $query = null;
+        }
+//        $select = $this->getSelect();
+        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName);
+        if($query != null) {
+            $selectLogs = $selectLogs->where
+                ->nest
+                ->like('agent',$query)
+                ->or
+                ->like('filter',$query)
+                ->or
+                ->like('fullname', $query)
+                ->or
+                ->like('login',$query)
+                ->unnest;
+        }
+        if($offset != null) {
+            $selectLogs = $selectLogs->offset($offset);
+        }
+        if($limit != null) {
+            $selectLogs = $selectLogs->limit($limit);
+        } 
+        if($orderBy != null) {
+            $selectLogs = $selectLogs->order($order);
+        }
+
+        // $select = $this
+        //     ->getSlaveSql()
+        //     ->select('hostname')
+        $select = new Select('hostname');
+            $select->from($this->discoveredNodesTableName)
+            ->join(
+                ['log' => $selectLogs],
+                'log.id = '.$this->discoveredNodesTableName.'.id',
+                 ['*' => '*'],
+                Select::JOIN_RIGHT
+        );
+//        error_log($select->getSqlString());
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+
+    /**
      * @param $login
      * @return array
      */
@@ -96,7 +167,7 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
         return parent::getSelect()->join(
             ['dn' => $this->discoveredNodesTableName],
             $this->tableName . '.id = dn.log_id',
-            ['dn.hostname' => 'hostname'],
+            ['hostname' => 'hostname'],
             Select::JOIN_LEFT
         );
     }

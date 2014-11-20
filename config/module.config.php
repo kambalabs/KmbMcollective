@@ -118,4 +118,9 @@ return [
             ],
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            'KmbMcollective\Service\McollectiveLog' => 'KmbMcollective\Service\McollectiveLogFactory',
+        ],
+    ],
 ];

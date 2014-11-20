@@ -46,9 +46,10 @@ class McollectiveLogCollector implements CollectorInterface
                 ];
             }
         }
-
+        
         $logsCollection = $this->getHistoryRepositoryService()->getAll($query, $offset, $limit, $orderBy);
-        return Collection::factory($logsCollection, sizeof($logsCollection), sizeof($logsCollection));
+        //   return Collection::factory($logsCollection, sizeof($logsCollection), sizeof($logsCollection));
+        return $logsCollection;
     }
 
     /**

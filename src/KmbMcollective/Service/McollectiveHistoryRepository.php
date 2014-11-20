@@ -59,14 +59,16 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
      */
     public function getByActionid($actionid)
     {
-//        $criteria = new Predicate();
-//        return $this->getBy($criteria->equalTo('actionid', $actionid));
         $where = new Where();
         $where -> equalTo('actionid',$actionid);
         $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
+    public function getAll() {
+        return $this->hydrateAggregateRootsFromResult($this->performRead($this->getSelect()));
+    }
+    
     /**
      * @param integer $nlogs
      * @return array
