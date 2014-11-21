@@ -71,20 +71,7 @@ function getResult(data,target,discovered_nodes,refreshResult)
 
                         results += '</div>';
 
-			target.append('<div class="panel panel-default"><div class="panel-heading"><h3 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+results);
-
-
-			// var tablist = '<div class="panel-body"><ul class="nav tab-menu nav-tabs" data-tabs="tabs">';
-			// var divresult = '<div class="tab-content">';
-			// $.each(JSON.parse(obj['result']),function(name,value){
-			//     tablist += '<li><a class="output" href="#mcol_'+ hostname.replace(/\./g,'_') +'_'+ name +'" data-toggle="tab">'+name+'</a></li>';
-			//     divresult += '<div class="tab-pane" id="mcol_'+ hostname.replace(/\./g,'_') +'_'+ name +'"><pre>'+ value+'</pre></div>';
-			// });
-			// tablist += '</ul>';
-			// divresult += '</div>';
-			// target.append('<div class="panel panel-default"><div class="panel-heading"><h3 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+tablist+divresult);
-			// target.find("li .output").first().addClass('active');
-			// target.find(".tab-pane").first().addClass('active');
+			target.append('<div class="panel panel-default"><div class="panel-heading"><h4 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+results+'</h4>');
                     }
 		});
 	    });
