@@ -82,6 +82,7 @@ function getResult(data,target,discovered_nodes,refreshResult)
 $(document).ready(function(){
     var agents = null;
     $legend = $("#legende_mcol");
+    NProgress.configure({ trickle: false });
 
     $.ajax({
 	'async': false,
