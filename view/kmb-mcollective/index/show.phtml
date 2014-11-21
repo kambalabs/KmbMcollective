@@ -1,4 +1,8 @@
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.show.js'); ?>
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/nprogress.js'); ?>
+<?php $this->headLink()->prependStylesheet($this->basePath() . '/css/nprogress.css'); ?>
+<?php $this->headLink()->prependStylesheet($this->basePath() . '/css/kmb.mco.css'); ?>
+
 <div class="row">
   <div class="col-sm-7">
     <div class="panel panel-default">
@@ -26,7 +30,7 @@
                 </div>
               </div>
             </div>
-            <div id="form_arg_mcol" class="arg_mcol">	      
+            <div id="form_arg_mcol" class="arg_mcol">
 	    </div>
 	    <div class="form-group">
 	      <div class="controls row">
@@ -58,11 +62,12 @@
       </li>
     </ul>
     <?php else: ?>
-    <h1>Légende</h1>
+    <h1>Infos</h1>
     <blockquote id="legende_mcol"><p>Choisissez l&lsquo;action à réaliser via mcollective dans le menu déroulant. Filtrez ensuite les serveurs ciblés par la commande (accepte les expressions régulières) puis cliquez sur le bouton exécuter.</p>
       <p>Le bouton sera grisé le temps de la validation de la commande. Une notification apparaitra pour indiquer si la commande a été acceptée ou pas.</p>
       <p>Vous pouvez limiter la commande à X serveurs qui répondront au filtre donné.</p>
     </blockquote>
+    <!-- <blockquote id="pending_mcol"></blockquote> -->
     <?php endif ?>
   </div>
 </div>
