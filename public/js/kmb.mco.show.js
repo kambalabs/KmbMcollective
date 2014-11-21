@@ -51,7 +51,7 @@ function getResult(data,target,discovered_nodes,refreshResult)
 		$.each(result, function(index,jsondata){
 		    obj = jsondata;
                     if (obj['statuscode'] != null) {
-				    if(obj['statuscode'] != 0)
+			if(obj['statuscode'] != 0)
 			{
 			    var tag = '<span class="label label-danger" id="serveurs_security">Error : '+ obj['result']+'</span>';
                             $legend.append('<a href="#' + hostname + '">' + hostname + '</a> <span class="label label-danger">KO</span><br/>');
@@ -59,17 +59,32 @@ function getResult(data,target,discovered_nodes,refreshResult)
 			    var tag = '<span class="label label-success" id="serveurs_security">OK</span>';
                             $legend.append('<a href="#' + hostname + '">' + hostname + '</a> <span class="label label-success">OK</span><br/>');
 			}
-			var tablist = '<div class="panel-body"><ul class="nav tab-menu nav-tabs" data-tabs="tabs">';
-			var divresult = '<div class="tab-content">';
+
+                        var results = '<div class="tab-content">';
+
 			$.each(JSON.parse(obj['result']),function(name,value){
-			    tablist += '<li><a class="output" href="#mcol_'+ hostname.replace(/\./g,'_') +'_'+ name +'" data-toggle="tab">'+name+'</a></li>';
-			    divresult += '<div class="tab-pane" id="mcol_'+ hostname.replace(/\./g,'_') +'_'+ name +'"><pre>'+ value+'</pre></div>';
-			});
-			tablist += '</ul>';
-			divresult += '</div>';
-			target.append('<div class="panel panel-default"><div class="panel-heading"><h3 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+tablist+divresult);
-			target.find("li .output").first().addClass('active');
-			target.find(".tab-pane").first().addClass('active');
+                            if (name == 'status') { return true; }
+                            if (value == '') { return true; }
+                            results += '<div class="result-mco"><span class="label label-default result-mco">' + name + '</span></div>';
+                            results += '<pre>' + value + '</pre>';
+                        });
+
+                        results += '</div>';
+
+			target.append('<div class="panel panel-default"><div class="panel-heading"><h3 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+results);
+
+
+			// var tablist = '<div class="panel-body"><ul class="nav tab-menu nav-tabs" data-tabs="tabs">';
+			// var divresult = '<div class="tab-content">';
+			// $.each(JSON.parse(obj['result']),function(name,value){
+			//     tablist += '<li><a class="output" href="#mcol_'+ hostname.replace(/\./g,'_') +'_'+ name +'" data-toggle="tab">'+name+'</a></li>';
+			//     divresult += '<div class="tab-pane" id="mcol_'+ hostname.replace(/\./g,'_') +'_'+ name +'"><pre>'+ value+'</pre></div>';
+			// });
+			// tablist += '</ul>';
+			// divresult += '</div>';
+			// target.append('<div class="panel panel-default"><div class="panel-heading"><h3 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+tablist+divresult);
+			// target.find("li .output").first().addClass('active');
+			// target.find(".tab-pane").first().addClass('active');
                     }
 		});
 	    });
@@ -141,6 +156,7 @@ $(document).ready(function(){
 	    success: function(data, status) {
 		console.log("Success in run");
                 $legend.html('Ex&eacute;cution de la requ&ecirc;te <span class="label label-success">OK</span><br/>');
+                $legend.append('<strong>Réception des données : en cours...</strong><br/>');
                 var discovered_nodes = data['discovered_nodes'].length;
 
                 var refreshResult = setInterval(function() {
