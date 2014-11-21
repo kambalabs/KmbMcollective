@@ -131,10 +131,14 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
         if($limit != null) {
             $selectLogs->limit($limit);
         } 
-        
         if($orderBy != null) {
             $selectLogs->order($orderBy);
+        } else {
+            $selectLogs->order('received_at DESC');
         }
+
+
+        
         $select = $this
             ->getSlaveSql()
             ->select()
@@ -146,6 +150,11 @@ class McollectiveLogRepository extends Repository implements McollectiveLogRepos
                 Select::JOIN_RIGHT
         );
 
+        if($orderBy != null) {
+            $select->order($orderBy);
+        } else {
+            $select->order('received_at DESC');
+        }
 
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
