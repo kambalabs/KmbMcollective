@@ -1,11 +1,16 @@
 $(window).load(function(){
     var dataTablesDefaultSettings = {
         "sPaginationType": "bootstrap",
-        "bProcessing": true,
+        "bProcessing": false,
         "bAutoWidth": false,
         "aaSorting": [],
         "oLanguage": {
             "sUrl": "/js/dataTables.french.txt"
+        },
+        "fnPreDrawCallback": function() {
+            // gather info to compose a message
+            NProgress.start();
+            return true;
         },
         "fnDrawCallback": function () {
             $('a', this.fnGetNodes()).each(function () {
@@ -16,10 +21,11 @@ $(window).load(function(){
                         hide: 200
                     }
                 });
+                NProgress.done();
             });
         }
     };
-    
+
     $('#mcollective_logs').dataTable($.extend({}, dataTablesDefaultSettings, {
         "processing": true,
         "serverSide": true,
@@ -27,6 +33,7 @@ $(window).load(function(){
             "url": window.location,
             "error": function (cause) {
                 console.log('Could not get log list : ' + cause.statusText);
+                NProgress.done();
                 $('#mcollective_logs_processing').hide();
             }
         }
