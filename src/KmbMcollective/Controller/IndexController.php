@@ -64,7 +64,8 @@ class IndexController extends AbstractActionController
         $this->debug('KmbMcollective/IndexController::showAction(' . $environment . ')');
 
         if ($environment == null) {
-            return new ViewModel(['error' => $this->translate('You have to select an environment first !'), 'environment' => $environment]);
+            $this->globalMessenger()->addDangerMessage($this->translate('<h4>Warning !</h4><p>You have to select an environment first !</p>'));
+            return new ViewModel();
         }
         $agents = $mcProxyAgentService->getAll();
         return new ViewModel(['environment' => $environment, 'agents' => $agents]);
@@ -132,8 +133,9 @@ class IndexController extends AbstractActionController
         if (!empty($id)) {
             $actionid = $this->params()->fromRoute('id');
             $historyClass = $this->getServiceLocator()->get('McollectiveHistoryRepository');
-            if(!empty($this->params()->fromQuery('state'))) {
-                $result = $historyClass->getByActionid($actionid,pg_escape_string($this->params()->fromQuery('state')));
+            $state = $this->params()->fromQuery('state');
+            if(!empty($state)) {
+                $result = $historyClass->getByActionid($actionid,pg_escape_string($state));
             } else {
                 $result = $historyClass->getByActionid($actionid);
             }

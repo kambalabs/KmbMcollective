@@ -54,21 +54,12 @@
     </div>
   </div>
   <div class="col-sm-5" id="legend">
-    <?php if (isset($this->error)): ?>
-    <ul class="flash">
-      <li class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <?php echo $this->error ?>
-      </li>
-    </ul>
-    <?php else: ?>
     <h1>Infos</h1>
     <blockquote id="legende_mcol"><p>Choisissez l&lsquo;action à réaliser via mcollective dans le menu déroulant. Filtrez ensuite les serveurs ciblés par la commande (accepte les expressions régulières) puis cliquez sur le bouton exécuter.</p>
       <p>Le bouton sera grisé le temps de la validation de la commande. Une notification apparaitra pour indiquer si la commande a été acceptée ou pas.</p>
       <p>Vous pouvez limiter la commande à X serveurs qui répondront au filtre donné.</p>
     </blockquote>
     <!-- <blockquote id="pending_mcol"></blockquote> -->
-    <?php endif ?>
   </div>
 </div>
 <div class="col-sm-12">
