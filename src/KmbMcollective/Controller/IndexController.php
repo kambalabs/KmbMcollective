@@ -41,6 +41,22 @@ class IndexController extends AbstractActionController
         ),
     );
 
+    public function metadataAction() {
+        $agent = $this->params()->fromRoute('agent');
+        $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
+        $agentList = $mcProxyAgentService->getAll();
+
+        if ($agent == null ) {
+            $choiceText = "Choisissez un agent pour ajouter les metadatas.";
+            return new ViewModel(['agent' => $agent, 'choiceText' => $choiceText, 'agentList' => $agentList]);
+        } else {
+            $agentRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
+            $agentDetail = $agentRepository->getByName($agent);
+            $this->debug(print_r($agentDetail,true));
+            return new ViewModel(['agent' => $agent, 'agentList' => $agentList, 'agentDetail' => $agentDetail]);
+        }
+    }
+    
     public function showAction()
     {
         $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));

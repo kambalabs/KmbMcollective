@@ -1,0 +1,84 @@
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.metadatas.js'); ?>
+<div class="row">
+  <div class="col-sm-7">
+    <div class="panel panel-default">
+      <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>Metadata Mcollective</div>
+      <div class="panel-body">
+	<?php if( $agent != null): ?>
+	<form class="form-horizontal" data-async action="<?php echo $this->url('mcollective', ['action' => 'run'], [], true) ?>" method="POST" id="metadataForm">
+	  <fieldset class="col-sm-12">
+	    <div class="form-group">
+	      <label class="control-label" for="selectAgent">Agent</label>
+	      <div class="controls row">
+		<div class="col-lg-12">
+		  <select id="selectAgent" data-placeholder="Selectionnez un Agent..." class="form-control" name="agent" data-rel="chosen">
+		    <option value="default"></option>
+		    <?php foreach( $agentList as $agentName => $content): ?>
+		    <?php if($agentName == $agent) : ?>
+		    <?= '<option value="' . $agentName . '" selected >' . $agentName .'</option>'; ?>
+		    <?php else : ?>
+		    <?= '<option value="' . $agentName . '" >' . $agentName .'</option>'; ?>
+		    <?php endif ?>
+		    <?php endforeach ?>
+                  </select>
+                </div>
+              </div>
+<!--	      <label class="control-label" for="selectAgent">Description de l'agent</label> -->
+	      <div class="controls row">
+		<div class="col-lg-12">
+		  <div class="input-group">
+		    <span class="input-group-addon">Description de l'agent</span>
+		    <input type="text" class="form-control" value="<?= $agentDetail->getDescription() ?>"/>
+		    <?php if(!empty($agentDetail)): ?>
+		    <?php else: ?>
+		    <input type="text" class="form-control" placeholder="Description..."/>
+		    <?php endif ?>
+		    </div>
+		</div>
+	      </div>
+	    </div>
+	    <div class="form-actions">
+	      <button type="submit" class="btn btn-primary<?php if(is_null($this->environment)):?> disabled <?php endif ?>" id="mcol-form-submit">Exécuter</button>
+	      <button type="reset" class="btn">Annuler</button>
+	    </div>
+	  </fieldset>
+	</form>
+	<?php else: ?>
+	<h4><?= $choiceText ?></h4>
+	    <label class="control-label" for="selectAgent">Agent</label>
+	      <div class="controls row">
+		<div class="col-lg-12">
+		  <select id="selectAgent" data-placeholder="Selectionnez un Agent..." class="form-control" name="agent" data-rel="chosen">
+		    <option value="default"></option>
+		    <?php foreach( $agentList as $agent => $content): ?>
+		    <?= '<option value="' . $agent . '">' . $agent .'</option>'; ?>
+		    <?php endforeach ?>
+                  </select>
+                </div>
+              </div>	      
+	<?php endif ?>
+	
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5" id="legend">
+    <?php if (isset($this->error)): ?>
+    <ul class="flash">
+      <li class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <?php echo $this->error ?>
+      </li>
+    </ul>
+    <?php else: ?>
+    <h1>Infos</h1>
+    <blockquote id="legende_mcol"><p>Choisissez l&lsquo;action à réaliser via mcollective dans le menu déroulant. Filtrez ensuite les serveurs ciblés par la commande (accepte les expressions régulières) puis cliquez sur le bouton exécuter.</p>
+      <p>Le bouton sera grisé le temps de la validation de la commande. Une notification apparaitra pour indiquer si la commande a été acceptée ou pas.</p>
+      <p>Vous pouvez limiter la commande à X serveurs qui répondront au filtre donné.</p>
+    </blockquote>
+    <!-- <blockquote id="pending_mcol"></blockquote> -->
+    <?php endif ?>
+  </div>
+</div>
+<div class="col-sm-12">
+  <div class="row" id="resultat_action_mcol"></div>
+</div>

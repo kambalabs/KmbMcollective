@@ -37,6 +37,22 @@ return [
                 ],
             
             ],
+            'mcollective_metadatas' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '[/env/:envId]/mcollective/metadata[/[:agent]]',
+                    'constraints' => [
+                        'envId' => '[0-9]+',
+                        'agent' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Index',
+                        'action' => 'metadata',
+                        'envId' => '0',
+                    ],
+                ],
+            ],
 
         ],
     ],
@@ -55,7 +71,13 @@ return [
             'table_sequence_name' => 'mcollective_actions_logs_id_seq',
             'repository_class' => 'KmbMcollective\Service\McollectiveHistoryRepository',
         ],
-
+        'McollectiveAgentRepository' => [
+            'aggregate_root_class' => 'KmbMcollective\Model\McollectiveAgent',
+            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveAgentHydrator',
+            'table_name' => 'mcollective_agents_metadata',
+            'table_sequence_name' => 'mcollective_agents_metadata_id_seq',
+            'repository_class' => 'KmbMcollective\Service\McollectiveAgentRepository',
+        ],        
     ],
     'translator' => [
         'translation_file_patterns' => [
@@ -86,6 +108,11 @@ return [
                     'controller' => 'KmbMcollective\Controller\Index',
                     'actions' => ['show', 'agents', 'run', 'logs', 'history'],
                     'roles' => ['user']
+                ],
+                [
+                    'controller' => 'KmbMcollective\Controller\Index',
+                    'actions' => ['metadata'],
+                    'roles' => ['admin']
                 ]
             ]
         ],
