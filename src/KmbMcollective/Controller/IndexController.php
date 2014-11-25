@@ -22,6 +22,7 @@ namespace KmbMcollective\Controller;
 
 use GtnDataTables\Service\DataTable;
 use KmbMcollective\Model\McollectiveAgent;
+use KmbMcollective\Model\McollectiveAction;
 use KmbMcProxy\Service;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -40,19 +41,37 @@ class IndexController extends AbstractActionController
     );
 
     public function metadataUpdateAction() {
-        $agentName = $this->params()->fromPost('agent');
         $params = $this->params()->fromPost();
+        $agentName = $params['agent'];
         $agentRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
         $agent = $agentRepository->getByName($agentName);
         if($agent != null) {
             $this->debug("Updating agent " . $agentName);
             $agent->setDescription($params['agentDesc']);
+            foreach($this->params()->fromPost('action') as $actionName => $detail) {
+                $action = $agent->getRelatedActions($actionName);
+                if($action != null){
+                    $action->setDescription($detail['description']);
+                    $action->setLongDesc($detail['longdesc']);
+                    $action->setShortDesc($detail['shortdesc']);
+                    $action->setIhmIcon($detail['ihmicon']);
+                    if($detail['limitnumber'] != "" ) {
+                        $action->setLimitNumber(intval($detail['limitnumber']));
+                    }
+                    $action->setLimitHosts($detail['limitHosts']);
+                } else {
+                    $action = new McollectiveAction($actionName, $detail['description'], $agent->getId(), $detail['longdesc'], $detail['shortdesc'], $detail['ihmicon'], intval($detail['limitnumber']), $detail['limitHosts']);
+                    $agent->addRelatedAction($action);
+                }
+            }
             $agentRepository->update($agent);
         } else {
             $this->debug("Creating new metadata for  agent " . $agentName);
             $agent = new McollectiveAgent();
             $agent->setName($agentName);
-            $agent->setDescription($params['agentDesc']);
+            if ($params['agentDesc']) {
+                $agent->setDescription($params['agentDesc']);
+            }
             $agentRepository->add($agent);
         }
                 

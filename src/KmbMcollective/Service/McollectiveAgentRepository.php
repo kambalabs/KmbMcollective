@@ -98,6 +98,11 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
                     if ($action->getId() === null) {
                         $action->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->actionTableSequenceName));
                     }
+                } else {
+                    $data = $this->actionHydrator->extract($action);
+                    $update = $this->getMasterSql()->update($this->actionTableName)->set($data);
+                    $update->where->equalto('id', $action->getId());
+                    $this->performWrite($update);
                 }
             }
         }        
@@ -115,7 +120,8 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
         $select = $this->getSelect();
         $select->where
             ->equalTo($this->getTableName().'.name',$name);
-        return $this->hydrateAggregateRootsFromResult($this->performRead($select))[0];
+        $result = $this->hydrateAggregateRootsFromResult($this->performRead($select)) != null ? $this->hydrateAggregateRootsFromResult($this->performRead($select))[0] : null;
+        return $result;
     }
 
     public function getAll() {

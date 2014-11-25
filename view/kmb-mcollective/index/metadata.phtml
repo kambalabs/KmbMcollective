@@ -45,7 +45,7 @@
 		  <div class="col-sm-11 pull-right">
 		  <div class="panel-group" id="actionlist" role="tablist" aria-multiselectable="true">
 		  <?php foreach($agentList[$agent]->getActions() as $action): ?>
-		  <?php $actionMetadata = $agentDetail->getRelatedActions($action) ?>
+		  <?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
 		      <div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="head_<?= $action->getName()?>">
 			  <h4 class="panel-title">
@@ -60,53 +60,53 @@
 			    <div class="input-group">
 			      <span class="input-group-addon">Description de l'action</span>
 			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionDesc_<?= $action->getName()?>" name="actionDesc_<?= $action->getName()?>" value="<?= $agentDetail->getRelatedActions($agent)->getDescription() ?>"/>				      
+			      <input type="text" class="form-control" id="actionDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>"/>				      
 			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Description..."/>
+			      <input type="text" class="form-control" placeholder="Description..." name="action[<?= $action->getName() ?>][description]"/>
 			      <?php endif ?>
 			    </div>
 			    <div class="input-group">
 			      <span class="input-group-addon">Long detail</span>
 			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionLongDesc_<?= $action->getName()?>" name="actionLongDesc_<?= $action->getName()?>" value="<?= $actionMetadata->getLongDesc() ?>"/>				      
+			      <input type="text" class="form-control" id="actionLongDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][longdesc]" value="<?= $actionMetadata->getLongDesc() ?>"/>				      
 			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Long detail"/>
+			      <input type="text" class="form-control" placeholder="Long detail"  name="action[<?= $action->getName() ?>][longdesc]"/>
 			      <?php endif ?>
 			    </div>
 
 			    <div class="input-group">
 			      <span class="input-group-addon">Short detail</span>
 			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionShortDesc_<?= $action->getName()?>" name="actionShortDesc_<?= $action->getName()?>" value="<?= $actionMetadata->getShortDesc() ?>"/>				      
+			      <input type="text" class="form-control" id="actionShortDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][shortdesc]" value="<?= $actionMetadata->getShortDesc() ?>"/>				      
 			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Short detail"/>
+			      <input type="text" class="form-control" placeholder="Short detail" name="action[<?= $action->getName() ?>][shortdesc]"/>
 			      <?php endif ?>
 			    </div>
 
 			    <div class="input-group">
 			      <span class="input-group-addon">Ihm Icon</span>
 			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionIhmIcon_<?= $action->getName()?>" name="actionIhmIcon_<?= $action->getName()?>" value="<?= $actionMetadata->getIhmIcon() ?>"/>				      
+			      <input type="text" class="form-control" id="actionIhmIcon_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][ihmicon]" value="<?= $actionMetadata->getIhmIcon() ?>"/>				      
 			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Ihm glyphicon"/>
+			      <input type="text" class="form-control" placeholder="Ihm glyphicon" name="action[<?= $action->getName() ?>][ihmicon]"/>
 			      <?php endif ?>
 			    </div>
 
 			    <div class="input-group">
 			      <span class="input-group-addon">Limit number</span>
 			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionLimitNumber_<?= $action->getName()?>" name="actionLimitNumber_<?= $action->getName()?>" value="<?= $actionMetadata->getLimitNumber() ?>"/>				      
+			      <input type="text" class="form-control" id="actionLimitNumber_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitnumber]" value="<?= $actionMetadata->getLimitNumber() ?>"/>				      
 			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Max number of host impacted"/>
+			      <input type="text" class="form-control" placeholder="Max number of host impacted" name="action[<?= $action->getName() ?>][limitnumber]"/>
 			      <?php endif ?>
 			    </div>
 
 			    <div class="input-group">
 			      <span class="input-group-addon">Limit Host</span>
 			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="actionLimitHost_<?= $action->getName()?>" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+			      <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitHosts]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
 			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Limit action to hosts ..."/>
+			      <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"/>
 			      <?php endif ?>
 			    </div>
 			  </div>

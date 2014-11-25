@@ -34,9 +34,8 @@ class McollectiveActionHydrator implements HydratorInterface
     public function extract($object)
     {
         $data = [
-//            'agent_id' => $object->getRelatedAgent();
-            'id'   => $object->getId(),
             'name' => $object->getName(),
+            'agent_id' => $object->getRelatedAgent() != null ? $object->getRelatedAgent()->getId() : null,
             'description' => $object->getDescription(),
             'long_detail' => $object->getLongDesc(),
             'short_detail' => $object->getShortDesc(),
@@ -56,7 +55,6 @@ class McollectiveActionHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        error_log("Data : " . print_r($data,true));
         $object->setId($data['mact.id']);
         $object->setName($data['mact.name']);
         $object->setDescription($data['mact.description']);

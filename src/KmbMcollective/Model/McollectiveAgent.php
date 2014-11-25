@@ -132,11 +132,9 @@ class McollectiveAgent implements McollectiveAgentInterface
     public function getRelatedActions($name = null)
     {
         if( $name == null) {
-            error_log("Fooooooooooooooooooooooooooooooooooooooooooo : " . print_r($this->relatedActions,true));
             return $this->relatedActions;
         } else {
             foreach($this->relatedActions as $action) {
-                error_log("Fooooooooooooooooooooooooooooooooooooooooooo : " . print_r($action,true));
                 if($action->getName() == $name) {
                     return $action;
                 }
