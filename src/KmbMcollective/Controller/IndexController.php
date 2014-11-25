@@ -21,9 +21,7 @@
 namespace KmbMcollective\Controller;
 
 use GtnDataTables\Service\DataTable;
-use KmbDomain\Model\EnvironmentInterface;
-use KmbDomain\Model\UserInterface;
-use KmbMcollective\Model\McollectiveLog;
+use KmbMcollective\Model\McollectiveAgent;
 use KmbMcProxy\Service;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -41,6 +39,27 @@ class IndexController extends AbstractActionController
         ),
     );
 
+    public function metadataUpdateAction() {
+        $agentName = $this->params()->fromPost('agent');
+        $params = $this->params()->fromPost();
+        $agentRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
+        $agent = $agentRepository->getByName($agentName);
+        if($agent != null) {
+            $this->debug("Updating agent " . $agentName);
+            $agent->setDescription($params['agentDesc']);
+            $agentRepository->update($agent);
+        } else {
+            $this->debug("Creating new metadata for  agent " . $agentName);
+            $agent = new McollectiveAgent();
+            $agent->setName($agentName);
+            $agent->setDescription($params['agentDesc']);
+            $agentRepository->add($agent);
+        }
+                
+        $this->debug("Params : " . print_r($this->params()->fromPost(),true));
+        return $this->redirect()->toRoute('mcollective_metadatas', ['agent' => $agentName], [], true);
+    }
+    
     public function metadataAction() {
         $agent = $this->params()->fromRoute('agent');
         $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
@@ -52,7 +71,10 @@ class IndexController extends AbstractActionController
         } else {
             $agentRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
             $agentDetail = $agentRepository->getByName($agent);
-            $this->debug(print_r($agentDetail,true));
+            $this->debug("Agent retrieved : ". print_r($agentDetail,true));
+            if ($agentDetail == null) {
+                $agentDetail = new McollectiveAgent($agent);
+            }
             return new ViewModel(['agent' => $agent, 'agentList' => $agentList, 'agentDetail' => $agentDetail]);
         }
     }

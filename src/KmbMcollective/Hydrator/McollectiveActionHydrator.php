@@ -20,10 +20,10 @@
  */
 namespace KmbMcollective\Hydrator;
 
-use KmbMcollective\Model\McollectiveAgentInterface;
+use KmbMcollective\Model\McollectiveActionInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class McollectiveAgentHydrator implements HydratorInterface
+class McollectiveActionHydrator implements HydratorInterface
 {
     /**
      * Extract values from an object
@@ -34,8 +34,15 @@ class McollectiveAgentHydrator implements HydratorInterface
     public function extract($object)
     {
         $data = [
+//            'agent_id' => $object->getRelatedAgent();
+            'id'   => $object->getId(),
             'name' => $object->getName(),
             'description' => $object->getDescription(),
+            'long_detail' => $object->getLongDesc(),
+            'short_detail' => $object->getShortDesc(),
+            'ihm_icon' => $object->getIhmIcon(),
+            'limit_number' => $object->getLimitNumber(),
+            'limit_host' => $object->getLimitHosts(),
         ];
         return $data;
     }
@@ -49,9 +56,15 @@ class McollectiveAgentHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        $object->setId($data['id']);
-        $object->setName($data['name']);
-        $object->setDescription($data['description']);
+        error_log("Data : " . print_r($data,true));
+        $object->setId($data['mact.id']);
+        $object->setName($data['mact.name']);
+        $object->setDescription($data['mact.description']);
+        $object->setLongDesc($data['mact.long_detail']);
+        $object->setShortDesc($data['mact.short_detail']);
+        $object->setIhmIcon($data['mact.ihm_icon']);
+        $object->setLimitNumber($data['mact.limit_number']);
+        $object->setLimitHosts($data['mact.limit_host']);
         return $object;
     }
 }

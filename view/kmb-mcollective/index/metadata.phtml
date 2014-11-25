@@ -1,19 +1,19 @@
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.metadatas.js'); ?>
 <div class="row">
-  <div class="col-sm-7">
+    <div class="col-sm-7">
     <div class="panel panel-default">
-      <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>Metadata Mcollective</div>
-      <div class="panel-body">
-	<?php if( $agent != null): ?>
-	<form class="form-horizontal" data-async action="<?php echo $this->url('mcollective', ['action' => 'run'], [], true) ?>" method="POST" id="metadataForm">
+    <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>Metadata Mcollective</div>
+    <div class="panel-body">
+<?php if( $agent != null): ?>
+	<form class="form-horizontal" action="<?php echo $this->url('mcollective_metadatas_update', ['action' => 'metadataUpdate'], [], true) ?>" method="POST" id="metadataForm">
 	  <fieldset class="col-sm-12">
 	    <div class="form-group">
 	      <label class="control-label" for="selectAgent">Agent</label>
 	      <div class="controls row">
 		<div class="col-lg-12">
 		  <select id="selectAgent" data-placeholder="Selectionnez un Agent..." class="form-control" name="agent" data-rel="chosen">
-		    <option value="default"></option>
-		    <?php foreach( $agentList as $agentName => $content): ?>
+    <option value="default"></option>
+<?php foreach( $agentList as $agentName => $content): ?>
 		    <?php if($agentName == $agent) : ?>
 		    <?= '<option value="' . $agentName . '" selected >' . $agentName .'</option>'; ?>
 		    <?php else : ?>
@@ -23,12 +23,13 @@
                   </select>
                 </div>
               </div>
-<!--	      <label class="control-label" for="selectAgent">Description de l'agent</label> -->
+	    </div>
+	    <div class="form-group">
 	      <div class="controls row">
 		<div class="col-lg-12">
 		  <div class="input-group">
-		    <span class="input-group-addon">Description de l'agent</span>
-		    <input type="text" class="form-control" value="<?= $agentDetail->getDescription() ?>"/>
+    <span class="input-group-addon">Description de l'agent</span>
+		    <input type="text" class="form-control" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>"/>
 		    <?php if(!empty($agentDetail)): ?>
 		    <?php else: ?>
 		    <input type="text" class="form-control" placeholder="Description..."/>
@@ -37,8 +38,87 @@
 		</div>
 	      </div>
 	    </div>
-	    <div class="form-actions">
-	      <button type="submit" class="btn btn-primary<?php if(is_null($this->environment)):?> disabled <?php endif ?>" id="mcol-form-submit">Exécuter</button>
+	    <div class="form-group">
+	      <label class="control-label" for="selectAgent">Actions</label>
+	      <div class="controls row">
+		<div class="col-lg-12">
+		  <div class="col-sm-11 pull-right">
+		  <div class="panel-group" id="actionlist" role="tablist" aria-multiselectable="true">
+		  <?php foreach($agentList[$agent]->getActions() as $action): ?>
+		  <?php $actionMetadata = $agentDetail->getRelatedActions($action) ?>
+		      <div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="head_<?= $action->getName()?>">
+			  <h4 class="panel-title">
+			    <a data-toggle="collapse" data-parent="#actionlist" href="#<?= $action->getName()?>" aria-expanded="true" aria-controls="collapseOne">			     
+			      <?= $action->getName() ?>
+			    </a>
+			  </h4>
+			</div>
+			<div id="<?= $action->getName()?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="head_<?= $action->getName()?>">
+			  <div class="panel-body">
+			    <input type="hidden" id="actionName_<?= $action->getName()?>" name="actionName_<?= $action->getName()?>" value="<?= $action->getName() ?>"/>				      
+			    <div class="input-group">
+			      <span class="input-group-addon">Description de l'action</span>
+			      <?php if($actionMetadata != null): ?>
+			      <input type="text" class="form-control" id="actionDesc_<?= $action->getName()?>" name="actionDesc_<?= $action->getName()?>" value="<?= $agentDetail->getRelatedActions($agent)->getDescription() ?>"/>				      
+			      <?php else: ?>
+			      <input type="text" class="form-control" placeholder="Description..."/>
+			      <?php endif ?>
+			    </div>
+			    <div class="input-group">
+			      <span class="input-group-addon">Long detail</span>
+			      <?php if($actionMetadata != null): ?>
+			      <input type="text" class="form-control" id="actionLongDesc_<?= $action->getName()?>" name="actionLongDesc_<?= $action->getName()?>" value="<?= $actionMetadata->getLongDesc() ?>"/>				      
+			      <?php else: ?>
+			      <input type="text" class="form-control" placeholder="Long detail"/>
+			      <?php endif ?>
+			    </div>
+
+			    <div class="input-group">
+			      <span class="input-group-addon">Short detail</span>
+			      <?php if($actionMetadata != null): ?>
+			      <input type="text" class="form-control" id="actionShortDesc_<?= $action->getName()?>" name="actionShortDesc_<?= $action->getName()?>" value="<?= $actionMetadata->getShortDesc() ?>"/>				      
+			      <?php else: ?>
+			      <input type="text" class="form-control" placeholder="Short detail"/>
+			      <?php endif ?>
+			    </div>
+
+			    <div class="input-group">
+			      <span class="input-group-addon">Ihm Icon</span>
+			      <?php if($actionMetadata != null): ?>
+			      <input type="text" class="form-control" id="actionIhmIcon_<?= $action->getName()?>" name="actionIhmIcon_<?= $action->getName()?>" value="<?= $actionMetadata->getIhmIcon() ?>"/>				      
+			      <?php else: ?>
+			      <input type="text" class="form-control" placeholder="Ihm glyphicon"/>
+			      <?php endif ?>
+			    </div>
+
+			    <div class="input-group">
+			      <span class="input-group-addon">Limit number</span>
+			      <?php if($actionMetadata != null): ?>
+			      <input type="text" class="form-control" id="actionLimitNumber_<?= $action->getName()?>" name="actionLimitNumber_<?= $action->getName()?>" value="<?= $actionMetadata->getLimitNumber() ?>"/>				      
+			      <?php else: ?>
+			      <input type="text" class="form-control" placeholder="Max number of host impacted"/>
+			      <?php endif ?>
+			    </div>
+
+			    <div class="input-group">
+			      <span class="input-group-addon">Limit Host</span>
+			      <?php if($actionMetadata != null): ?>
+			      <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="actionLimitHost_<?= $action->getName()?>" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+			      <?php else: ?>
+			      <input type="text" class="form-control" placeholder="Limit action to hosts ..."/>
+			      <?php endif ?>
+			    </div>
+			  </div>
+			</div>
+
+		  </div>
+		  <?php endforeach ?>
+		  </div>
+		</div>
+	      </div>
+		    <div class="form-actions">
+	      <button type="submit" class="btn btn-primary" id="mcol-form-submit">Exécuter</button>
 	      <button type="reset" class="btn">Annuler</button>
 	    </div>
 	  </fieldset>

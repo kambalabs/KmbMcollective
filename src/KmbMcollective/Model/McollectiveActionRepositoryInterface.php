@@ -18,40 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Kamba.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace KmbMcollective\Hydrator;
+namespace KmbMcollective\Model;
 
-use KmbMcollective\Model\McollectiveAgentInterface;
-use Zend\Stdlib\Hydrator\HydratorInterface;
+use GtnPersistBase\Model\RepositoryInterface;
 
-class McollectiveAgentHydrator implements HydratorInterface
+interface McollectiveAgentRepositoryInterface extends RepositoryInterface
 {
     /**
-     * Extract values from an object
-     *
-     * @param  McollectiveAgentInterface $object
-     * @return array
-     */
-    public function extract($object)
-    {
-        $data = [
-            'name' => $object->getName(),
-            'description' => $object->getDescription(),
-        ];
-        return $data;
-    }
-
-    /**
-     * Hydrate $object with the provided $data.
-     *
-     * @param  array  $data
-     * @param  McollectiveAgentInterface $object
+     * @param string $name
      * @return McollectiveAgentInterface
      */
-    public function hydrate(array $data, $object)
-    {
-        $object->setId($data['id']);
-        $object->setName($data['name']);
-        $object->setDescription($data['description']);
-        return $object;
-    }
+    public function getByName($name);
+
+    public function getAllByAgentId($id);
+
+
+
 }

@@ -40,6 +40,7 @@ return [
             'mcollective_metadatas' => [
                 'type' => 'Segment',
                 'options' => [
+                    'verb' => 'get',
                     'route' => '[/env/:envId]/mcollective/metadata[/[:agent]]',
                     'constraints' => [
                         'envId' => '[0-9]+',
@@ -49,6 +50,22 @@ return [
                         '__NAMESPACE__' => 'KmbMcollective\Controller',
                         'controller' => 'Index',
                         'action' => 'metadata',
+                        'envId' => '0',
+                    ],
+                ],
+            ],
+            'mcollective_metadatas_update' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '[/env/:envId]/mcollective/metadata/:agent/update',
+                    'constraints' => [
+                        'envId' => '[0-9]+',
+                        'agent' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Index',
+                        'action' => 'metadataUpdate',
                         'envId' => '0',
                     ],
                 ],
@@ -76,6 +93,11 @@ return [
             'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveAgentHydrator',
             'table_name' => 'mcollective_agents_metadata',
             'table_sequence_name' => 'mcollective_agents_metadata_id_seq',
+            'action_class' => 'KmbMcollective\Model\McollectiveAction',
+            'action_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveActionHydrator',
+            'action_table_name' => 'mcollective_actions_metadata',
+            'action_table_sequence_name' => 'mcollective_actions_metadata_id_seq',
+            'factory' => 'KmbMcollective\Service\McollectiveAgentRepositoryFactory',
             'repository_class' => 'KmbMcollective\Service\McollectiveAgentRepository',
         ],        
     ],
@@ -111,7 +133,7 @@ return [
                 ],
                 [
                     'controller' => 'KmbMcollective\Controller\Index',
-                    'actions' => ['metadata'],
+                    'actions' => ['metadata','metadataUpdate'],
                     'roles' => ['admin']
                 ]
             ]
