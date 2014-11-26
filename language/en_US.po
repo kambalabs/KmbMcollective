@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 11:29+0100\n"
-"PO-Revision-Date: 2014-11-24 11:36+0100\n"
+"POT-Creation-Date: 2014-11-26 18:29+0100\n"
+"PO-Revision-Date: 2014-11-26 18:29+0100\n"
 "Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:51
+#: ../src/KmbMcollective/Controller/IndexController.php:108
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
 msgstr ""
 
@@ -43,5 +43,52 @@ msgstr ""
 
 #: ../src/KmbMcollective/View/Decorator/FullNameDecorator.php:33
 msgid "User"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:9
+msgid "Back"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:10
+msgid "Metadata"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:15
+msgid "Save"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:16
+msgid "Cancel"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:35
+msgid "Associated Actions"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:54
+#: ../view/kmb-mcollective/index/metadata.phtml:204
+msgid "Help"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:55
+#: ../view/kmb-mcollective/index/metadata.phtml:205
+msgid "Click on an agent's name to edit its metadata"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:64
+#: ../view/kmb-mcollective/index/metadata.phtml:143
+msgid "Description"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:131
+msgid "Argument :"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:160
+msgid "Value"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:183
+msgid "Mcollective Agents"
 msgstr ""
 

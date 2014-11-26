@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 11:29+0100\n"
-"PO-Revision-Date: 2014-11-24 11:36+0100\n"
+"POT-Creation-Date: 2014-11-26 18:28+0100\n"
+"PO-Revision-Date: 2014-11-26 18:31+0100\n"
 "Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:51
+#: ../src/KmbMcollective/Controller/IndexController.php:108
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
 msgstr "<h4>Attention !</h4><p>Vous devez d'abord choisir un environnement !</p>"
 
@@ -44,6 +44,53 @@ msgstr "Nombre de serveurs"
 #: ../src/KmbMcollective/View/Decorator/FullNameDecorator.php:33
 msgid "User"
 msgstr "Utilisateur"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:9
+msgid "Back"
+msgstr "Retour"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:10
+msgid "Metadata"
+msgstr "Metadonnées"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:15
+msgid "Save"
+msgstr "Enregistrer"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:16
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:35
+msgid "Associated Actions"
+msgstr "Actions associées"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:54
+#: ../view/kmb-mcollective/index/metadata.phtml:204
+msgid "Help"
+msgstr "Aide"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:55
+#: ../view/kmb-mcollective/index/metadata.phtml:205
+msgid "Click on an agent's name to edit its metadata"
+msgstr "Cliquez sur le nom de l'agent pour éditer ses métadonnées"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:64
+#: ../view/kmb-mcollective/index/metadata.phtml:143
+msgid "Description"
+msgstr "Description"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:131
+msgid "Argument :"
+msgstr "Argument :"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:160
+msgid "Value"
+msgstr "Valeur"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:183
+msgid "Mcollective Agents"
+msgstr "Agents Mcollective"
 
 #~ msgid "Failed server"
 

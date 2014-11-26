@@ -16,7 +16,7 @@ return [
                         'action' => 'show',
                         'envId' => '0',
                     ],
-                ],		
+                ],
             ],
             'mcollective_history' => [
                 'type' => 'Segment',
@@ -35,7 +35,7 @@ return [
 			'id' => '0',
                     ],
                 ],
-            
+
             ],
             'mcollective_metadatas' => [
                 'type' => 'Segment',
@@ -73,6 +73,41 @@ return [
 
         ],
     ],
+    'navigation' => [
+        'default' => [
+            [
+                'label' => 'Mcollective',
+                'route' => 'mcollective',
+                'tabindex' => 80,
+                'pages' => [
+                    [
+                        'label' => 'Actions',
+                        'route' => 'mcollective',
+                        'controller' => 'Index',
+                        'action' => 'show',
+                        'useRouteMatch' => true,
+                        'tabindex' => 81,
+                    ],
+                    [
+                        'label' => 'History',
+                        'route' => 'mcollective_history',
+                        'controller' => 'Index',
+                        'action' => 'history',
+                        'useRouteMatch' => true,
+                        'tabindex' => 82,
+                    ],
+                    [
+                        'label' => 'Metadatas',
+                        'route' => 'mcollective_metadatas',
+                        'controller' => 'Index',
+                        'action' => 'metadatas',
+                        'useRouteMatch' => true,
+                        'tabindex' => 83,
+                    ],
+                ],
+            ],
+        ],
+    ],
     'zenddb_repositories' => [
         'McollectiveLogRepository' => [
             'aggregate_root_class' => 'KmbMcollective\Model\McollectiveLog',
@@ -99,7 +134,7 @@ return [
             'action_table_sequence_name' => 'mcollective_actions_metadata_id_seq',
             'factory' => 'KmbMcollective\Service\McollectiveAgentRepositoryFactory',
             'repository_class' => 'KmbMcollective\Service\McollectiveAgentRepository',
-        ],        
+        ],
     ],
     'translator' => [
         'translation_file_patterns' => [
@@ -151,7 +186,7 @@ return [
                 ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
-    		    'key'       => 'agent',	
+    		    'key'       => 'agent',
                 ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\FilterDecorator',
@@ -159,7 +194,7 @@ return [
                 ],
 		[
                     'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
-                ],  
+                ],
 		[
                     'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
 		    'key'       => 'received_at',
