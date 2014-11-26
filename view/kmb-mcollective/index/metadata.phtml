@@ -1,164 +1,212 @@
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.metadatas.js'); ?>
+<?php $this->headLink()->prependStylesheet($this->basePath() . '/css/kmb.mco.css'); ?>
 <div class="row">
-    <div class="col-sm-7">
-    <div class="panel panel-default">
-    <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>Metadata Mcollective</div>
-    <div class="panel-body">
-<?php if( $agent != null): ?>
-	<form class="form-horizontal" action="<?php echo $this->url('mcollective_metadatas_update', ['action' => 'metadataUpdate'], [], true) ?>" method="POST" id="metadataForm">
-	  <fieldset class="col-sm-12">
-	    <div class="form-group">
-	      <label class="control-label" for="selectAgent">Agent</label>
-	      <div class="controls row">
-		<div class="col-lg-12">
-		  <select id="selectAgent" data-placeholder="Selectionnez un Agent..." class="form-control" name="agent" data-rel="chosen">
-    <option value="default"></option>
-<?php foreach( $agentList as $agentName => $content): ?>
-		    <?php if($agentName == $agent) : ?>
-		    <?= '<option value="' . $agentName . '" selected >' . $agentName .'</option>'; ?>
-		    <?php else : ?>
-		    <?= '<option value="' . $agentName . '" >' . $agentName .'</option>'; ?>
-		    <?php endif ?>
-		    <?php endforeach ?>
-                  </select>
-                </div>
-              </div>
-	    </div>
-	    <div class="form-group">
-	      <div class="controls row">
-		<div class="col-lg-12">
-		  <div class="input-group">
-    <span class="input-group-addon">Description de l'agent</span>
-		    <input type="text" class="form-control" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>"/>
-		    <?php if(!empty($agentDetail)): ?>
-		    <?php else: ?>
-		    <input type="text" class="form-control" placeholder="Description..."/>
-		    <?php endif ?>
-		    </div>
-		</div>
-	      </div>
-	    </div>
-	    <div class="form-group">
-	      <label class="control-label" for="selectAgent">Actions</label>
-	      <div class="controls row">
-		<div class="col-lg-12">
-		  <div class="col-sm-11 pull-right">
-		  <div class="panel-group" id="actionlist" role="tablist" aria-multiselectable="true">
-		  <?php foreach($agentList[$agent]->getActions() as $action): ?>
-		  <?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
-		      <div class="panel panel-default">
-			<div class="panel-heading" role="tab" id="head_<?= $action->getName()?>">
-			  <h4 class="panel-title">
-			    <a data-toggle="collapse" data-parent="#actionlist" href="#<?= $action->getName()?>" aria-expanded="true" aria-controls="collapseOne">			     
-			      <?= $action->getName() ?>
-			    </a>
-			  </h4>
-			</div>
-			<div id="<?= $action->getName()?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="head_<?= $action->getName()?>">
-			  <div class="panel-body">
-			    <input type="hidden" id="actionName_<?= $action->getName()?>" name="actionName_<?= $action->getName()?>" value="<?= $action->getName() ?>"/>				      
-			    <div class="input-group">
-			      <span class="input-group-addon">Description de l'action</span>
-			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>"/>				      
-			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Description..." name="action[<?= $action->getName() ?>][description]"/>
-			      <?php endif ?>
-			    </div>
-			    <div class="input-group">
-			      <span class="input-group-addon">Long detail</span>
-			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionLongDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][longdesc]" value="<?= $actionMetadata->getLongDesc() ?>"/>				      
-			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Long detail"  name="action[<?= $action->getName() ?>][longdesc]"/>
-			      <?php endif ?>
-			    </div>
+  <?php if( $agent != null): ?>
+  <form class="form-horizontal" action="<?php echo $this->url('mcollective_metadatas_update', ['action' => 'metadataUpdate'], [], true) ?>" method="POST" id="metadataForm">
+  <div class="row">
+      <div class="col-md-5 pull-left">
+	<div>
+	  <a tabindex="900" href="<?= $this->url('mcollective_metadatas', [ 'action' => 'metadata', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
+	   <span class="pull-right"> <h4><?= $agent ?> <?= $this->translate('Metadata') ?></h4></span>
+	</div>
+      </div>
+      <div class="col-md-7 pull-right">
+	<div class="form-actions pull-right">
+	  <button type="submit" class="btn btn-primary" id="mcol-form-submit"><?= $this->translate('Save') ?></button>
+	  <button type="reset" class="btn"><?= $this->translate('Cancel') ?></button>
+	</div>
+      </div>
+      <div class="col-md-12 pull-left">
+	<div class="input-group pull-left">
+	  <span class="input-group-addon">Description de l'agent</span>
+	  <input type="text" class="form-control" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>"/>
+	  <?php if(!empty($agentDetail)): ?>
+	  <?php else: ?>
+	  <input type="text" class="form-control" placeholder="Description..."/>
+	  <?php endif ?>	  
+	</div>
+      </div>
+      
+      <div>&nbsp</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="panel panel-default">
+	<div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span><?= $this->translate('Associated Actions')?></div>
+	<div class="panel-body">
+	  <table class="table table-striped" id="groups">
+	    <tbody>
+	      <?php foreach($agentList[$agent]->getActions() as $action): ?>
+	      <tr id="$agent">
+		<td style="width: 100%">
+		  <a class="action-link" href="#"><?= $action->getName() ?></a>
+		</td>
+	      </tr>
+	      <?php endforeach ?>
+	    </tbody>
+	  </table>
 
-			    <div class="input-group">
-			      <span class="input-group-addon">Short detail</span>
-			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionShortDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][shortdesc]" value="<?= $actionMetadata->getShortDesc() ?>"/>				      
-			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Short detail" name="action[<?= $action->getName() ?>][shortdesc]"/>
-			      <?php endif ?>
-			    </div>
+	</div>
+      </div>
+    </div>
+    <div class="col-sm-7" id="legend">
+      <div id="help">
+	<h1><?= $this->translate('Help') ?></h1>
+	<blockquote id="legend_metadata"><p><?= $this->translate("Click on an agent's name to edit its metadata") ?></p>
+	</blockquote>
+      </div>
+      <?php foreach($agentList[$agent]->getActions() as $action): ?>
+      <div id="<?= $action->getName() ?>_detail" class="action-detail"  style="display: none;">
+	<?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
+	<h4><?= $action->getName(); ?></h4>
+	<div class="form-group">
+	  <div class="input-group">
+	    <span class="input-group-addon"><?= $this->translate('Description')?></span>
+	    <?php if($actionMetadata != null): ?>
+	    <input type="text" class="form-control" id="actionDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>"></input>				      
+	    <?php else: ?>
+	    <input type="text" class="form-control" placeholder="Description..." name="action[<?= $action->getName() ?>][description]"></input>
+	    <?php endif ?>
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class="input-group">
+	    <span class="input-group-addon">Long detail</span>
+	    <?php if($actionMetadata != null): ?>
+	    <input type="text" class="form-control" id="actionLongDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][longdesc]" value="<?= $actionMetadata->getLongDesc() ?>"></input>				     
+	    <?php else: ?>
+	    <input type="text" class="form-control" placeholder="Long detail"  name="action[<?= $action->getName() ?>][longdesc]"></input>
+	    <?php endif ?>
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class="input-group">
+	    <span class="input-group-addon">Short detail</span>
+	    <?php if($actionMetadata != null): ?>
+	    <input type="text" class="form-control" id="actionShortDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][shortdesc]" value="<?= $actionMetadata->getShortDesc() ?>"></input>				      
+	    <?php else: ?>
+	    <input type="text" class="form-control" placeholder="Short detail" name="action[<?= $action->getName() ?>][shortdesc]"> </input>
+	    <?php endif ?>
+	  </div>
+	</div>
 
-			    <div class="input-group">
-			      <span class="input-group-addon">Ihm Icon</span>
-			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionIhmIcon_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][ihmicon]" value="<?= $actionMetadata->getIhmIcon() ?>"/>				      
-			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Ihm glyphicon" name="action[<?= $action->getName() ?>][ihmicon]"/>
-			      <?php endif ?>
-			    </div>
+	<div class="form-group">
+	  <div class="input-group">
+	    <span class="input-group-addon">Ihm Icon</span>
+	    <?php if($actionMetadata != null): ?>
+	    <input type="text" class="form-control" id="actionIhmIcon_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][ihmicon]" value="<?= $actionMetadata->getIhmIcon() ?>"></input>				      
+	    <?php else: ?>
+	    <input type="text" class="form-control" placeholder="Ihm glyphicon" name="action[<?= $action->getName() ?>][ihmicon]"></input>
+	    <?php endif ?>
+	  </div>
+	</div>
 
-			    <div class="input-group">
-			      <span class="input-group-addon">Limit number</span>
-			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionLimitNumber_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitnumber]" value="<?= $actionMetadata->getLimitNumber() ?>"/>				      
-			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Max number of host impacted" name="action[<?= $action->getName() ?>][limitnumber]"/>
-			      <?php endif ?>
-			    </div>
-
-			    <div class="input-group">
-			      <span class="input-group-addon">Limit Host</span>
-			      <?php if($actionMetadata != null): ?>
-			      <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitHosts]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
-			      <?php else: ?>
-			      <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"/>
-			      <?php endif ?>
-			    </div>
-			  </div>
-			</div>
-
-		  </div>
-		  <?php endforeach ?>
-		  </div>
-		</div>
-	      </div>
-		    <div class="form-actions">
-	      <button type="submit" class="btn btn-primary" id="mcol-form-submit">Exécuter</button>
-	      <button type="reset" class="btn">Annuler</button>
-	    </div>
-	  </fieldset>
-	</form>
-	<?php else: ?>
-	<h4><?= $choiceText ?></h4>
-	    <label class="control-label" for="selectAgent">Agent</label>
-	      <div class="controls row">
-		<div class="col-lg-12">
-		  <select id="selectAgent" data-placeholder="Selectionnez un Agent..." class="form-control" name="agent" data-rel="chosen">
-		    <option value="default"></option>
-		    <?php foreach( $agentList as $agent => $content): ?>
-		    <?= '<option value="' . $agent . '">' . $agent .'</option>'; ?>
-		    <?php endforeach ?>
-                  </select>
-                </div>
-              </div>	      
-	<?php endif ?>
+	<div class="form-group">
+	  <div class="input-group">
+	    <span class="input-group-addon">Limit number</span>
+	    <?php if($actionMetadata != null): ?>
+	    <input type="text" class="form-control" id="actionLimitNumber_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitnumber]" value="<?= $actionMetadata->getLimitNumber() ?>"></input>				      
+	    <?php else: ?>
+	    <input type="text" class="form-control" placeholder="Max number of host impacted" name="action[<?= $action->getName() ?>][limitnumber]"></input>
+	    <?php endif ?>
+	  </div>
+	</div>
 	
+	<div class="form-group">
+	  <div class="input-group">
+	    <span class="input-group-addon">Limit Host</span>
+	    <?php if($actionMetadata != null): ?>
+	    <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitHosts]" value="<?= $actionMetadata->getLimitHosts() ?>"></input>				      
+	    <?php else: ?>
+	    <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"></input>
+	    <?php endif ?>
+	  </div>
+	</div>
+	<?php foreach($action->getInputArguments() as $name => $detail): ?>
+	<div class="panel-group" id="<?= $action->getName() ?>_args_<?= $name ?>" role="tablist" aria-multiselectable="true">
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="<?= $name ?>">
+	      <h4 class="panel-title">
+		<a data-toggle="collapse" data-parent="#<?= $action->getName() ?>_args" href="#<?= $name ?>_detail" aria-expanded="true" aria-controls="<?= $name ?>_detail">
+		  <?= $this->translate('Argument :') ?> <?= $name ?>
+		</a>
+		<div class="checkbox pull-right required-arg" >
+		  <label>
+		    <input type="checkbox">Required</input>
+		  </label>
+		</div>
+	      </h4>
+	    </div>
+	    <div id="<?= $name ?>_detail" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<?= $action->getName() ?>_args_<?= $name ?>">
+	      <div class="form-group col-md-12">
+		<div class="input-group">
+		  <span class="input-group-addon"><?= $this->translate('Description') ?></span>
+		  <?php if($actionMetadata != null): ?>
+		  <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitHosts]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+		  <?php else: ?>
+		  <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"/>
+		  <?php endif ?>
+		</div>
+	      </div>
+	      <div class="form-group col-md-12">
+		<select id="selectType" class="form-control chosen-select" name="type" data-rel="chosen">
+		  <option value="string">string</option>
+		  <option value="list">list</option>
+		</select>
+	      </div>
+	      
+	      <div class="form-group col-md-12">
+		<div class="input-group">
+		  <span class="input-group-addon"><?= $this->translate('Value') ?></span>
+		  <?php if($actionMetadata != null): ?>
+		  <input type="text" class="form-control" id="action_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][argument][<?= $name ?>][value]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+		  <?php else: ?>
+		  <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"/>
+		  <?php endif ?>
+		</div>
+	      </div>
+	    </div> <!-- end panel collapse -->
+	  </div> <!-- end panel -->
+	</div>
+        <?php endforeach ?>
+      </div>
+      <?php endforeach ?>
+    </form>
+  </div>
+    <?php else: ?>
+    <div class="col-sm-7">
+      <!--      <h4><?= $choiceText ?></h4> -->
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>
+	  <span>
+	  <?= $this->translate('Mcollective Agents') ?>
+	  </span>
+	</div>
+	
+	<div class="panel-body">
+	  <table class="table table-striped" id="groups">
+	    <tbody>
+	      <?php foreach( $agentList as $agent => $content): ?>
+	      <tr id="$agent">
+		<td style="width: 100%">
+		  <a href="<?= $this->url('mcollective_metadatas', ['agent' => $agent], [], true) ?>"><?= $agent ?></a>
+		</td>
+	      </tr>
+	      <?php endforeach ?>
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+    </div>
+    <div class="col-sm-5" id="legend">
+      <div id="help">
+	<h1><?= $this->translate('Help') ?></h1>
+	<blockquote id="legend_metadata"><p><?= $this->translate("Click on an agent's name to edit its metadata") ?></p>
+	</blockquote>
       </div>
     </div>
   </div>
-  <div class="col-sm-5" id="legend">
-    <?php if (isset($this->error)): ?>
-    <ul class="flash">
-      <li class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <?php echo $this->error ?>
-      </li>
-    </ul>
-    <?php else: ?>
-    <h1>Infos</h1>
-    <blockquote id="legende_mcol"><p>Choisissez l&lsquo;action à réaliser via mcollective dans le menu déroulant. Filtrez ensuite les serveurs ciblés par la commande (accepte les expressions régulières) puis cliquez sur le bouton exécuter.</p>
-      <p>Le bouton sera grisé le temps de la validation de la commande. Une notification apparaitra pour indiquer si la commande a été acceptée ou pas.</p>
-      <p>Vous pouvez limiter la commande à X serveurs qui répondront au filtre donné.</p>
-    </blockquote>
-    <!-- <blockquote id="pending_mcol"></blockquote> -->
-    <?php endif ?>
-  </div>
 </div>
-<div class="col-sm-12">
-  <div class="row" id="resultat_action_mcol"></div>
-</div>
+
+<?php endif ?>

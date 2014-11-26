@@ -34,6 +34,8 @@ class McollectiveAction implements McollectiveActionInterface
     /** @var McollectiveAgent */
     protected $relatedAgent;
 
+    protected $arguments;
+
     protected $longDetail;
 
     protected $shortDetail;
@@ -141,6 +143,57 @@ class McollectiveAction implements McollectiveActionInterface
         return $this->relatedAgent;
     }
 
+
+
+    /**
+     * Set Agent's related actions.
+     *
+     * @param McollectiveActions[]
+     * @return McollectiveAgent
+     */
+    public function setArguments($arguments)
+    {
+        $this->arguments = $arguments;
+        return $this;
+    }
+
+    /**
+     * Get Agent's related actions
+     *
+     * @return McollectiveAction[]
+     */
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    
+    
+    /**
+     * Add an agent related action.
+     *
+     * @param McollectiveActionInterface $relatedAction
+     * @return McollectiveAgentInterface
+     */
+    public function addArguments($arguments)
+    {
+        $this->arguments[] = $arguments;
+        return $this;
+    }
+
+    /**
+     * Add action's arguments.
+     *
+     * @param McollectiveActionInterface $relatedAction
+     * @return McollectiveAgentInterface
+     */
+    public function hasArguments()
+    {
+        return !empty($this->arguments);
+    }
+
+
+    
 
     /**
      * Set Action long description.

@@ -17,3 +17,7 @@ div.result-mco {
 span.result-mco {
     font-size: 100%;
 }
+
+div.checkbox.required-arg {
+    padding-top: 0px;
+}
