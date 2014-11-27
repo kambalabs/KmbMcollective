@@ -1,4 +1,6 @@
 <?php
+// Awfull hack to tell to poedit to translate navigation labels
+$translate = function($message) { return $message; };
 return [
     'router' => [
         'routes' => [
@@ -76,12 +78,12 @@ return [
     'navigation' => [
         'default' => [
             [
-                'label' => 'Mcollective',
+                'label' => $translate('Mcollective'),
                 'route' => 'mcollective',
                 'tabindex' => 80,
                 'pages' => [
                     [
-                        'label' => 'Actions',
+                        'label' => $translate('Actions'),
                         'route' => 'mcollective',
                         'controller' => 'Index',
                         'action' => 'show',
@@ -89,7 +91,7 @@ return [
                         'tabindex' => 81,
                     ],
                     [
-                        'label' => 'History',
+                        'label' => $translate('History'),
                         'route' => 'mcollective_history',
                         'controller' => 'Index',
                         'action' => 'history',
@@ -97,7 +99,7 @@ return [
                         'tabindex' => 82,
                     ],
                     [
-                        'label' => 'Metadatas',
+                        'label' => $translate('Metadatas'),
                         'route' => 'mcollective_metadatas',
                         'controller' => 'Index',
                         'action' => 'metadatas',

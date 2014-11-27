@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-26 18:29+0100\n"
-"PO-Revision-Date: 2014-11-26 18:29+0100\n"
+"POT-Creation-Date: 2014-11-27 12:24+0100\n"
+"PO-Revision-Date: 2014-11-27 12:24+0100\n"
 "Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: \n"
@@ -43,6 +43,22 @@ msgstr ""
 
 #: ../src/KmbMcollective/View/Decorator/FullNameDecorator.php:33
 msgid "User"
+msgstr ""
+
+#: ../config/module.config.php:80
+msgid "Mcollective"
+msgstr ""
+
+#: ../config/module.config.php:85
+msgid "Actions"
+msgstr ""
+
+#: ../config/module.config.php:93
+msgid "History"
+msgstr ""
+
+#: ../config/module.config.php:101
+msgid "Metadatas"
 msgstr ""
 
 #: ../view/kmb-mcollective/index/metadata.phtml:9
