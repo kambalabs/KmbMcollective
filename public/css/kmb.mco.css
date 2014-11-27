@@ -21,3 +21,8 @@ span.result-mco {
 div.checkbox.required-arg {
     padding-top: 0px;
 }
+
+.input-group-addon {
+    min-width:150px;
+    text-align:left;
+}

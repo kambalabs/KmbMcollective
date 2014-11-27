@@ -162,9 +162,20 @@ class McollectiveAction implements McollectiveActionInterface
      *
      * @return McollectiveAction[]
      */
-    public function getArguments()
+    public function getArguments($name = null)
     {
-        return $this->arguments;
+        if( $name == null) {
+            return $this->arguments;
+        } else {
+            if($this->hasArguments()){
+                foreach($this->arguments as $argument) {
+                    if($argument->getName() == $name) {
+                        return $argument;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     
@@ -175,9 +186,9 @@ class McollectiveAction implements McollectiveActionInterface
      * @param McollectiveActionInterface $relatedAction
      * @return McollectiveAgentInterface
      */
-    public function addArguments($arguments)
+    public function addArgument($argument)
     {
-        $this->arguments[] = $arguments;
+        $this->arguments[] = $argument;
         return $this;
     }
 

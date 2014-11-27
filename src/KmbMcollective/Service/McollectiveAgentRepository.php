@@ -44,6 +44,18 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
 
     /** @var  string */
     protected $actionTableSequenceName;
+
+        /** @var  string */
+    protected $argumentClass;
+
+    /** @var  HydratorInterface */
+    protected $argumentHydrator;
+
+    /** @var  string */
+    protected $argumentTableName;
+
+    /** @var  string */
+    protected $argumentTableSequenceName;
     
 
     // protected $actionMetadataTableName = 'mcollective_actions_metadata'; 
@@ -65,6 +77,12 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
                 foreach ($aggregateRoot->getRelatedActions() as $action) {
                     $action->setRelatedAgent($aggregateRoot);
                     $this->actionRepository->add($action);
+                    if($action->hasArguments()) {
+                        foreach( $action->getArguments() as $arg ) {
+                            $arg->setRelatedAction($action);
+                            $this->argumentRepository->add($arg);
+                        }
+                    }
                 }
             }
 
@@ -217,6 +235,95 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
         return $this->actionTableSequenceName;
     }
 
+
+        /**
+     * Set argumentClass.
+     *
+     * @param string $argumentClass
+     * @return McollectiveAgentRepository
+     */
+    public function setArgumentClass($argumentClass)
+    {
+        $this->argumentClass = $argumentClass;
+        return $this;
+    }
+
+    /**
+     * Get argumentClass.
+     *
+     * @return string
+     */
+    public function getArgumentClass()
+    {
+        return $this->argumentClass;
+    }
+
+    /**
+     * Set argumentHydrator.
+     *
+     * @param \Zend\Stdlib\Hydrator\HydratorInterface $revisionLogHydrator
+     * @return McollectiveAgentRepository
+     */
+    public function setArgumentHydrator($argumentHydrator)
+    {
+        $this->argumentHydrator = $argumentHydrator;
+        return $this;
+    }
+
+    /**
+     * Get ArgumentHydrator.
+     *
+     * @return \Zend\Stdlib\Hydrator\HydratorInterface
+     */
+    public function getArgumentHydrator()
+    {
+        return $this->argumentHydrator;
+    }
+
+    /**
+     * Set ArgumentTableName.
+     *
+     * @param string $argumentTableName
+     * @return McollectiveAgentRepository
+     */
+    public function setArgumentTableName($argumentTableName)
+    {
+        $this->argumentTableName = $argumentTableName;
+        return $this;
+    }
+
+    /**
+     * Get ArgumentTableName.
+     *
+     * @return string
+     */
+    public function getArgumentTableName()
+    {
+        return $this->argumentTableName;
+    }
+
+    /**
+     * Set ArgumentTableSequenceName.
+     *
+     * @param string $argumentTableSequenceName
+     * @return McollectiveAgentRepository
+     */
+    public function setArgumentTableSequenceName($argumentTableSequenceName)
+    {
+        $this->argumentTableSequenceName = $argumentTableSequenceName;
+        return $this;
+    }
+
+    /**
+     * Get ArgumentTableSequenceName.
+     *
+     * @return string
+     */
+    public function getArgumentTableSequenceName()
+    {
+        return $this->argumentTableSequenceName;
+    }
+
     protected function getSelect()
     {
         $select =  parent::getSelect()
@@ -235,6 +342,20 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
                     'mact.limit_host' => 'limit_host',
                 ],
                 Select::JOIN_LEFT
+            )
+            ->join(
+                ['margs' => $this->getArgumentTableName()],
+                'mact.id = margs.action_id',
+                [
+                    'margs.id' => 'id',
+                    'margs.action_id' => 'action_id',
+                    'margs.name' => 'name',
+                    'margs.description' => 'description',
+                    'margs.mandatory' => 'mandatory',
+                    'margs.type' => 'type',
+                    'margs.value' => 'value',
+                ],
+                Select::JOIN_LEFT
             );
         error_log($select->getSqlString());
         return $select;
@@ -248,6 +369,7 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
     {
         $aggregateRootClassName = $this->getAggregateRootClass();
         $actionClassName = $this->getActionClass();
+        $argumentClassName = $this->getArgumentClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
             $agentId = $row['id'];
@@ -263,6 +385,14 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
                 $action = new $actionClassName;
                 $this->actionHydrator->hydrate($row, $action);
                 $aggregateRoot->addRelatedAction($action);
+                
+                if (isset($row['margs.name'])) {
+                    /** @var RevisionLog $revisionLog */
+                    $arg = new $argumentClassName;
+                    $this->argumentHydrator->hydrate($row, $arg);
+                    $action->addArgument($arg);
+                }
+
             }
         }
         return array_values($aggregateRoots);

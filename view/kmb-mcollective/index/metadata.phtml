@@ -7,7 +7,6 @@
       <div class="col-md-5 pull-left">
 	<div>
 	  <a tabindex="900" href="<?= $this->url('mcollective_metadatas', [ 'action' => 'metadata', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
-	   <span class="pull-right"> <h4><?= $agent ?> <?= $this->translate('Metadata') ?></h4></span>
 	</div>
       </div>
       <div class="col-md-7 pull-right">
@@ -17,6 +16,10 @@
 	</div>
       </div>
       <div class="col-md-12 pull-left">
+	<div class="pull-left">
+	  <span class="pull-right"> <h4><?= $agent ?> <?= $this->translate('Metadata') ?></h4></span>
+	  <input type="hidden" name="agent" value="<?= $agent ?>"/>
+	</div>
 	<div class="input-group pull-left">
 	  <span class="input-group-addon">Description de l'agent</span>
 	  <input type="text" class="form-control" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>"/>
@@ -122,12 +125,13 @@
 	    <?php endif ?>
 	  </div>
 	</div>
-	<?php foreach($action->getInputArguments() as $name => $detail): ?>
-	<div class="panel-group" id="<?= $action->getName() ?>_args_<?= $name ?>" role="tablist" aria-multiselectable="true">
+	<div class="panel-group" id="<?= $action->getName() ?>_args" role="tablist" aria-multiselectable="true">
+	  <?php foreach($action->getInputArguments() as $name => $detail): ?>
+	  <?php $argsMetadata = $actionMetadata != null ? $actionMetadata->getArguments($name) : null ?>
 	  <div class="panel panel-default">
-	    <div class="panel-heading" role="tab" id="<?= $name ?>">
+	    <div class="panel-heading" role="tab" id="<?= $action->getName() ?>_<?= $name ?>">
 	      <h4 class="panel-title">
-		<a data-toggle="collapse" data-parent="#<?= $action->getName() ?>_args" href="#<?= $name ?>_detail" aria-expanded="true" aria-controls="<?= $name ?>_detail">
+		<a data-toggle="collapse" class="collapsed" data-parent="#<?= $action->getName() ?>_args" href="#<?= $action->getName() ?>_<?= $name ?>_detail" aria-expanded="true" aria-controls="<?= $action->getName() ?>_<?= $name ?>_detail">
 		  <?= $this->translate('Argument :') ?> <?= $name ?>
 		</a>
 		<div class="checkbox pull-right required-arg" >
@@ -137,45 +141,46 @@
 		</div>
 	      </h4>
 	    </div>
-	    <div id="<?= $name ?>_detail" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<?= $action->getName() ?>_args_<?= $name ?>">
-	      <div class="form-group col-md-12">
-		<div class="input-group">
-		  <span class="input-group-addon"><?= $this->translate('Description') ?></span>
-		  <?php if($actionMetadata != null): ?>
-		  <input type="text" class="form-control" id="actionLimitHost_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitHosts]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
-		  <?php else: ?>
-		  <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"/>
-		  <?php endif ?>
+	    <div id="<?= $action->getName() ?>_<?= $name ?>_detail" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<?= $action->getName() ?>_<?= $name ?>">
+	      <div class="panel-body">
+		<div class="form-group col-md-12">
+		  <div class="input-group">
+		    <span class="input-group-addon"><?= $this->translate('Description') ?></span>
+		    <?php if($argsMetadata != null): ?>
+		    <input type="text" class="form-control" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" value="<?= $argsMetadata->getDescription() ?>"/>				      
+		    <?php else: ?>
+		    <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]"/>
+		    <?php endif ?>
+		  </div>
 		</div>
-	      </div>
-	      <div class="form-group col-md-12">
-		<select id="selectType" class="form-control chosen-select" name="type" data-rel="chosen">
-		  <option value="string">string</option>
-		  <option value="list">list</option>
-		</select>
-	      </div>
+		<div class="form-group col-md-12">
+		  <select id="selectType" class="form-control chosen-select" name="type" data-rel="chosen">
+		    <option value="string">string</option>
+		    <option value="list">list</option>
+		  </select>
+		</div>
 	      
-	      <div class="form-group col-md-12">
-		<div class="input-group">
-		  <span class="input-group-addon"><?= $this->translate('Value') ?></span>
-		  <?php if($actionMetadata != null): ?>
-		  <input type="text" class="form-control" id="action_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][argument][<?= $name ?>][value]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
-		  <?php else: ?>
-		  <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"/>
-		  <?php endif ?>
+		<div class="form-group col-md-12">
+		  <div class="input-group">
+		    <span class="input-group-addon"><?= $this->translate('Value') ?></span>
+		    <?php if($actionMetadata != null): ?>
+		    <input type="text" class="form-control" id="action_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][argument][<?= $name ?>][arguments][<?= $name ?>][value]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+		    <?php else: ?>
+		    <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][argument][<?= $name ?>][arguments][<?= $name ?>][value]"/>
+		    <?php endif ?>
+		  </div>
 		</div>
-	      </div>
+	      </div> <!-- end panel body -->
 	    </div> <!-- end panel collapse -->
 	  </div> <!-- end panel -->
-	</div>
-        <?php endforeach ?>
+          <?php endforeach ?>
+	</div> <!-- end pannel-group -->
       </div>
       <?php endforeach ?>
     </form>
   </div>
     <?php else: ?>
     <div class="col-sm-7">
-      <!--      <h4><?= $choiceText ?></h4> -->
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>

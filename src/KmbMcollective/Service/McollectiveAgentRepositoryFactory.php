@@ -37,6 +37,13 @@ class McollectiveAgentRepositoryFactory extends ZendDb\RepositoryFactory
         $actionHydratorClass = $this->getStrict('action_hydrator_class');
         $service->setActionHydrator(new $actionHydratorClass);
 
+
+        $service->setArgumentClass($this->getStrict('argument_class'));
+        $service->setArgumentTableName($this->getStrict('argument_table_name'));
+        $service->setArgumentTableSequenceName($this->getStrict('argument_table_sequence_name'));
+        $argumentHydratorClass = $this->getStrict('argument_hydrator_class');
+        $service->setArgumentHydrator(new $argumentHydratorClass);
+
         return $service;
     }
 }
