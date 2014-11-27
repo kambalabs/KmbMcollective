@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-26 18:28+0100\n"
-"PO-Revision-Date: 2014-11-26 18:31+0100\n"
+"POT-Creation-Date: 2014-11-27 17:05+0100\n"
+"PO-Revision-Date: 2014-11-27 17:06+0100\n"
 "Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: fr_FR\n"
@@ -11,23 +11,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate;translatePlural:1,2\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:108
+#: ../config/module.config.php:81
+msgid "Mcollective"
+msgstr "Mcollective"
+
+#: ../config/module.config.php:86
+msgid "Actions"
+msgstr "Actions"
+
+#: ../config/module.config.php:94
+msgid "History"
+msgstr "Historique"
+
+#: ../config/module.config.php:102
+msgid "Metadatas"
+msgstr "Metadonnées"
+
+#: ../src/KmbMcollective/Controller/IndexController.php:133
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
-msgstr "<h4>Attention !</h4><p>Vous devez d'abord choisir un environnement !</p>"
-
-#: ../src/KmbMcollective/View/Decorator/FilterDecorator.php:33
-msgid "Filter"
-msgstr "Filtre"
-
-#: ../src/KmbMcollective/View/Decorator/TimeDecorator.php:33
-msgid "Date"
-msgstr "Date"
+msgstr ""
+"<h4>Attention !</h4><p>Vous devez d'abord choisir un environnement !</p>"
 
 #: ../src/KmbMcollective/View/Decorator/ActionDecorator.php:33
 msgid "Action"
@@ -37,81 +45,86 @@ msgstr "Action"
 msgid "Agent"
 msgstr "Agent"
 
-#: ../src/KmbMcollective/View/Decorator/ServersDecorator.php:33
-msgid "Nombre de serveurs"
-msgstr "Nombre de serveurs"
+#: ../src/KmbMcollective/View/Decorator/FilterDecorator.php:33
+msgid "Filter"
+msgstr "Filtre"
 
 #: ../src/KmbMcollective/View/Decorator/FullNameDecorator.php:33
 msgid "User"
 msgstr "Utilisateur"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:9
-msgid "Back"
-msgstr "Retour"
+#: ../src/KmbMcollective/View/Decorator/ServersDecorator.php:33
+msgid "Nombre de serveurs"
+msgstr "Nombre de serveurs"
+
+#: ../src/KmbMcollective/View/Decorator/TimeDecorator.php:33
+msgid "Date"
+msgstr "Date"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:10
-msgid "Metadata"
-msgstr "Metadonnées"
+msgid "Cancel"
+msgstr "Annuler"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:15
+#: ../view/kmb-mcollective/index/metadata.phtml:11
 msgid "Save"
 msgstr "Enregistrer"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:16
-msgid "Cancel"
-msgstr "Annuler"
+#, php-format
+msgid "%s agent description"
+msgstr "Description de l'agent %s"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:35
+#: ../view/kmb-mcollective/index/metadata.phtml:23
+msgid "Back"
+msgstr "Retour"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:32
 msgid "Associated Actions"
 msgstr "Actions associées"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:54
-#: ../view/kmb-mcollective/index/metadata.phtml:204
+#: ../view/kmb-mcollective/index/metadata.phtml:51
+#: ../view/kmb-mcollective/index/metadata.phtml:213
 msgid "Help"
 msgstr "Aide"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:55
-#: ../view/kmb-mcollective/index/metadata.phtml:205
+#: ../view/kmb-mcollective/index/metadata.phtml:52
+#: ../view/kmb-mcollective/index/metadata.phtml:214
 msgid "Click on an agent's name to edit its metadata"
 msgstr "Cliquez sur le nom de l'agent pour éditer ses métadonnées"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:64
-#: ../view/kmb-mcollective/index/metadata.phtml:143
+#: ../view/kmb-mcollective/index/metadata.phtml:69
+#: ../view/kmb-mcollective/index/metadata.phtml:150
 msgid "Description"
 msgstr "Description"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:131
+#: ../view/kmb-mcollective/index/metadata.phtml:137
 msgid "Argument :"
 msgstr "Argument :"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:160
+#: ../view/kmb-mcollective/index/metadata.phtml:167
 msgid "Value"
 msgstr "Valeur"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:183
+#: ../view/kmb-mcollective/index/metadata.phtml:192
 msgid "Mcollective Agents"
 msgstr "Agents Mcollective"
 
 #~ msgid "Failed server"
-
 #~ msgid_plural "Failed servers"
 #~ msgstr[0] "Serveur en échec"
 #~ msgstr[1] "Serveurs en échec"
 
 #~ msgid "Changed server"
-
 #~ msgid_plural "Changed servers"
 #~ msgstr[0] "Serveur corrigé"
 #~ msgstr[1] "Serveurs corrigés"
 
 #~ msgid "%s server for %s OS"
-
 #~ msgid_plural "Distribution of the %s servers by %s OS"
 #~ msgstr[0] "%s serveur pour %s OS"
 #~ msgstr[1] "Répartition des %s serveurs pour les %s OS"
 
 #~ msgid "Unchanged server"
-
 #~ msgid_plural "Unchanged servers"
 #~ msgstr[0] "Serveur OK"
 #~ msgstr[1] "Serveurs OK"
@@ -132,19 +145,16 @@ msgstr "Agents Mcollective"
 #~ msgstr "Informations Puppet"
 
 #~ msgid "skip"
-
 #~ msgid_plural "skips"
 #~ msgstr[0] "skip"
 #~ msgstr[1] "skips"
 
 #~ msgid "change"
-
 #~ msgid_plural "changes"
 #~ msgstr[0] "changement"
 #~ msgstr[1] "changements"
 
 #~ msgid "failure"
-
 #~ msgid_plural "failures"
 #~ msgstr[0] "échec"
 #~ msgstr[1] "échecs"
