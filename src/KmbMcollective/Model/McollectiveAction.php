@@ -275,7 +275,6 @@ class McollectiveAction implements McollectiveActionInterface
      * @return McollectiveAgent
      */
     public function setLimitNumber($max) {
-        error_log("...... setting limit to ".$max);
         $this->limitNum = $max;
         return $this;
     }

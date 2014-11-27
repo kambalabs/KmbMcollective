@@ -67,7 +67,6 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
      */
     public function add(AggregateRootInterface $aggregateRoot)
     {
-        error_log("Creating new metadata");
         /** @var McollectiveHistoryInterface $aggregateRoot */
         $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
         try {
@@ -109,6 +108,23 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
         if ($aggregateRoot->hasRelatedActions()) {
             foreach ($aggregateRoot->getRelatedActions() as $action) {
                 $action->setRelatedAgent($aggregateRoot);
+                foreach($action->getArguments() as $argument) {
+                    $argument->setRelatedAction($action);
+                    if ($argument->getId() === null) {
+                        $data = $this->argumentHydrator->extract($argument);
+                        $insert = $this->getMasterSql()->insert($this->argumentTableName)->values($data);
+                        $this->performWrite($insert);
+                        if ($argument->getId() === null) {
+                            $argument->setId($this->getDbAdapter()->getDriver()->getLastGeneratedValue($this->argumentTableSequenceName));
+                        }
+                    } else {
+                        $data = $this->argumentHydrator->extract($argument);
+                        $update = $this->getMasterSql()->update($this->argumentTableName)->set($data);
+                        $update->where->equalto('id', $argument->getId());
+                        $this->performWrite($update);
+                    }
+                }
+                
                 if ($action->getId() === null) {
                     $data = $this->actionHydrator->extract($action);
                     $insert = $this->getMasterSql()->insert($this->actionTableName)->values($data);
@@ -357,7 +373,6 @@ class McollectiveAgentRepository extends Repository implements McollectiveAgentR
                 ],
                 Select::JOIN_LEFT
             );
-        error_log($select->getSqlString());
         return $select;
     }
 

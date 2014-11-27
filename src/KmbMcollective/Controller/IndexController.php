@@ -23,6 +23,7 @@ namespace KmbMcollective\Controller;
 use GtnDataTables\Service\DataTable;
 use KmbMcollective\Model\McollectiveAgent;
 use KmbMcollective\Model\McollectiveAction;
+use KmbMcollective\Model\McollectiveArgument;
 use KmbMcProxy\Service;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -63,6 +64,31 @@ class IndexController extends AbstractActionController
                     $action = new McollectiveAction($actionName, $detail['description'], $agent->getId(), $detail['longdesc'], $detail['shortdesc'], $detail['ihmicon'], intval($detail['limitnumber']), $detail['limitHosts']);
                     $agent->addRelatedAction($action);
                 }
+                if($detail['arguments'] != null) {                    
+                    foreach($detail['arguments'] as $argname => $settings) {
+                        $arg = $action->getArguments($argname);
+                        if($arg != null)
+                        {
+                            $this->debug("Editing argument ". $argname);
+                            $arg->setDescription($settings['description']);
+                            $arg->setType($settings['type']);
+                            if($settings['type'] == 'list') {
+                                $arg->setValue($settings['value']);
+                            }
+                            if(isset($settings['mandatory'])) {
+                                $arg->setMandatory(1);
+                            } else {
+                                $arg->setMandatory(0);
+                            }
+                        } else {
+
+                            $this->debug("Creating a new argument ". $argname);
+                            $arg = new McollectiveArgument($argname, $settings['description'], null, $settings['mandatory'] ? $settings['mandatory'] : null, $settings['type'], $settings['type'] == 'list' ? $settings['value'] : null );
+                            $action->addArgument($arg);
+                        }
+                        
+                    }
+                }
             }
             $agentRepository->update($agent);
         } else {
@@ -90,7 +116,6 @@ class IndexController extends AbstractActionController
         } else {
             $agentRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
             $agentDetail = $agentRepository->getByName($agent);
-            $this->debug("Agent retrieved : ". print_r($agentDetail,true));
             if ($agentDetail == null) {
                 $agentDetail = new McollectiveAgent($agent);
             }

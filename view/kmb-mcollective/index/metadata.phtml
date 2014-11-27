@@ -3,35 +3,29 @@
 <div class="row">
   <?php if( $agent != null): ?>
   <form class="form-horizontal" action="<?php echo $this->url('mcollective_metadatas_update', ['action' => 'metadataUpdate'], [], true) ?>" method="POST" id="metadataForm">
-  <div class="row">
-      <div class="col-md-5 pull-left">
+    <div class="row">
+      <div>
+		<div id="actions" class="editable-actions pull-right" style="display: none">
+	  <div>&nbsp;</div>
+	  <button class="btn btn-default" tabindex="110" type="reset"><i class="glyphicon glyphicon-remove"></i> <?php echo $this->translate('Cancel') ?></button>
+	  <button class="btn btn-primary" tabindex="112" type="submit"><i class="glyphicon glyphicon-ok"></i> <?php echo $this->translate('Save') ?></button>
+	</div>
+
+	<div class="form-group">
+	  <div class="col-md-6" >
+	    <label for="agentDescription"><?= sprintf($this->translate('%s agent description'), $agent) ?></label>
+	    <input type="text" class="form-control editable" data-target="#actions" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>" placeholder="Description.."/>
+	    <input type="hidden" name="agent" value="<?= $agent ?>"/>
+	  </div>
+	  <div>&nbsp</div>
+	</div>
 	<div>
-	  <a tabindex="900" href="<?= $this->url('mcollective_metadatas', [ 'action' => 'metadata', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
+	<a tabindex="900" href="<?= $this->url('mcollective_metadatas', [ 'action' => 'metadata', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
 	</div>
+
       </div>
-      <div class="col-md-7 pull-right">
-	<div class="form-actions pull-right">
-	  <button type="submit" class="btn btn-primary" id="mcol-form-submit"><?= $this->translate('Save') ?></button>
-	  <button type="reset" class="btn"><?= $this->translate('Cancel') ?></button>
-	</div>
+      <hr class="col-md-12"/>
       </div>
-      <div class="col-md-12 pull-left">
-	<div class="pull-left">
-	  <span class="pull-right"> <h4><?= $agent ?> <?= $this->translate('Metadata') ?></h4></span>
-	  <input type="hidden" name="agent" value="<?= $agent ?>"/>
-	</div>
-	<div class="input-group pull-left">
-	  <span class="input-group-addon">Description de l'agent</span>
-	  <input type="text" class="form-control" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>"/>
-	  <?php if(!empty($agentDetail)): ?>
-	  <?php else: ?>
-	  <input type="text" class="form-control" placeholder="Description..."/>
-	  <?php endif ?>	  
-	</div>
-      </div>
-      
-      <div>&nbsp</div>
-  </div>
   <div class="row">
     <div class="col-sm-5">
       <div class="panel panel-default">
@@ -40,7 +34,7 @@
 	  <table class="table table-striped" id="groups">
 	    <tbody>
 	      <?php foreach($agentList[$agent]->getActions() as $action): ?>
-	      <tr id="$agent">
+	      <tr id="<?= $agent ?>_tabline">
 		<td style="width: 100%">
 		  <a class="action-link" href="#"><?= $action->getName() ?></a>
 		</td>
@@ -59,19 +53,27 @@
 	</blockquote>
       </div>
       <?php foreach($agentList[$agent]->getActions() as $action): ?>
-      <div id="<?= $action->getName() ?>_detail" class="action-detail"  style="display: none;">
-	<?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
-	<h4><?= $action->getName(); ?></h4>
-	<div class="form-group">
-	  <div class="input-group">
-	    <span class="input-group-addon"><?= $this->translate('Description')?></span>
-	    <?php if($actionMetadata != null): ?>
-	    <input type="text" class="form-control" id="actionDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>"></input>				      
-	    <?php else: ?>
-	    <input type="text" class="form-control" placeholder="Description..." name="action[<?= $action->getName() ?>][description]"></input>
-	    <?php endif ?>
+      <div id="<?= $action->getName() ?>_detail" class="action-detail" style="display: none;">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <button type="button" class="close">&times;</button>
+	    <span class="glyphicon glyphicon-th-list"></span>
+	    <span class="panel-break"></span>
+	    <?= $action->getName(); ?>
+
 	  </div>
-	</div>
+	  <div class="panel-body" >
+	    <?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
+	    <div class="form-group">
+	      <div class="input-group">
+		<span class="input-group-addon"><?= $this->translate('Description')?></span>
+		<?php if($actionMetadata != null): ?>
+		<input type="text" class="form-control editable" id="actionDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>"></input>				      
+		<?php else: ?>
+		<input type="text" class="form-control editable" placeholder="Description..." name="action[<?= $action->getName() ?>][description]"></input>
+		<?php endif ?>
+	      </div>
+	    </div>
 	<div class="form-group">
 	  <div class="input-group">
 	    <span class="input-group-addon">Long detail</span>
@@ -136,7 +138,7 @@
 		</a>
 		<div class="checkbox pull-right required-arg" >
 		  <label>
-		    <input type="checkbox">Required</input>
+		    <input type="checkbox" <?= isset($argsMetadata) && ($argsMetadata->getMandatory() == 1) ? "checked=\"check"ed\"" : "" ?> name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][mandatory]">Required</input>
 		  </label>
 		</div>
 	      </h4>
@@ -154,7 +156,7 @@
 		  </div>
 		</div>
 		<div class="form-group col-md-12">
-		  <select id="selectType" class="form-control chosen-select" name="type" data-rel="chosen">
+		  <select id="selectType" class="form-control chosen-select" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][type]" data-rel="chosen">
 		    <option value="string">string</option>
 		    <option value="list">list</option>
 		  </select>
@@ -164,9 +166,9 @@
 		  <div class="input-group">
 		    <span class="input-group-addon"><?= $this->translate('Value') ?></span>
 		    <?php if($actionMetadata != null): ?>
-		    <input type="text" class="form-control" id="action_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][argument][<?= $name ?>][arguments][<?= $name ?>][value]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+		    <input type="text" class="form-control" id="action_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
 		    <?php else: ?>
-		    <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][argument][<?= $name ?>][arguments][<?= $name ?>][value]"/>
+		    <input type="text" class="form-control" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]"/>
 		    <?php endif ?>
 		  </div>
 		</div>
@@ -175,6 +177,8 @@
 	  </div> <!-- end panel -->
           <?php endforeach ?>
 	</div> <!-- end pannel-group -->
+          </div>
+	</div>
       </div>
       <?php endforeach ?>
     </form>

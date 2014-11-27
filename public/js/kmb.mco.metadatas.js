@@ -31,7 +31,10 @@ $(document).ready(function(){
 	$("#" + action + "_detail").show();
     });
     $legend = $("#legende_mcol");
-    
+    $(document).on('click', ".close", function() {
+	$(this).parents(".action-detail").hide();
+	$("#help").show();
+    });
     $(document).on('change', '#selectAgent', function() {
 	var url = '/mcollective/metadata/' + $(this).val(); // get selected value
 	console.log(url);
