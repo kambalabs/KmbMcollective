@@ -1,0 +1,39 @@
+{
+    "name": "kambalabs/kmb-mcollective",
+    "description": "Kamba module for Mcollective views",
+    "keywords": [
+        "kamba",
+        "module",
+        "mcollective"
+    ],
+    "homepage": "http://github.com/kambalabs/KmbMcollective",
+    "license": "GPL V2",
+    "authors": [
+        {
+            "name": "Sébastien Lawniczak",
+            "email": "s.lawniczak@gmail.com",
+            "homepage": "https://github.com/slaws",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "kambalabs/kmb-base": "dev-master",
+        "kambalabs/kmb-domain": "dev-master",
+        "kambalabs/kmb-authentication": "dev-master",
+        "kambalabs/kmb-permission": "dev-master",
+        "kambalabs/kmb-mc-proxy": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "3.7.*",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "KmbMcollective": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
