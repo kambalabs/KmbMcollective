@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-27 12:24+0100\n"
-"PO-Revision-Date: 2014-11-27 12:24+0100\n"
+"POT-Creation-Date: 2014-11-27 15:17+0100\n"
+"PO-Revision-Date: 2014-11-27 15:17+0100\n"
 "Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: \n"
@@ -45,19 +45,19 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: ../config/module.config.php:80
+#: ../config/module.config.php:81
 msgid "Mcollective"
 msgstr ""
 
-#: ../config/module.config.php:85
+#: ../config/module.config.php:86
 msgid "Actions"
 msgstr ""
 
-#: ../config/module.config.php:93
+#: ../config/module.config.php:94
 msgid "History"
 msgstr ""
 
-#: ../config/module.config.php:101
+#: ../config/module.config.php:102
 msgid "Metadatas"
 msgstr ""
 
@@ -65,46 +65,46 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:10
-msgid "Metadata"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:15
+#: ../view/kmb-mcollective/index/metadata.phtml:14
 msgid "Save"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:16
+#: ../view/kmb-mcollective/index/metadata.phtml:15
 msgid "Cancel"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:35
+#: ../view/kmb-mcollective/index/metadata.phtml:20
+msgid "Metadata"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:38
 msgid "Associated Actions"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:54
-#: ../view/kmb-mcollective/index/metadata.phtml:204
+#: ../view/kmb-mcollective/index/metadata.phtml:57
+#: ../view/kmb-mcollective/index/metadata.phtml:209
 msgid "Help"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:55
-#: ../view/kmb-mcollective/index/metadata.phtml:205
+#: ../view/kmb-mcollective/index/metadata.phtml:58
+#: ../view/kmb-mcollective/index/metadata.phtml:210
 msgid "Click on an agent's name to edit its metadata"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:64
-#: ../view/kmb-mcollective/index/metadata.phtml:143
+#: ../view/kmb-mcollective/index/metadata.phtml:67
+#: ../view/kmb-mcollective/index/metadata.phtml:148
 msgid "Description"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:131
+#: ../view/kmb-mcollective/index/metadata.phtml:135
 msgid "Argument :"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:160
+#: ../view/kmb-mcollective/index/metadata.phtml:165
 msgid "Value"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:183
+#: ../view/kmb-mcollective/index/metadata.phtml:188
 msgid "Mcollective Agents"
 msgstr ""
 
