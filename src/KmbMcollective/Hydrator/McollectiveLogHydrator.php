@@ -40,6 +40,7 @@ class McollectiveLogHydrator implements HydratorInterface
             'agent'       => $object->getAgent(),
             'filter'      => $object->getFilter(),
             'pf'          => $object->getPf(),
+            'parameters'  => $object->getParameters(),
             'received_at' => $object->getReceivedAt(),
         ];
         if ($object->getId() != null) {
@@ -64,6 +65,7 @@ class McollectiveLogHydrator implements HydratorInterface
         $object->setAgent($data['agent']);
         $object->setFilter($data['filter']);
         $object->setPf($data['pf']);
+        $object->setParameters($data['parameters']);
         $object->setReceivedAt($data['received_at']);
         return $object;
     }

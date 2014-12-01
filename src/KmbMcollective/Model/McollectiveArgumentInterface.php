@@ -136,7 +136,7 @@ interface McollectiveArgumentInterface extends  AggregateRootInterface
      *
      * @return string
      */
-    public function getValue($value);
+    public function getValue();
 
 
 /**

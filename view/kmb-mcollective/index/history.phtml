@@ -1,5 +1,10 @@
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.history.js'); ?>
-
+<div class="row">
+    <div class="col-md-12">
+	<a tabindex="900" href="<?= $this->url('mcollective', [ 'action' => 'history', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
+    </div>
+    </div>
+    <hr />
 <?php if(isset($actionid)): ?>
 <div class="row">
   <div class="col-sm-6">

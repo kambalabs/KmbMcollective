@@ -23,7 +23,7 @@
 	  <div>&nbsp</div>
 	</div>
 	<div>
-	<a tabindex="900" href="<?= $this->url('mcollective_metadatas', [ 'action' => 'metadata', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
+	<a tabindex="900" href="<?= $this->url('mcollective', [ 'action' => 'metadata', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
 	</div>
 
       </div>
@@ -70,12 +70,8 @@
 	    <?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
 	    <div class="form-group">
 	      <label for="actionDesc_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Description')?></label>
-	      <div class="col-md-8">
-		<?php if($actionMetadata != null): ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type a description for this action') ?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>" />
-		<?php else: ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type a description for this action') ?>" name="action[<?= $action->getName() ?>][description]" />
-		<?php endif ?>
+	      <div class="col-md-8">		
+		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type a description for this action') ?>" name="action[<?= $action->getName() ?>][description]" <?php if($actionMetadata != null): ?> value="<?= $actionMetadata->getDescription() ?>" <?php endif ?> />
 	      </div>
 	    </div> <!-- end of form group -->
 	    <div class="form-group">
@@ -88,11 +84,7 @@
 	    <div class="form-group">
 	      <label for="actionLongDesc_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Long details')?></label>
 	      <div class="col-md-8">
-		<?php if($actionMetadata != null): ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionLongDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type long details for this action') ?>" name="action[<?= $action->getName() ?>][longdesc]" value="<?= $actionMetadata->getLongDesc() ?>" />
-		<?php else: ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionLongDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type long details for this action') ?>" name="action[<?= $action->getName() ?>][longdesc]" />
-		<?php endif ?>
+		<input type="text" class="form-control editable" data-target="#actions" id="actionLongDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type long details for this action') ?>" name="action[<?= $action->getName() ?>][longdesc]" <?php if($actionMetadata != null): ?> value="<?= $actionMetadata->getLongDesc() ?>" <?php endif ?> />
 	      </div>
 	    </div> <!-- end of form group -->
 	    <div class="form-group">
@@ -139,32 +131,24 @@
 	      <div class="panel-body">
 		<div class="form-group col-md-12">
 		  <label for="<?= $action->getName()?>_arg_<?= $name ?>" class="col-md-4 control-label pull-left"><?= $this->translate('Description')?></label>
-		  <div class="col-md-8">
-		    <?php if($argsMetadata != null): ?>
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" placeholder="<?= $this->translate('Type a description for this argument') ?>" value="<?= $argsMetadata->getDescription() ?>"/>
-		    <?php else: ?>
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" placeholder="<?= $this->translate('Type a description for this argument') ?>" />
-		    <?php endif ?>
+		  <div class="col-md-8">		    
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" placeholder="<?= $this->translate('Type a description for this argument') ?>" <?php if($argsMetadata != null): ?> value="<?= $argsMetadata->getDescription() ?> <?php endif ?>"/>
 		  </div>
 		</div> <!-- end of form group -->
 		<div class="form-group col-md-12">
 		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_type" class="col-md-4 control-label pull-left"><?= $this->translate('Type')?></label>
 		  <div class="col-md-8">
-		    <select id="<?= $action->getName()?>_arg_<?= $name ?>_type" class="form-control chosen-select editable" data-target="#actions" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][type]" data-rel="chosen">
-		      <option value="string">string</option>
-		      <option value="list">list</option>
+		    <select id="<?= $action->getName()?>_arg_<?= $name ?>_type" class="form-control argtype chosen-select editable" data-valuefield="#<?= $action->getName()?>_arg_<?= $name ?>_value" data-target="#actions" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][type]" data-rel="chosen">
+                      <option value="string"><?= $this->translate('string') ?></option>
+		      <option value="list"><?= $this->translate('list') ?></option>
 		    </select>
 		  </div>
 		</div> <!-- end of form group -->
 
-		<div class="form-group col-md-12">
+		<div id="<?= $action->getName()?>_arg_<?= $name ?>_value_form" class="form-group col-md-12">
 		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_value" class="col-md-4 control-label pull-left"><?= $this->translate('List values')?></label>
 		  <div class="col-md-8">
-		    <?php if($actionMetadata != null): ?>
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" value="<?= $actionMetadata->getLimitHosts() ?>"/>
-		    <?php else: ?>
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" />
-		    <?php endif ?>
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" <?php if($actionMetadata != null): ?> value="<?= $argsMetadata->getValue() ?>"<?php endif ?> <?= ( isset($argsMetadata)) && ($argsMetadata->getType() == "list") ? "" : "disabled" ?> />
 		  </div>
 		</div> <!-- end form group -->
 	    </div> <!-- end panel body -->

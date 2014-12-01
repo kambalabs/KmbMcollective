@@ -24,14 +24,16 @@ use GtnDataTables\Service\DataTable;
 use KmbMcollective\Model\McollectiveAgent;
 use KmbMcollective\Model\McollectiveAction;
 use KmbMcollective\Model\McollectiveArgument;
+use KmbMcollective\Model\McollectiveLog;
 use KmbMcProxy\Service;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+use KmbAuthentication\Controller\AuthenticatedControllerInterface;
 
-class IndexController extends AbstractActionController
-{
+class IndexController extends AbstractActionController implements AuthenticatedControllerInterface
+{ 
     protected $acceptCriteria = array(
         'Zend\View\Model\JsonModel' => array(
             'application/json',
@@ -189,16 +191,24 @@ class IndexController extends AbstractActionController
         foreach (explode(' ', trim($params['args'])) as $argname) {
             $args[$argname] = $params[$argname];
         }
-        $actionResult = $mcProxyAgentService->doRequest($params['agent'], $params['action'], $filter, $environment->getNormalizedName(), $user->getLogin(), $args);
+        $this->debug('arguments: ' . print_r(json_encode($args),true));
+        try {
+            $actionResult = $mcProxyAgentService->doRequest($params['agent'], $params['action'], $filter, $environment->getNormalizedName(), $user->getLogin(), $args);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+            $this->debug($e->getMessage());
+            $actionResult = null;
+        }
         $mcoLog = new McollectiveLog();
-        $this->debug('KmbMcollective/IndexController::log(' . $user->getName() . '/' . $actionResult->actionid . ')');
-        $mcoLog->setActionid($actionResult->actionid);
+//        $this->debug('KmbMcollective/IndexController::log(' . $user->getName() . '/' . $actionResult->actionid . ')');
+        $mcoLog->setActionid($actionResult ? $actionResult->actionid : $actionid );
         $mcoLog->setLogin($user->getLogin());
         $mcoLog->setFullName($user->getName());
         $mcoLog->setAgent($params['agent'] . '::' . $params['action']);
         $mcoLog->setFilter($params['filter']);
-        $mcoLog->setDiscoveredNodes($actionResult->discovered_nodes);
+        $mcoLog->setDiscoveredNodes($actionResult ? $actionResult->discovered_nodes : []);
         $mcoLog->setPf($environment->getNormalizedName());
+        $mcoLog->setParameters(json_encode($args));
         try {
             $logRepository = $this->getServiceLocator()->get('McollectiveLogRepository');
             $logRepository->add($mcoLog);
@@ -206,9 +216,15 @@ class IndexController extends AbstractActionController
             $this->debug($e->getMessage());
             $this->debug($e->getTraceAsString());
         }
-        $resultUrl = (string)$this->url()->fromRoute('mcollective_history', ['action' => 'history', 'id' => $actionResult->actionid ], [], true);
-        $actionResult->resultUrl = $resultUrl;
-        return new JsonModel((array)$actionResult);
+        if($actionResult)
+        {
+            $resultUrl = (string)$this->url()->fromRoute('mcollective_history', ['action' => 'history', 'id' => $actionResult->actionid ], [], true);
+            $actionResult->resultUrl = $resultUrl;
+            return new JsonModel((array)$actionResult);
+        }else{
+            $this->getResponse()->setStatusCode(500);
+            return new JsonModel([$error]);
+        }
     }
 
     public function historyAction()
@@ -221,7 +237,7 @@ class IndexController extends AbstractActionController
             $historyClass = $this->getServiceLocator()->get('McollectiveHistoryRepository');
             $state = $this->params()->fromQuery('state');
             if(!empty($state)) {
-                $result = $historyClass->getByActionid($actionid,pg_escape_string($state));
+                $result = $historyClass->getByActionid($actionid,$state);
             } else {
                 $result = $historyClass->getByActionid($actionid);
             }

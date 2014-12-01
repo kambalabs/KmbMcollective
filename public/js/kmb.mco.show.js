@@ -135,7 +135,7 @@ $(document).ready(function(){
 	$(".arg_mcol").html('');
 	$('#selectAction option[value!="default"]').remove();
 	$.each(agents[agent]['actions'], function(key,value) {
-	    var description = value['description'] != "" ? value['description'] : value['summary'];
+	    var description = (value['description'] != "") && (value['description'] != null) ? value['description'] : value['summary'];
 	    $("#selectAction").append(
 		$('<option></option>').val(key).html(key + ' - ' + description)
 	    ).trigger('chosen:updated');
@@ -155,7 +155,7 @@ $(document).ready(function(){
 	    $("#limit_mcol").val("");
 	    $("#limit_mcol").removeAttr("disabled");
 	}
-	if(agents[agent]['actions'][action]['limithosts'].length > 0 && agents[agent]['actions'][action]['limithosts'][0] != "") {
+	if(agents[agent]['actions'][action]['limithosts'] != null && agents[agent]['actions'][action]['limithosts'].length > 0 && agents[agent]['actions'][action]['limithosts'][0] != "") {
 	    setFilterField('limited', agents[agent]['actions'][action]['limithosts'],agents[agent]['actions'][action]['limitnum']);
 	}else{
 	    setFilterField('normal',null,null);
@@ -199,7 +199,11 @@ $(document).ready(function(){
                 $("#action_mcol :input").prop("disabled", false);
 	    },
 	    error: function(data,status) {
-		$("#legend").html('<ul class="flash"><li class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><b> '+ data['statusText'] +'</b></li></ul>');
+		$.gritter.add({
+		    title: data['statusText'],
+		    text: data['responseText'],
+		    class_name: 'gritter-danger',
+		});
 		$("#wait_img").remove();
 		$("#action_mcol :input").prop("disabled", false);
                 NProgress.done();

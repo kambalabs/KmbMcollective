@@ -42,10 +42,7 @@ class ActionDecorator extends AbstractDecorator
         return
             '
 <div class="btn-group btn-group-lg">
-  <span class="label label-info">
-    <a href="' . $this->url('mcollective_history', ['action' => 'history', 'id' => $object->getActionId()], [], true) . '">
-      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-    </a>
+  <span class="label label-info">' . $agent->getName() . ' / '. $action->getName().'
   </span>
 </div>
 ';

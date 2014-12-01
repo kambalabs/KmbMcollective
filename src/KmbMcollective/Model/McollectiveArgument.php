@@ -191,7 +191,7 @@ class McollectiveArgument implements McollectiveArgumentInterface
      *
      * @return string
      */
-    public function getValue($value) {
+    public function getValue() {
         return $this->value;
     }
 

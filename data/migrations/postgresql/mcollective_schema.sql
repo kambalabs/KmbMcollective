@@ -8,6 +8,7 @@ CREATE TABLE mcollective_logs (
   agent       VARCHAR(50)  NOT NULL,
   filter      VARCHAR(256) NOT NULL,
   pf          VARCHAR(256) NOT NULL,
+  parameters  TEXT,
   received_at TIMESTAMP    NOT NULL
 );
 CREATE INDEX mcollective_logs_actionid ON mcollective_logs (actionid);
@@ -18,7 +19,7 @@ CREATE INDEX mcollective_logs_pf ON mcollective_logs (pf);
 DROP TABLE IF EXISTS mcollective_logs_discovered CASCADE;
 CREATE TABLE mcollective_logs_discovered (
   id       SERIAL PRIMARY KEY,
-  log_id   INTEGER REFERENCES mcollective_logs (id),
+  log_id   INTEGER REFERENCES mcollective_logs (id) ON DELETE CASCADE,
   hostname VARCHAR(256) NOT NULL
 );
 CREATE INDEX mcollective_logs_discovered_logid ON mcollective_logs_discovered (id);
@@ -49,7 +50,7 @@ DROP TABLE IF EXISTS mcollective_agents_metadata CASCADE;
 CREATE TABLE mcollective_agents_metadata (
   id   	         SERIAL PRIMARY KEY,
   name 	   	 VARCHAR(256) NOT NULL,
-  description 	 VARCHAR(256),
+  description 	 VARCHAR(256)
 );
 CREATE INDEX mcollective_agents_metadata_name ON mcollective_agents_metadata (name);
 
@@ -57,7 +58,7 @@ CREATE INDEX mcollective_agents_metadata_name ON mcollective_agents_metadata (na
 DROP TABLE IF EXISTS mcollective_actions_metadata CASCADE;
 CREATE TABLE mcollective_actions_metadata (
   id   	         SERIAL PRIMARY KEY,
-  agent_id	 INTEGER references mcollective_agents_metadata (id),
+  agent_id	 INTEGER references mcollective_agents_metadata (id) ON DELETE CASCADE,
   name 	   	 VARCHAR(256) NOT NULL,
   description 	 VARCHAR(256),
   long_detail	 VARCHAR(256),
@@ -72,7 +73,7 @@ CREATE INDEX mcollective_actions_metadata_name ON mcollective_actions_metadata (
 DROP TABLE IF EXISTS mcollective_actions_arguments_metadata CASCADE;
 CREATE TABLE mcollective_actions_arguments_metadata (
   id   	         SERIAL PRIMARY KEY,
-  action_id	 INTEGER references mcollective_actions_metadata (id),
+  action_id	 INTEGER references mcollective_actions_metadata (id) ON DELETE CASCADE,
   name 	   	 VARCHAR(256) NOT NULL,
   description 	 VARCHAR(256),
   mandatory	 SMALLINT,

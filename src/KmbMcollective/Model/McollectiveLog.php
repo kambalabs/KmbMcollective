@@ -49,6 +49,9 @@ class McollectiveLog implements McollectiveLogInterface
     /** @var int */
     protected $receivedAt;
 
+    /** @var string */
+    protected $parameters;
+
     /**
      * @param string   $actionid
      * @param string   $login
@@ -274,7 +277,27 @@ class McollectiveLog implements McollectiveLogInterface
         return $this;
     }
 
+    /**
+     * Get Parameters
+     *
+     * @return int
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
 
+    /**
+     * Set parameters
+     *
+     * @param  string $parameters
+     * @return McollectiveLog
+     */
+    public function setParameters($parameters = null)
+    {
+        $this->parameters = $parameters;
+        return $this;
+    }
 
 
 
