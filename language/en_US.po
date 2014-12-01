@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-27 15:17+0100\n"
-"PO-Revision-Date: 2014-11-27 15:17+0100\n"
+"POT-Creation-Date: 2014-12-01 12:19+0100\n"
+"PO-Revision-Date: 2014-12-01 12:19+0100\n"
 "Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:108
+#: ../src/KmbMcollective/Controller/IndexController.php:134
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
 msgstr ""
 
@@ -61,47 +61,110 @@ msgstr ""
 msgid "Metadatas"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:9
-msgid "Back"
+#: ../view/kmb-mcollective/index/metadata.phtml:13
+msgid "Cancel"
 msgstr ""
 
 #: ../view/kmb-mcollective/index/metadata.phtml:14
 msgid "Save"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:15
-msgid "Cancel"
+#: ../view/kmb-mcollective/index/metadata.phtml:19
+#, php-format
+msgid "%s agent description"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:20
-msgid "Metadata"
+#: ../view/kmb-mcollective/index/metadata.phtml:26
+msgid "Back"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:38
+#: ../view/kmb-mcollective/index/metadata.phtml:35
 msgid "Associated Actions"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:57
+#: ../view/kmb-mcollective/index/metadata.phtml:54
 #: ../view/kmb-mcollective/index/metadata.phtml:209
 msgid "Help"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:58
+#: ../view/kmb-mcollective/index/metadata.phtml:55
 #: ../view/kmb-mcollective/index/metadata.phtml:210
 msgid "Click on an agent's name to edit its metadata"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:67
-#: ../view/kmb-mcollective/index/metadata.phtml:148
+#: ../view/kmb-mcollective/index/metadata.phtml:72
+#: ../view/kmb-mcollective/index/metadata.phtml:141
 msgid "Description"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:135
-msgid "Argument :"
+#: ../view/kmb-mcollective/index/metadata.phtml:75
+#: ../view/kmb-mcollective/index/metadata.phtml:77
+msgid "Type a description for this action"
 msgstr ""
 
-#: ../view/kmb-mcollective/index/metadata.phtml:165
-msgid "Value"
+#: ../view/kmb-mcollective/index/metadata.phtml:82
+msgid "Action icon"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:89
+msgid "Long details"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:92
+#: ../view/kmb-mcollective/index/metadata.phtml:94
+msgid "Type long details for this action"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:99
+msgid "Details summary"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:102
+#: ../view/kmb-mcollective/index/metadata.phtml:104
+msgid "Type details summary for this action"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:110
+msgid "Restrict action to"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:112
+msgid "Max number of discovered servers"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:117
+msgid "and / or"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:120
+msgid "Coma separated list of allowed servers"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:130
+#, php-format
+msgid "%s argument"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:133
+msgid "required"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:144
+#: ../view/kmb-mcollective/index/metadata.phtml:146
+msgid "Type a description for this argument"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:151
+msgid "Type"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:161
+msgid "List values"
+msgstr ""
+
+#: ../view/kmb-mcollective/index/metadata.phtml:164
+#: ../view/kmb-mcollective/index/metadata.phtml:166
+msgid "Coma separated values"
 msgstr ""
 
 #: ../view/kmb-mcollective/index/metadata.phtml:188

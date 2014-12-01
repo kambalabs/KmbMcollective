@@ -17,7 +17,7 @@
 	<div class="form-group">
 	  <div class="col-md-6" >
 	    <label for="agentDescription"><?= sprintf($this->translate('%s agent description'), $agent) ?></label>
-	    <input type="text" class="form-control editable" data-target="#actions" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>" placeholder="Description.."/>
+	    <input type="text" class="form-control editable" data-target="#actions" id="agentDesc" name="agentDesc" value="<?= $agentDetail->getDescription() ?>" />
 	    <input type="hidden" name="agent" value="<?= $agent ?>"/>
 	  </div>
 	  <div>&nbsp</div>
@@ -69,62 +69,55 @@
 	    <div class="col-md-12">
 	    <?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
 	    <div class="form-group">
-	      <label for="actionDesc_<?= $action->getName()?>" class="col-md-3 control-label pull-left"><?= $this->translate('Description')?></label>
-	      <div class="col-md-9">
+	      <label for="actionDesc_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Description')?></label>
+	      <div class="col-md-8">
 		<?php if($actionMetadata != null): ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>"></input>				      
+		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type a description for this action') ?>" name="action[<?= $action->getName() ?>][description]" value="<?= $actionMetadata->getDescription() ?>" />
 		<?php else: ?>
-		<input type="text" class="form-control editable" data-target="#actions" placeholder="Description..." name="action[<?= $action->getName() ?>][description]"></input>
+		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type a description for this action') ?>" name="action[<?= $action->getName() ?>][description]" />
 		<?php endif ?>
 	      </div>
 	    </div> <!-- end of form group -->
 	    <div class="form-group">
-	      <label for="<?= $action->getName() ?>_ihmicon" class="control-label col-md-3 pull-left"><?= $this->translate('Action icon') ?></label>
-	      <div class="col-md-9">
+	      <label for="<?= $action->getName() ?>_ihmicon" class="control-label col-md-4 pull-left"><?= $this->translate('Action icon') ?></label>
+	      <div class="col-md-8">
 		<button id="<?= $action->getName() ?>_ihmicon" class="btn btn-default  editable" data-target="#actions" role="iconpicker" data-iconset="glyphicon" data-placement="top" name="action[<?= $action->getName() ?>][ihmicon]" data-icon="<?= $actionMetadata != null ? $actionMetadata->getIhmIcon() : null ?>"></button>
 	      </div>
-	    </div> <!-- end of form group ->
+	    </div> <!-- end of form group -->
 
 	    <div class="form-group">
-	      <label for="actionLongDesc_<?= $action->getName()?>" class="col-md-3 control-label pull-left"><?= $this->translate('Long detail')?></label>
-	      <div class="col-md-9">
+	      <label for="actionLongDesc_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Long details')?></label>
+	      <div class="col-md-8">
 		<?php if($actionMetadata != null): ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionLongDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][longdesc]" value="<?= $actionMetadata->getLongDesc() ?>"></input>				     
+		<input type="text" class="form-control editable" data-target="#actions" id="actionLongDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type long details for this action') ?>" name="action[<?= $action->getName() ?>][longdesc]" value="<?= $actionMetadata->getLongDesc() ?>" />
 		<?php else: ?>
-		<input type="text" class="form-control editable" data-target="#actions" placeholder="Long detail"  name="action[<?= $action->getName() ?>][longdesc]"></input>
+		<input type="text" class="form-control editable" data-target="#actions" id="actionLongDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type long details for this action') ?>" name="action[<?= $action->getName() ?>][longdesc]" />
 		<?php endif ?>
 	      </div>
 	    </div> <!-- end of form group -->
 	    <div class="form-group">
-	      <label for="actionShortDesc_<?= $action->getName()?>" class="col-md-3 control-label pull-left"><?= $this->translate('Short detail')?></label>
-	      <div class="col-md-9">
+	      <label for="actionShortDesc_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Details summary')?></label>
+	      <div class="col-md-8">
 		<?php if($actionMetadata != null): ?>
-		<input type="text" class="form-control editable" data-target="#actions" id="actionShortDesc_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][shortdesc]" value="<?= $actionMetadata->getShortDesc() ?>"></input>				      
+		<input type="text" class="form-control editable" data-target="#actions" id="actionShortDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type details summary for this action') ?>" name="action[<?= $action->getName() ?>][shortdesc]" value="<?= $actionMetadata->getShortDesc() ?>" />
 		<?php else: ?>
-		<input type="text" class="form-control editable" data-target="#actions" placeholder="Short detail" name="action[<?= $action->getName() ?>][shortdesc]"> </input>
+		<input type="text" class="form-control editable" data-target="#actions" id="actionShortDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type details summary for this action') ?>" name="action[<?= $action->getName() ?>][shortdesc]" />
 		<?php endif ?>
 	      </div>
 	    </div> <!-- end of form group -->
 
 	    <div class="form-group">
-	  <label for="actionLimitNumber_<?= $action->getName()?>" class="col-md-3 control-label pull-left"><?= $this->translate('Limit Number of hosts')?></label>
-	  <div class="col-md-9">
-	    <?php if($actionMetadata != null): ?>
-	    <input type="text" class="form-control editable" data-target="#actions" id="actionLimitNumber_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitnumber]" value="<?= $actionMetadata->getLimitNumber() ?>"></input>				      
-	    <?php else: ?>
-	    <input type="text" class="form-control editable" data-target="#actions" placeholder="Max number of host impacted" name="action[<?= $action->getName() ?>][limitnumber]"></input>
-	    <?php endif ?>
+	  <label for="actionLimitNumber_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Restrict action to')?></label>
+	  <div class="col-md-8">
+	    <input type="text" class="form-control editable" data-target="#actions" id="actionLimitNumber_<?= $action->getName()?>" placeholder="<?= $this->translate('Max number of discovered servers') ?>" name="action[<?= $action->getName() ?>][limitnumber]"<?php if($actionMetadata != null): ?> value="<?= $actionMetadata->getLimitNumber() ?>"<?php endif ?> />
 	  </div>
 		</div> <!-- end of form group -->
-	
+
 	<div class="form-group">
-	  <label for="actionLimitHost_<?= $action->getName()?>" class="col-md-3 control-label pull-left"><?= $this->translate('Limit hosts')?></label>
-	  <div class="col-md-9">
-	    <?php if($actionMetadata != null): ?>
-	    <input type="text" class="form-control editable" data-target="#actions" id="actionLimitHost_<?= $action->getName()?>" name="action[<?= $action->getName() ?>][limitHosts]" value="<?= $actionMetadata->getLimitHosts() ?>"></input>				      
-	    <?php else: ?>
-	    <input type="text" class="form-control editable" data-target="#actions" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][limitHosts]"></input>
-	    <?php endif ?>
+	  <label for="actionLimitHost_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('and / or')?></label>
+	  <div class="col-md-8">
+
+	    <input type="text" class="form-control editable" data-target="#actions" id="actionLimitHost_<?= $action->getName()?>" placeholder="<?= $this->translate('Coma separated list of allowed servers') ?>" name="action[<?= $action->getName() ?>][limitHosts]"<?php if($actionMetadata != null): ?> value="<?= $actionMetadata->getLimitHosts() ?>"<?php endif ?> />
 	  </div>
 	</div> <!-- end of form group -->
 	<div class="panel-group" id="<?= $action->getName() ?>_args" role="tablist" aria-multiselectable="true">
@@ -133,12 +126,11 @@
 	  <div class="panel panel-default">
 	    <div class="panel-heading" role="tab" id="<?= $action->getName() ?>_<?= $name ?>">
 	      <h4 class="panel-title">
-		<a data-toggle="collapse" class="collapsed" data-parent="#<?= $action->getName() ?>_args" href="#<?= $action->getName() ?>_<?= $name ?>_detail" aria-expanded="true" aria-controls="<?= $action->getName() ?>_<?= $name ?>_detail">
-		  <?= $this->translate('Argument :') ?> <?= $name ?>
-		</a>
+		<a data-toggle="collapse" class="collapsed" data-parent="#<?= $action->getName() ?>_args" href="#<?= $action->getName() ?>_<?= $name ?>_detail" aria-expanded="true" aria-controls="<?= $action->getName() ?>_<?= $name ?>_detail"><i class="glyphicon glyphicon-plus-sign"></i></a>
+        <?= sprintf($this->translate('%s argument'), $name) ?>
 		<div class="checkbox pull-right required-arg" >
 		  <label>
-		    <input type="checkbox" class="editable" data-target="#actions" <?= isset($argsMetadata) && ($argsMetadata->getMandatory() == 1) ? "checked=\"checked\"" : "" ?> name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][mandatory]"><?= $this->translate('Required') ?></input>
+		    <input type="checkbox" class="editable" data-target="#actions" <?= isset($argsMetadata) && ($argsMetadata->getMandatory() == 1) ? "checked=\"checked\"" : "" ?> name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][mandatory]"><?= $this->translate('required') ?></input>
 		  </label>
 		</div> <!-- end of required -->
 	      </h4>
@@ -146,32 +138,32 @@
 	    <div id="<?= $action->getName() ?>_<?= $name ?>_detail" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<?= $action->getName() ?>_<?= $name ?>">
 	      <div class="panel-body">
 		<div class="form-group col-md-12">
-		  <label for="<?= $action->getName()?>_arg_<?= $name ?>" class="col-md-3 control-label pull-left"><?= $this->translate('Description')?></label>
-		  <div class="col-md-9">
+		  <label for="<?= $action->getName()?>_arg_<?= $name ?>" class="col-md-4 control-label pull-left"><?= $this->translate('Description')?></label>
+		  <div class="col-md-8">
 		    <?php if($argsMetadata != null): ?>
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" value="<?= $argsMetadata->getDescription() ?>"/>
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" placeholder="<?= $this->translate('Type a description for this argument') ?>" value="<?= $argsMetadata->getDescription() ?>"/>
 		    <?php else: ?>
-		    <input type="text" class="form-control editable" id="<?= $action->getName()?>_arg_<?= $name ?>" data-target="#actions" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]"/>
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" placeholder="<?= $this->translate('Type a description for this argument') ?>" />
 		    <?php endif ?>
 		  </div>
 		</div> <!-- end of form group -->
 		<div class="form-group col-md-12">
-		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_type" class="col-md-3 control-label pull-left"><?= $this->translate('Type')?></label>
-		  <div class="col-md-9">
+		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_type" class="col-md-4 control-label pull-left"><?= $this->translate('Type')?></label>
+		  <div class="col-md-8">
 		    <select id="<?= $action->getName()?>_arg_<?= $name ?>_type" class="form-control chosen-select editable" data-target="#actions" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][type]" data-rel="chosen">
 		      <option value="string">string</option>
 		      <option value="list">list</option>
 		    </select>
 		  </div>
 		</div> <!-- end of form group -->
-	      
+
 		<div class="form-group col-md-12">
-		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_value" class="col-md-3 control-label pull-left"><?= $this->translate('List values')?></label>
-		  <div class="col-md-9">
+		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_value" class="col-md-4 control-label pull-left"><?= $this->translate('List values')?></label>
+		  <div class="col-md-8">
 		    <?php if($actionMetadata != null): ?>
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" value="<?= $actionMetadata->getLimitHosts() ?>"/>				      
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" value="<?= $actionMetadata->getLimitHosts() ?>"/>
 		    <?php else: ?>
-		    <input type="text" id="<?= $action->getName()?>_arg_<?= $name ?>_value" class="form-control editable" data-target="#actions" placeholder="Limit action to hosts ..." name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]"/>
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" />
 		    <?php endif ?>
 		  </div>
 		</div> <!-- end form group -->
@@ -196,7 +188,7 @@
 	  <?= $this->translate('Mcollective Agents') ?>
 	  </span>
 	</div>
-	
+
 	<div class="panel-body">
 	  <table class="table table-striped" id="groups">
 	    <tbody>

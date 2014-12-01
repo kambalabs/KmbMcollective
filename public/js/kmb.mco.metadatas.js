@@ -47,4 +47,12 @@ $(document).ready(function(){
         NProgress.start();
 	event.preventDefault();
     });
+
+    $('a').on('click', 'i.glyphicon-minus-sign', function (e) {
+        $(this).addClass('glyphicon-plus-sign').removeClass('glyphicon-minus-sign');
+    });
+    $('a').on('click', 'i.glyphicon-plus-sign', function (e) {
+        $(this).addClass('glyphicon-minus-sign').removeClass('glyphicon-plus-sign');
+    });
+
 });
