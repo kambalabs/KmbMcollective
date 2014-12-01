@@ -1,12 +1,14 @@
 function addInputField(object,argname,details)
 {
-    if(details['optional'] == false)
+    console.log(details['optional']);
+    if(details['optional'] == true)
     {
 	var required='required';
     }else{
 	var required='';
     }
-    object.append('<div class="form-group"><label class="control-label" for="'+ argname +'">'+ details['prompt'] +'</label><div class="controls row"><div class="col-lg-4"><input class="form-control" name="'+ argname +'" type="text"'+ required +'></div><p class="help-block"> '+ details['description'] +'</p></div>');
+    var help = details['metadesc'] ? details['metadesc'] : details['description'];
+    object.append('<div class="form-group"><label class="control-label" for="'+ argname +'">'+ details['prompt'] +'</label><div class="controls row"><div class="col-lg-4"><input class="form-control" name="'+ argname +'" type="text"'+ required +'></div><p class="help-block"> '+ help +'</p></div>');
 }
 
 function addSelectBox(object,argname, details)
@@ -18,6 +20,29 @@ function addSelectBox(object,argname, details)
 	);
     });
     $("#"+argname+'list_arg_chosen').chosen();
+}
+
+function setFilterField(type, options, maxselect) {
+    target=$("#form_filtre_mcol");
+    if(type == "limited") {
+	if(parseInt(maxselect) >1) {
+	    multiple="multiple";
+	}
+	select = '<label class="control-label" for="filtre_mcol">Filtre serveurs</label><select id="filtre_mcol" data-placeholder="---" class="form-control" name="filter[]" data-rel="chosen"'+ multiple +'> <option value="default"></option></select>'
+	target.html(select);
+	$.each(options, function(index,host) {
+	    $("#filtre_mcol").append(
+		$('<option></option>').val(host).html(host)
+	    );
+	});
+	if(multiple) {
+	    $("#filtre_mcol").chosen({max_selected_options: parseInt(maxselect)});
+	} else {
+	    $("#filtre_mcol").chosen();
+	}
+    }else{
+	target.html('<label class="control-label" for="filtre_mcol">Filtre serveurs</label><input type="text" class="form-control" name="filter" id="filtre_mcol" required>');
+    }
 }
 
 function getResult(data,target,discovered_nodes,refreshResult)
@@ -93,31 +118,49 @@ $(document).ready(function(){
 	    agents = json;
 	}
     });
-
     $.each(agents, function(key, value) {
+	if(agents[key]['description'] == null)
+	{
+	    var agentdesc = "";
+	}else{
+	    var agentdesc = agents[key]['description']
+	}
 	$("#selectAgent").append(
-	    $('<option></option>').val(key).html(key)
+	    $('<option></option>').val(key).html(key + " - " + agentdesc)
 	);
     });
 
     $(document).on('change', '#selectAgent', function() {
-	var agent = $('#selectAgent option:selected').text();
+	var agent = $('#selectAgent option:selected').val();
 	$(".arg_mcol").html('');
 	$('#selectAction option[value!="default"]').remove();
-	$.each(agents[agent], function(key,value) {
+	$.each(agents[agent]['actions'], function(key,value) {
+	    var description = value['description'] != "" ? value['description'] : value['summary'];
 	    $("#selectAction").append(
-		$('<option></option>').val(key).html(key + ' - ' + value['summary'])
+		$('<option></option>').val(key).html(key + ' - ' + description)
 	    ).trigger('chosen:updated');
 	});
     });
 
     $(document).on('change', '.selectAction', function() {
 	$(".arg_mcol").html('');
-	var agent = jQuery.trim($('#selectAgent option:selected').text());
+	var agent = jQuery.trim($('#selectAgent option:selected').val());
 	var action = this.value;
 	$('#arglist').remove();
 	var arglist ='';
-	$.each(agents[agent][action]['input'], function(inputargname, indetail){
+	if(agents[agent]['actions'][action]['limitnum'] > 0) {
+	    $("#limit_mcol").val(agents[agent]['actions'][action]['limitnum']);
+	    $("#limit_mcol").attr("disabled", "disabled");
+	}else{
+	    $("#limit_mcol").val("");
+	    $("#limit_mcol").removeAttr("disabled");
+	}
+	if(agents[agent]['actions'][action]['limithosts'].length > 0 && agents[agent]['actions'][action]['limithosts'][0] != "") {
+	    setFilterField('limited', agents[agent]['actions'][action]['limithosts'],agents[agent]['actions'][action]['limitnum']);
+	}else{
+	    setFilterField('normal',null,null);
+	}
+	$.each(agents[agent]['actions'][action]['input'], function(inputargname, indetail){
 	    arglist += inputargname +' ';
 	    if(indetail['type'] == 'string')
 	    {

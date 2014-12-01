@@ -56,6 +56,7 @@ class IndexController extends AbstractActionController
                     $action->setLongDesc($detail['longdesc']);
                     $action->setShortDesc($detail['shortdesc']);
                     $action->setIhmIcon($detail['ihmicon']);
+                    $this->debug("Icon : " . $detail['ihmicon']);
                     if($detail['limitnumber'] != "" ) {
                         $action->setLimitNumber(intval($detail['limitnumber']));
                     }
@@ -134,21 +135,34 @@ class IndexController extends AbstractActionController
             return new ViewModel();
         }
         $agents = $mcProxyAgentService->getAll();
-        return new ViewModel(['environment' => $environment, 'agents' => $agents]);
+        $viewModel = new ViewModel(['environment' => $environment, 'agents' => $agents]);
+        return $viewModel;
     }
 
     public function agentsAction()
     {
         $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
+        $metadataRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
         $agents = $mcProxyAgentService->getAll();
         $agentList = [];
         foreach ($agents as $agent) {
+            $agentMetadata = $metadataRepository->getByName($agent->getName());
+            $agentList[$agent->getName()]['description'] = isset($agentMetadata) ? $agentMetadata->getDescription() : null; 
             foreach ($agent->getActions() as $action) {
-                $agentList[$agent->getName()][$action->getName()] = [
+                $actionMetadata = $agentMetadata ? $agentMetadata->getRelatedActions($action->getName()) : null;
+                $agentList[$agent->getName()]['actions'][$action->getName()] = [
                     'input' => $action->getInputArguments(),
                     'output' => $action->getOutputArguments(),
                     'summary' => $action->getSummary(),
                 ];
+                $agentList[$agent->getName()]['actions'][$action->getName()]['description'] = isset($actionMetadata) ? $actionMetadata->getDescription() : null;
+                $agentList[$agent->getName()]['actions'][$action->getName()]['limitnum'] = isset($actionMetadata) ? $actionMetadata->getLimitNumber() : null;
+                $agentList[$agent->getName()]['actions'][$action->getName()]['limithosts'] = isset($actionMetadata) ? explode(",",$actionMetadata->getLimitHosts()) : null;
+                foreach( $agentList[$agent->getName()]['actions'][$action->getName()]['input'] as $argname => $argDetail ) {
+                    $this->debug(print_r($agentList[$agent->getName()]['actions'][$action->getName()]['input'],true));
+                    $argMetadata = isset($actionMetadata) ? $actionMetadata->getArguments($argname) : null;
+                    $agentList[$agent->getName()]['actions'][$action->getName()]['input']->$argname->metadesc = isset($argMetadata) ? $argMetadata->getDescription() : null;
+                }
             }
         }
         return new JsonModel($agentList);
@@ -165,11 +179,17 @@ class IndexController extends AbstractActionController
         $actionid = md5($user->getLogin() . time());
         $params = $this->getRequest()->getPost();
         $this->debug('KmbMcollective/IndexController::runAction(' . $environment . ')');
+        $this->debug('Parameters :'. print_r($params,true));
+        if(is_a($params['filter'],"Array")) {
+            $filter = implode(",",$params['filter']);
+        }else{
+            $filter = $params['filter'];
+        }
         $args = [];
         foreach (explode(' ', trim($params['args'])) as $argname) {
             $args[$argname] = $params[$argname];
         }
-        $actionResult = $mcProxyAgentService->doRequest($params['agent'], $params['action'], $params['filter'], $environment->getNormalizedName(), $user->getLogin(), $args);
+        $actionResult = $mcProxyAgentService->doRequest($params['agent'], $params['action'], $filter, $environment->getNormalizedName(), $user->getLogin(), $args);
         $mcoLog = new McollectiveLog();
         $this->debug('KmbMcollective/IndexController::log(' . $user->getName() . '/' . $actionResult->actionid . ')');
         $mcoLog->setActionid($actionResult->actionid);
