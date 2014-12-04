@@ -76,7 +76,7 @@ return [
         ],
     ],
     'navigation' => [
-        'default' => [
+        'navbar' => [
             [
                 'label' => $translate('Mcollective'),
                 'route' => 'mcollective',
