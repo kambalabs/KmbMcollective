@@ -77,7 +77,7 @@ return [
     ],
     'navigation' => [
         'navbar' => [
-            [
+            'mcollective' => [
                 'label' => $translate('Mcollective'),
                 'route' => 'mcollective',
                 'tabindex' => 80,
