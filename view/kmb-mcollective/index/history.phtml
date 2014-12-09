@@ -1,4 +1,5 @@
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.history.js'); ?>
+<?php $this->headLink()->prependStylesheet($this->basePath() . '/css/kmb.mco.history.css'); ?>
 <div class="row">
     <div class="col-md-12">
 	<a tabindex="900" href="<?= $this->url('mcollective', [ 'action' => 'history', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
@@ -26,7 +27,7 @@
 	    </tr>
 	    <?php foreach( $log as $line): ?>
 	    <tr id="line_<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid'] ?>" class="result_line" data-target="#<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>">
-	      <td><?= $line['agent'] ?>::<?= $line['agent'];?></td><td align="right">
+	      <td><?= $line['agent'] ?>::<?= $line['action'];?></td><td align="right">
 		<?php if($line['statuscode'] == 0): ?>
 		<span class="label label-success">Success</span>
 		<?php else: ?>
@@ -37,10 +38,9 @@
 	  <div id="<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>" class="result_detail">
 	    <?php $dataResult = json_decode($line['result']); ?>
 	    <?php foreach($dataResult as $name => $value): ?>
-	    <u><?= $name ?> :</u><br>
-	    <pre>
-	      <?= $value ?>
-	    </pre>
+            <?php if ($value === "") { continue; } ?>
+	    <span class="label label-default result-mco"><?= $name ?></span>
+	    <pre><?= trim($value) ?></pre>
 	    <?php endforeach ?>
 	  </div>
 	  <?php endforeach ?>
@@ -69,11 +69,13 @@
     </div>
   </div>
   <div class="col-sm-6">
-    <div id="details">
+    <div id="details" data-spy="affix" data-offset-top="0">
       <h2>D&eacute;tails</h2>
       <blockquote>
 	Cliquer sur les actions sous les serveurs pour obtenir la sortie de la commande.
       </blockquote>
+      <div id="result">
+      </div>
     </div>
   </div>
 </div>

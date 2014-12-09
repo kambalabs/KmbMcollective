@@ -79,10 +79,10 @@ function getResult(data,target,discovered_nodes,refreshResult)
 			if(obj['statuscode'] != 0)
 			{
 			    var tag = '<span class="label label-danger" id="serveurs_security">Error : '+ obj['result']+'</span>';
-                            $legend.append('<a href="#' + hostname + '">' + hostname + '</a> <span class="label label-danger">KO</span><br/>');
+                            $legend.append('<span class="label label-danger">KO</span> <a href="#' + hostname + '">' + hostname + '</a><br/>');
 			}else{
 			    var tag = '<span class="label label-success" id="serveurs_security">OK</span>';
-                            $legend.append('<a href="#' + hostname + '">' + hostname + '</a> <span class="label label-success">OK</span><br/>');
+                            $legend.append('<span class="label label-success">OK</span> <a href="#' + hostname + '">' + hostname + '</a><br/>');
 			}
 
                         var results = '<div class="tab-content">';

@@ -1,0 +1,10 @@
+pre {
+    padding: 9.5px;
+}
+
+.result-mco {
+    font-size: 100%;
+    position: absolute;
+    right: 0px;
+    padding: 6px;
+}

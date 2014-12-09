@@ -33,7 +33,7 @@ use Zend\View\Model\ViewModel;
 use KmbAuthentication\Controller\AuthenticatedControllerInterface;
 
 class IndexController extends AbstractActionController implements AuthenticatedControllerInterface
-{ 
+{
     protected $acceptCriteria = array(
         'Zend\View\Model\JsonModel' => array(
             'application/json',
@@ -67,7 +67,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
                     $action = new McollectiveAction($actionName, $detail['description'], $agent->getId(), $detail['longdesc'], $detail['shortdesc'], $detail['ihmicon'], intval($detail['limitnumber']), $detail['limitHosts']);
                     $agent->addRelatedAction($action);
                 }
-                if($detail['arguments'] != null) {                    
+                if($detail['arguments'] != null) {
                     foreach($detail['arguments'] as $argname => $settings) {
                         $arg = $action->getArguments($argname);
                         if($arg != null)
@@ -89,7 +89,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
                             $arg = new McollectiveArgument($argname, $settings['description'], null, $settings['mandatory'] ? $settings['mandatory'] : null, $settings['type'], $settings['type'] == 'list' ? $settings['value'] : null );
                             $action->addArgument($arg);
                         }
-                        
+
                     }
                 }
             }
@@ -103,11 +103,11 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             }
             $agentRepository->add($agent);
         }
-                
+
         $this->debug("Params : " . print_r($this->params()->fromPost(),true));
         return $this->redirect()->toRoute('mcollective_metadatas', ['agent' => $agentName], [], true);
     }
-    
+
     public function metadataAction() {
         $agent = $this->params()->fromRoute('agent');
         $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
@@ -125,7 +125,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             return new ViewModel(['agent' => $agent, 'agentList' => $agentList, 'agentDetail' => $agentDetail]);
         }
     }
-    
+
     public function showAction()
     {
         $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
@@ -149,7 +149,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         $agentList = [];
         foreach ($agents as $agent) {
             $agentMetadata = $metadataRepository->getByName($agent->getName());
-            $agentList[$agent->getName()]['description'] = isset($agentMetadata) ? $agentMetadata->getDescription() : null; 
+            $agentList[$agent->getName()]['description'] = isset($agentMetadata) ? $agentMetadata->getDescription() : null;
             foreach ($agent->getActions() as $action) {
                 $actionMetadata = $agentMetadata ? $agentMetadata->getRelatedActions($action->getName()) : null;
                 $agentList[$agent->getName()]['actions'][$action->getName()] = [
