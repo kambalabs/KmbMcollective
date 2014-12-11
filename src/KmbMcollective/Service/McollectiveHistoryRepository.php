@@ -70,6 +70,20 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
+    public function getAllByActionidRequestId($actionid,$requestid,$state = null)
+    {
+        $where = new Where();
+        $where -> equalTo('actionid',$actionid);
+        $where -> equalTo('requestid',$requestid);
+        if(!empty($state)) {
+            $where
+                ->and
+                ->isNotNull('statuscode');
+        }
+        $select = $this->getSelect()->where($where);
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+    
     public function getAll() {
         return $this->hydrateAggregateRootsFromResult($this->performRead($this->getSelect()));
     }
