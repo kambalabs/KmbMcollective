@@ -70,6 +70,16 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
+    public function getResultsByActionid($actionid,$expectedResults,$maxiteration=null) {
+        $where = new Where();
+        $where -> equalTo('actionid',$actionid);
+        $where
+            ->and
+            ->isNotNull('statuscode');
+        $select = $this->getSelect()->where($where);
+        return $this->getResultSetFor($select,$expectedResults,$maxiteration);
+    }
+
     public function getAllByActionidRequestId($actionid,$requestid,$state = null)
     {
         $where = new Where();
@@ -83,9 +93,36 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
+
+    public function getResultsByActionidRequestId($actionid, $requestid, $expectedResults,$maxiteration=null) {
+        $where = new Where();
+        $where -> equalTo('actionid',$actionid);
+        $where -> equalTo('requestid',$requestid);
+        $where
+            ->and
+            ->isNotNull('statuscode');
+        $select = $this->getSelect()->where($where);
+        return $this->getResultSetFor($select,$expectedResults,$maxiteration);
+    }
     
     public function getAll() {
         return $this->hydrateAggregateRootsFromResult($this->performRead($this->getSelect()));
+    }
+
+
+    public function getResultSetFor($request, $expectedResult, $maxiteration=null) {
+        $result = $this->hydrateAggregateRootsFromResult($this->performRead($request));
+        for($i=0; count($result) < $expectedResult ; $i++) {
+            error_log("Got ". count($result)." results .. expecting : ". $expectedResult);
+            if(isset($maxiteration)) {
+                if($i > $maxiteration) {
+                    break;
+                }
+            }
+            $result = $this->hydrateAggregateRootsFromResult($this->performRead($request));
+            sleep(1);
+        }
+        return $result;
     }
     
     /**
