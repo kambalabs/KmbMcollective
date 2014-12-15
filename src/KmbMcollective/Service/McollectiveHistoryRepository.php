@@ -52,7 +52,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
 
         return $this;
     }
-    
+
     /**
      * @param $actionid
      * @return McollectiveHistoryInterface
@@ -104,7 +104,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         $select = $this->getSelect()->where($where);
         return $this->getResultSetFor($select,$expectedResults,$maxiteration);
     }
-    
+
     public function getAll() {
         return $this->hydrateAggregateRootsFromResult($this->performRead($this->getSelect()));
     }
@@ -113,7 +113,6 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
     public function getResultSetFor($request, $expectedResult, $maxiteration=null) {
         $result = $this->hydrateAggregateRootsFromResult($this->performRead($request));
         for($i=0; count($result) < $expectedResult ; $i++) {
-            error_log("Got ". count($result)." results .. expecting : ". $expectedResult);
             if(isset($maxiteration)) {
                 if($i > $maxiteration) {
                     break;
@@ -124,7 +123,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         }
         return $result;
     }
-    
+
     /**
      * @param integer $nlogs
      * @return array
