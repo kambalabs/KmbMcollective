@@ -56,6 +56,23 @@ return [
                     ],
                 ],
             ],
+            'mcollective_results' => [
+                'type' => 'Segment',
+                'options' => [
+                    'verb' => 'get',
+                    'route' => '/mcollective/results/:actionid[/requestid/:requestid]',
+                    'constraints' => [
+                        'actionid' => '[a-fA-F0-9]{32}',
+                        'requestid' => '[a-fA-F0-9]{32}',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Result',
+                        'action' => 'getResults',
+                        'envId' => 0,
+                    ],
+                ],
+            ],
             'mcollective_metadatas_update' => [
                 'type' => 'Segment',
                 'options' => [
@@ -153,7 +170,8 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'KmbMcollective\Controller\Index' => 'KmbMcollective\Controller\IndexController'
+            'KmbMcollective\Controller\Index' => 'KmbMcollective\Controller\IndexController',
+            'KmbMcollective\Controller\Result' => 'KmbMcollective\Controller\ResultController'
         ],
     ],
     'view_manager' => [
