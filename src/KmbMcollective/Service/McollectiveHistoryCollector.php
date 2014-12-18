@@ -23,7 +23,7 @@ namespace KmbMcollective\Service;
 use GtnDataTables\Model\Collection;
 use GtnDataTables\Service\CollectorInterface;
 
-class McollectiveLogCollector implements CollectorInterface
+class McollectiveHistoryCollector implements CollectorInterface
 {
     /** @var Service\NodeInterface */
     protected $historyRepository;
@@ -50,7 +50,6 @@ class McollectiveLogCollector implements CollectorInterface
                 $orderBy .= "".$clause['column']." ".$clause['dir'];
             }
         }
-        
         $logsCollection = $this->getHistoryRepositoryService()->getAll($query, $offset, $limit, $orderBy);
         return $logsCollection;
     }

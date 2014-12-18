@@ -39,6 +39,6 @@ class FullNameDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return '<span title="' . $this->escapeHtml($object->getLogin()) . '">' . $this->escapeHtml($object->getFullName()) . '</span>';
+        return '<span title="' . $this->escapeHtml($object->getCaller()) . '">' . $this->escapeHtml($object->getIhmLog()!= null ? $object->getIhmLog()[0]->getFullName() : $object->getCaller() ) . '</span>';
     }
 }

@@ -20,32 +20,22 @@
  */
 namespace KmbMcollective\Service;
 
-use KmbPermission\Service\EnvironmentInterface;
-use KmbPuppetDb\Query\EnvironmentsQueryBuilderInterface;
-use KmbPuppetDb\Service;
-use Zend\ServiceManager\FactoryInterface;
+use GtnPersistZendDb\Infrastructure\ZendDb;
+use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class McollectiveLogCollectorFactory implements FactoryInterface
+class McollectiveHistoryRepositoryFactory extends ZendDb\RepositoryFactory
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new McollectiveLogCollector();
+        /** @var RevisionRepository $service */
+        $service = parent::createService($serviceLocator);
 
-        try {
-        $historyRepositoryService = $serviceLocator->get('KmbMcollective\Service\McollectiveLog');
-        } catch (\Exception $e) {
-            do {
-                var_dump($e->getMessage());
-            } while ($e = $e->getPrevious());
-        }
-        $service->setHistoryRepositoryService($historyRepositoryService);
+        $service->setLogClass($this->getStrict('log_class'));
+        $service->setLogTableName($this->getStrict('log_table_name'));
+        $service->setLogTableSequenceName($this->getStrict('log_table_sequence_name'));
+        $actionHydratorClass = $this->getStrict('log_hydrator_class');
+        $service->setLogHydrator(new $actionHydratorClass);
 
         return $service;
     }

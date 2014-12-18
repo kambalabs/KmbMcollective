@@ -39,6 +39,12 @@ class ServersDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return '<a href="'.$this->url('mcollective_history',['action' => 'history','id' => $object->getActionId()],[],true) .'"><span class="label label-success">'.sizeof($object->getDiscoveredNodes()).' serveurs</span></a>';
+        $value = '<a href="'.$this->url('mcollective_history',['action' => 'history','id' => $object->getActionId()],[],true) .'">';
+        if($object->getIhmLog()) {
+            $value .=  '<span class="label label-success">'.sizeof($object->getIhmLog()[0]->getDiscoveredNodes()).' serveurs</span></a>';
+        }else{
+            $value .= '<span class="label label-default">n/a</span></a>';
+        }
+        return $value;
     }
 }

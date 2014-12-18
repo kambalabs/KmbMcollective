@@ -200,7 +200,6 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             $actionResult = null;
         }
         $mcoLog = new McollectiveLog();
-//        $this->debug('KmbMcollective/IndexController::log(' . $user->getName() . '/' . $actionResult->actionid . ')');
         $mcoLog->setActionid($actionResult ? $actionResult->actionid : $actionid );
         $mcoLog->setLogin($user->getLogin());
         $mcoLog->setFullName($user->getName());

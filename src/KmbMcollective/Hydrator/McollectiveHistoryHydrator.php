@@ -57,6 +57,7 @@ class McollectiveHistoryHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
+        $object->setId($data['id']);
         $object->setActionid($data['actionid']);
         $object->setRequestId($data['requestid']);
         $object->setCaller($data['caller']);

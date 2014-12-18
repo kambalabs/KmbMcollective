@@ -27,10 +27,17 @@ use KmbMcollective\Model\McollectiveHistoryInterface;
 use KmbMcollective\Model\McollectiveHistoryRepositoryInterface;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\Adapter\Driver\ResultInterface;
 
 
 class McollectiveHistoryRepository extends Repository implements McollectiveHistoryRepositoryInterface
 {
+
+
+    protected $logTableName;
+    protected $logTableSequenceName;
+    protected $logHydrator;
+    protected $logClass;
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -52,6 +59,77 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
 
         return $this;
     }
+
+
+
+    public function getFilteredLogs($query = null, $offset = null, $limit = null, $orderBy = null)
+    {
+        if (is_int($query)) {
+            $orderBy = $limit;
+            $limit = $offset;
+            $offset = $query;
+            $query = null;
+        }
+
+        //        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName);
+        $selectLogs = $this->getJoinSelect();
+        if($query != null) {
+                $selectLogs->where
+                ->like('agent','%'.$query.'%')
+                ->or
+                ->like('filter','%'.$query.'%')
+                ->or
+                ->like('fullname', '%'.$query.'%')
+                ->or
+                ->like('login','%'.$query.'%');
+        }
+        if($offset != null) {
+                $selectLogs->offset($offset);
+        }
+        if($limit != null) {
+            $selectLogs->limit($limit);
+        }
+        if($orderBy != null) {
+            $selectLogs->order($orderBy);
+        } else {
+            $selectLogs->order('mcollective_actions_logs.received_at DESC');
+        }
+
+
+
+        // $select = $this
+        //     ->getSlaveSql()
+        //     ->select()
+        //     ->from($this->tableName);
+
+        // if($orderBy != null) {
+        //     $select->order($orderBy);
+        // } else {
+        //     $select->order('received_at DESC');
+        // }
+
+        error_log($selectLogs->getSqlString());
+        $res = $this->hydrateAggregateRootsFromResult($this->performRead($selectLogs));
+        return $res;
+    }
+
+    public function getNumberOfRows($query)
+    {
+        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName)->columns(array('number' => new \Zend\Db\Sql\Expression('COUNT(*)')));;
+        if($query != null) {
+                $selectLogs->where
+                ->like('agent','%'.$query.'%')
+                ->or
+                ->like('filter','%'.$query.'%')
+                ->or
+                ->like('fullname', '%'.$query.'%')
+                ->or
+                ->like('login','%'.$query.'%');
+        }
+        return $this->performRead($selectLogs);
+    }
+
+
 
     /**
      * @param $actionid
@@ -77,6 +155,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
             ->and
             ->isNotNull('statuscode');
         $select = $this->getSelect()->where($where);
+        error_log($select->getSqlString());
         return $this->getResultSetFor($select,$expectedResults,$maxiteration);
     }
 
@@ -134,5 +213,91 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
+    protected function getJoinSelect()
+    {
+        return parent::getSelect()->join(
+            ['log' => $this->logTableName],
+            $this->tableName . '.actionid = log.actionid',
+            [
+                'log.id' => 'id',
+                'log.actionid' => 'actionid',
+                'log.login' => 'login',
+                'log.fullname' => 'fullname',
+                'log.agent' => 'agent',
+                'log.filter' => 'filter',
+                'log.pf' => 'pf',
+                'log.parameters' => 'parameters',
+
+            ],
+            Select::JOIN_LEFT
+        );
+        /*->join(
+            ['dn' => $this->discoveredNodesTableName],
+            $this->tableName . '.id = dn.log_id',
+            ['hostname' => 'hostname'],
+            Select::JOIN_LEFT
+            );*/
+    }
+
+
+    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    {
+        $aggregateRootClassName = $this->getAggregateRootClass();
+        $logClassName = $this->getLogClass();
+        $aggregateRoots = [];
+        foreach ($result as $row) {
+            $historyId = $row['id'];
+            if (!array_key_exists($historyId, $aggregateRoots)) {
+                $aggregateRoot = new $aggregateRootClassName;
+                $aggregateRoots[$historyId] = $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
+            } else {
+                $aggregateRoot = $aggregateRoots[$historyId];
+            }
+
+            if (isset($row['log.actionid'])) {
+                $log = new $logClassName;
+                $this->logHydrator->hydrateFromJoin($row, $log);
+                $aggregateRoot->addIhmLogs($log);
+            }
+        }
+        return array_values($aggregateRoots);
+    }
+
+
+    public function setLogTableName($logtable) {
+        $this->logTableName = $logtable;
+        return $this;
+    }
+
+    public function getLogTableName() {
+        return $this->logTableName;
+    }
+
+    public function setLogTableSequenceName($logtableseq) {
+        $this->logTableSequenceName = $logtableseq;
+        return $this;
+    }
+
+    public function getLogTableSequenceName() {
+        return $this->logTableSequenceName;
+    }
+
+    public function setLogClass($logclass) {
+        $this->logClassName = $logclass;
+        return $this;
+    }
+
+    public function getLogClass() {
+        return $this->logClassName;
+    }
+
+    public function setLogHydrator($loghydrator) {
+        $this->logHydrator = $loghydrator;
+        return $this;
+    }
+
+    public function getLogHydrator() {
+        return $this->logHydrator;
+    }
 
 }

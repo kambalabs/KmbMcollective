@@ -39,6 +39,6 @@ class FilterDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return $this->escapeHtml($object->getFilter());
+        return $this->escapeHtml($object->getIhmLog() != null ? $object->getIhmLog()[0]->getFilter() : 'n/a');
     }
 }

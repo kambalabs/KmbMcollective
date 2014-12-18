@@ -35,12 +35,12 @@ use GtnDataTables\Service\CollectorInterface;
 
 
 
-class McollectiveLog implements McollectiveLogInterface
+class McollectiveHistory implements McollectiveLogInterface
 {
     /**
-     * @var McollectiveLogRepositoryInterface
+     * @var McollectiveHistoryRepositoryInterface
      */
-    protected $mcollectiveLogRepository;
+    protected $mcollectiveHistoryRepository;
 
     /** @var Logger */
     protected $logger;
@@ -59,8 +59,8 @@ class McollectiveLog implements McollectiveLogInterface
      */
     public function getAll($query = null, $offset = null, $limit = null, $orderBy = null)
     {
-        $logs = $this->mcollectiveLogRepository->getFilteredLogs($query, $offset, $limit, $orderBy);
-        $logsCount = $this->mcollectiveLogRepository->getNumberOfRows($query);
+        $logs = $this->mcollectiveHistoryRepository->getFilteredLogs($query, $offset, $limit, $orderBy);
+        $logsCount = $this->mcollectiveHistoryRepository->getNumberOfRows($query);
         $this->logger->debug("Request logs with : ".$query.",".$offset.",".$limit.",".$orderBy);
         $this->logger->debug("Returns : ".print_r($logsCount->current()['number'],true));
         return Collection::factory($logs,sizeof($logs),$logsCount->current()['number']);
@@ -88,13 +88,13 @@ class McollectiveLog implements McollectiveLogInterface
         return $this->logger;
     }
 
-    public function setMcollectiveLogRepository($mcollectiveLogRepository) {
-        $this->mcollectiveLogRepository = $mcollectiveLogRepository;
+    public function setMcollectiveHistoryRepository($mcollectiveHistoryRepository) {
+        $this->mcollectiveHistoryRepository = $mcollectiveHistoryRepository;
         return $this;
     }
 
-    public function getMcollectiveLogRepository() {
-        return $this->mcollectiveLogRepository;
+    public function getMcollectiveHistoryRepository() {
+        return $this->mcollectiveHistoryRepository;
     }
-    
+
 }

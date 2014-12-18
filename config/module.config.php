@@ -140,6 +140,11 @@ return [
             'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveHistoryHydrator',
             'table_name' => 'mcollective_actions_logs',
             'table_sequence_name' => 'mcollective_actions_logs_id_seq',
+            'log_class' => 'KmbMcollective\Model\McollectiveLog',
+            'log_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveLogHydrator',
+            'log_table_name' => 'mcollective_logs',
+            'log_table_sequence_name' => 'mcollective_log_id_seq',
+            'factory' => 'KmbMcollective\Service\McollectiveHistoryRepositoryFactory',
             'repository_class' => 'KmbMcollective\Service\McollectiveHistoryRepository',
         ],
         'McollectiveAgentRepository' => [
@@ -202,11 +207,11 @@ return [
         'historyDatatable' => [
             'id' => 'mcollective_logs',
             'classes' => ['table', 'table-striped', 'table-hover', 'table-condensed', 'bootstrap-datatable'],
-            'collectorFactory' => 'KmbMcollective\Service\McollectiveLogCollectorFactory',
+            'collectorFactory' => 'KmbMcollective\Service\McollectiveHistoryCollectorFactory',
             'columns' => [
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
-		    'key'       => 'fullname',
+                    'key'       => 'fullname',
                 ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
@@ -235,7 +240,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'KmbMcollective\Service\McollectiveLog' => 'KmbMcollective\Service\McollectiveLogFactory',
+            'KmbMcollective\Service\McollectiveHistory' => 'KmbMcollective\Service\McollectiveHistoryFactory',
         ],
     ],
 ];

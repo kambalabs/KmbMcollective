@@ -24,7 +24,7 @@ use Zend\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class McollectiveLogFactory implements FactoryInterface
+class McollectiveHistoryFactory implements FactoryInterface
 {
     /**
      * Create service
@@ -34,20 +34,19 @@ class McollectiveLogFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $McoLogService = new McollectiveLog();
+        $McoHistoryService = new McollectiveHistory();
 
         /** @var ControllerManager $serviceLocator */
 //        $serviceManager = $serviceLocator->getServiceLocator();
 
         /** @var McollectiveLogRepositoryInterface $mcollectiveLogRepository */
-//        $mcollectiveLogRepository = $serviceManager->get('McollectiveLogRepository');
-        $mcollectiveLogRepository = $serviceLocator->get('McollectiveLogRepository');
-        $McoLogService->setMcollectiveLogRepository($mcollectiveLogRepository);
-        
+        $mcollectiveHistoryRepository = $serviceLocator->get('McollectiveHistoryRepository');
+        $McoHistoryService->setMcollectiveHistoryRepository($mcollectiveHistoryRepository);
+
         /** @var Logger $logger */
         $logger = $serviceLocator->get('Logger');
-        $McoLogService->setLogger($logger);
+        $McoHistoryService->setLogger($logger);
 
-        return $McoLogService;
+        return $McoHistoryService;
     }
 }

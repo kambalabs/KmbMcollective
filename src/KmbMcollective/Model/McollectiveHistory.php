@@ -51,7 +51,9 @@ class McollectiveHistory implements McollectiveHistoryInterface
 
     /** @var string */
     protected $receivedAt;
-    
+
+    /** @var McollectiveLog[] */
+    protected $ihmlogs;
 
     /**
      * @param string $actionid
@@ -189,7 +191,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
     {
         return $this->hostname;
     }
-    
+
     /**
      * Set Agent.
      *
@@ -299,7 +301,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
     {
         return $this->result;
     }
-           
+
 
     /**
      * Set ReceivedAt.
@@ -321,6 +323,40 @@ class McollectiveHistory implements McollectiveHistoryInterface
     public function getReceivedAt()
     {
         return $this->receivedAt;
+    }
+
+    /**
+     * Set ihm logs
+     *
+     * @param string $timestamp
+     * @return McollectiveHistoryInterface
+     */
+    public function setIhmLogs($logs)
+    {
+        $this->ihmlogs = $logs;
+        return $this;
+    }
+
+    /**
+     * Add ihm logs
+     *
+     * @param string $timestamp
+     * @return McollectiveHistoryInterface
+     */
+    public function addIhmLogs($log)
+    {
+        $this->ihmlogs[] = $log;
+        return $this;
+    }
+
+    /**
+     * Get ihm logs.
+     *
+     * @return string
+     */
+    public function getIhmLog()
+    {
+        return $this->ihmlogs;
     }
 
     /**
@@ -356,7 +392,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
         ];
     }
 
-    
+
 
 
 }

@@ -69,4 +69,25 @@ class McollectiveLogHydrator implements HydratorInterface
         $object->setReceivedAt($data['received_at']);
         return $object;
     }
+
+    /**
+     * Hydrate $object with the provided $data.
+     *
+     * @param  array                   $data
+     * @param  McollectiveLogInterface $object
+     * @return McollectiveLogInterface
+     */
+    public function hydrateFromJoin(array $data, $object)
+    {
+        $object->setId($data['log.id']);
+        $object->setActionid($data['log.actionid']);
+        $object->setLogin($data['log.login']);
+        $object->setFullName($data['log.fullname']);
+        $object->setAgent($data['log.agent']);
+        $object->setFilter($data['log.filter']);
+        $object->setPf($data['log.pf']);
+        $object->setParameters($data['log.parameters']);
+        $object->setReceivedAt($data['log.received_at']);
+        return $object;
+    }
 }
