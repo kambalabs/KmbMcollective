@@ -46,14 +46,23 @@ class ResultController extends AbstractActionController implements Authenticated
     public function getResultsAction() {
         $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
         $historyRepository = $this->getServiceLocator()->get('McollectiveHistoryRepository');
+        $securityLogsRepository = $this->getServiceLocator()->get('SecurityLogsRepository');
         $actionid = $this->params()->fromRoute('actionid');
         $requestid = $this->params()->fromRoute('requestid');
         if(isset($requestid)) {
             $results = $historyRepository->getAllByActionidRequestId($actionid,$requestid,'finished');
+            foreach($results as $index => $result) {
+                $status = $result->getStatusCode() == 0 ? 'success' : 'failure' ;
+                $log = $securityLogsRepository->getLogForHostByActionIdRequestId($result->getActionId(),$result->getRequestId(),$result->getHostname());
+                if(isset($log) && count($log) > 0 ) {
+                    $log->setStatus($status);
+                    $this->debug(print_r($log,true));
+                    $securityLogsRepository->update($log);
+                }
+            }
         }else{
             $results = $historyRepository->getByActionid($actionid,'finished');
         }
-        $this->debug(print_r($results[0],true));
         return new JsonModel(array_map(function($item){
             return $item->toArray();
         },$results));
