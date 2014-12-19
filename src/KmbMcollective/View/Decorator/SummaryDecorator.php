@@ -23,14 +23,14 @@ namespace KmbMcollective\View\Decorator;
 use GtnDataTables\View\AbstractDecorator;
 use KmbMcollective\Model\McollectiveLogInterface;
 
-class ServersDecorator extends AbstractDecorator
+class SummaryDecorator extends AbstractDecorator
 {
     /**
      * @return string
      */
     public function decorateTitle()
     {
-        return $this->translate('Servers');
+        return $this->translate('Summary');
     }
 
     /**
@@ -39,12 +39,6 @@ class ServersDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        $value = '<a href="'.$this->url('mcollective_history',['action' => 'history','id' => $object->getActionId()],[],true) .'">';
-        if($object->getIhmLog()) {
-            $value .=  '<span class="label label-success">'.count($object->getIhmLog()[0]->getDiscoveredNodes()).' serveurs</span></a>';
-        }else{
-            $value .= '<span class="label label-default">see details</span></a>';
-        }
-        return $value;
+        return '<span>'.$object->getSummary().'</span>';
     }
 }

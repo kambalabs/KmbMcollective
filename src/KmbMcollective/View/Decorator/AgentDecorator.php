@@ -39,6 +39,6 @@ class AgentDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return '<span class="badge">' . $this->escapeHtml($object->getIhmLog() != null ? $object->getIhmLog()[0]->getAgent() : $object->getAgent()) . '</span>';
+        return '<span class="badge">' . $this->escapeHtml($object->getIhmLog() != null ? $object->getIhmLog()[0]->getAgent() : $object->getAgent().'::'.$object->getAction()) . '</span>';
     }
 }

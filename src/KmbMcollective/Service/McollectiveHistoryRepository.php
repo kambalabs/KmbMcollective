@@ -27,6 +27,7 @@ use KmbMcollective\Model\McollectiveHistoryInterface;
 use KmbMcollective\Model\McollectiveHistoryRepositoryInterface;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Adapter\Driver\ResultInterface;
 
 
@@ -38,6 +39,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
     protected $logTableSequenceName;
     protected $logHydrator;
     protected $logClass;
+    protected $discoveredNodesTableName = 'mcollective_logs_discovered';
 
     /**
      * @param AggregateRootInterface $aggregateRoot
@@ -60,19 +62,33 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return $this;
     }
 
+    public function applyConstraintOnQuery($request, $offset = null, $limit = null, $orderBy = null,$hostlist=[]) {
+        if($offset != null) {
+            $request->offset($offset);
+        }
+        if($limit != null) {
+            $request->limit($limit);
+        }
+        if($orderBy != null) {
+            $request->order($orderBy);
+        } else {
+            $request->order('received_at DESC');
+        }
+        return $request;
+    }
 
-
-    public function getFilteredLogs($query = null, $offset = null, $limit = null, $orderBy = null)
+    public function getFilteredLogs($query = null,$offset = null, $limit = null, $orderBy = null,$hostlist=[])
     {
-        if (is_int($query)) {
-            $orderBy = $limit;
-            $limit = $offset;
-            $offset = $query;
-            $query = null;
+        $selectActionid = $this->getSlaveSql()->select()->quantifier('DISTINCT')->columns(['actionid' => 'actionid', 'received_at' => new Expression('min(received_at)')])->from($this->tableName)->group('actionid');
+        $selectActionid = $this->applyConstraintOnQuery($selectActionid, $offset, $limit, $orderBy,$hostlist);
+
+        $actionids = [];
+        foreach($this->performRead($selectActionid) as $result) {
+            $actionids[] = $result['actionid'];
         }
 
-        //        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName);
         $selectLogs = $this->getJoinSelect();
+        $selectLogs = $this->applyConstraintOnQuery($selectLogs, null, null, $orderBy,$hostlist);
         if($query != null) {
                 $selectLogs->where
                 ->like('agent','%'.$query.'%')
@@ -83,33 +99,12 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
                 ->or
                 ->like('login','%'.$query.'%');
         }
-        if($offset != null) {
-                $selectLogs->offset($offset);
-        }
-        if($limit != null) {
-            $selectLogs->limit($limit);
-        }
-        if($orderBy != null) {
-            $selectLogs->order($orderBy);
-        } else {
-            $selectLogs->order('mcollective_actions_logs.received_at DESC');
-        }
 
-
-
-        // $select = $this
-        //     ->getSlaveSql()
-        //     ->select()
-        //     ->from($this->tableName);
-
-        // if($orderBy != null) {
-        //     $select->order($orderBy);
-        // } else {
-        //     $select->order('received_at DESC');
-        // }
-
+        $selectLogs->where([
+            'mcollective_actions_logs.actionid' => $actionids,
+        ]);
         error_log($selectLogs->getSqlString());
-        $res = $this->hydrateAggregateRootsFromResult($this->performRead($selectLogs));
+        $res = $this->hydrateAggregateRootsFromResultGroupByActionid($this->performRead($selectLogs));
         return $res;
     }
 
@@ -230,23 +225,22 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
 
             ],
             Select::JOIN_LEFT
-        );
-        /*->join(
+        )->join(
             ['dn' => $this->discoveredNodesTableName],
-            $this->tableName . '.id = dn.log_id',
-            ['hostname' => 'hostname'],
+            'log.id = dn.log_id',
+            ['dn.hostname' => 'hostname'],
             Select::JOIN_LEFT
-            );*/
+            );
     }
 
 
-    protected function hydrateAggregateRootsFromResult(ResultInterface $result)
+    protected function hydrateAggregateRootsFromResultGroupByActionid(ResultInterface $result)
     {
         $aggregateRootClassName = $this->getAggregateRootClass();
         $logClassName = $this->getLogClass();
         $aggregateRoots = [];
         foreach ($result as $row) {
-            $historyId = $row['id'];
+            $historyId = $row['actionid'];
             if (!array_key_exists($historyId, $aggregateRoots)) {
                 $aggregateRoot = new $aggregateRootClassName;
                 $aggregateRoots[$historyId] = $this->aggregateRootHydrator->hydrate($row, $aggregateRoot);
@@ -255,9 +249,16 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
             }
 
             if (isset($row['log.actionid'])) {
-                $log = new $logClassName;
-                $this->logHydrator->hydrateFromJoin($row, $log);
-                $aggregateRoot->addIhmLogs($log);
+                if(empty($aggregateRoot->getIhmLog())) {
+                    $log = new $logClassName;
+                    $this->logHydrator->hydrateFromJoin($row, $log);
+                    $aggregateRoot->addIhmLogs($log);
+                }
+                if(isset($row['dn.hostname'])) {
+                    if(! in_array( $row['dn.hostname'],$log->getDiscoveredNodes())) {
+                        $log->addDiscoveredNode($row['dn.hostname']);
+                    }
+                }
             }
         }
         return array_values($aggregateRoots);

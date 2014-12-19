@@ -70,7 +70,7 @@
 	    <?php $actionMetadata = $agentDetail->getRelatedActions($action->getName()) ?>
 	    <div class="form-group">
 	      <label for="actionDesc_<?= $action->getName()?>" class="col-md-4 control-label pull-left"><?= $this->translate('Description')?></label>
-	      <div class="col-md-8">		
+	      <div class="col-md-8">
 		<input type="text" class="form-control editable" data-target="#actions" id="actionDesc_<?= $action->getName()?>" placeholder="<?= $this->translate('Type a description for this action') ?>" name="action[<?= $action->getName() ?>][description]" <?php if($actionMetadata != null): ?> value="<?= $actionMetadata->getDescription() ?>" <?php endif ?> />
 	      </div>
 	    </div> <!-- end of form group -->
@@ -131,7 +131,7 @@
 	      <div class="panel-body">
 		<div class="form-group col-md-12">
 		  <label for="<?= $action->getName()?>_arg_<?= $name ?>" class="col-md-4 control-label pull-left"><?= $this->translate('Description')?></label>
-		  <div class="col-md-8">		    
+		  <div class="col-md-8">
 		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][description]" placeholder="<?= $this->translate('Type a description for this argument') ?>" <?php if($argsMetadata != null): ?> value="<?= $argsMetadata->getDescription() ?> <?php endif ?>"/>
 		  </div>
 		</div> <!-- end of form group -->
@@ -148,7 +148,7 @@
 		<div id="<?= $action->getName()?>_arg_<?= $name ?>_value_form" class="form-group col-md-12">
 		  <label for="<?= $action->getName()?>_arg_<?= $name ?>_value" class="col-md-4 control-label pull-left"><?= $this->translate('List values')?></label>
 		  <div class="col-md-8">
-		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" <?php if($actionMetadata != null): ?> value="<?= $argsMetadata->getValue() ?>"<?php endif ?> <?= ( isset($argsMetadata)) && ($argsMetadata->getType() == "list") ? "" : "disabled" ?> />
+		    <input type="text" class="form-control editable" data-target="#actions" id="<?= $action->getName()?>_arg_<?= $name ?>_value" name="action[<?= $action->getName() ?>][arguments][<?= $name ?>][value]" placeholder="<?= $this->translate('Coma separated values') ?>" <?php if($argsMetadata != null): ?> value="<?= $argsMetadata->getValue() ?>"<?php endif ?> <?= ( isset($argsMetadata)) && ($argsMetadata->getType() == "list") ? "" : "disabled" ?> />
 		  </div>
 		</div> <!-- end form group -->
 	    </div> <!-- end panel body -->

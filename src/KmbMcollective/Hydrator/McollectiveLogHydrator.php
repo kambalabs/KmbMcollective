@@ -87,7 +87,7 @@ class McollectiveLogHydrator implements HydratorInterface
         $object->setFilter($data['log.filter']);
         $object->setPf($data['log.pf']);
         $object->setParameters($data['log.parameters']);
-        $object->setReceivedAt($data['log.received_at']);
+        $object->setReceivedAt($data['received_at']);
         return $object;
     }
 }

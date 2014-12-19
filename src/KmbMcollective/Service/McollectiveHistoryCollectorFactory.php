@@ -40,12 +40,15 @@ class McollectiveHistoryCollectorFactory implements FactoryInterface
 
         try {
         $historyRepositoryService = $serviceLocator->get('KmbMcollective\Service\McollectiveHistory');
+        $agentRepository = $serviceLocator->get('McollectiveAgentRepository');
         } catch (\Exception $e) {
             do {
                 var_dump($e->getMessage());
             } while ($e = $e->getPrevious());
         }
+
         $service->setHistoryRepositoryService($historyRepositoryService);
+        $service->setAgentRepository($agentRepository);
 
         return $service;
     }

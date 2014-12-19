@@ -210,6 +210,9 @@ return [
             'collectorFactory' => 'KmbMcollective\Service\McollectiveHistoryCollectorFactory',
             'columns' => [
                 [
+                    'decorator' => 'KmbMcollective\View\Decorator\SourceDecorator',
+                ],
+                [
                     'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
                     'key'       => 'fullname',
                 ],
@@ -218,9 +221,12 @@ return [
     		    'key'       => 'agent',
                 ],
                 [
-                    'decorator' => 'KmbMcollective\View\Decorator\FilterDecorator',
-                    'key'       => 'filter',
+                    'decorator' => 'KmbMcollective\View\Decorator\SummaryDecorator',
                 ],
+                // [
+                //     'decorator' => 'KmbMcollective\View\Decorator\FilterDecorator',
+                //     'key'       => 'filter',
+                // ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
                 ],

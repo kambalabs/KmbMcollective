@@ -199,18 +199,9 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             $this->debug($e->getMessage());
             $actionResult = null;
         }
-        $mcoLog = new McollectiveLog();
-        $mcoLog->setActionid($actionResult ? $actionResult->actionid : $actionid );
-        $mcoLog->setLogin($user->getLogin());
-        $mcoLog->setFullName($user->getName());
-        $mcoLog->setAgent($params['agent'] . '::' . $params['action']);
-        $mcoLog->setFilter($params['filter']);
-        $mcoLog->setDiscoveredNodes($actionResult ? $actionResult->discovered_nodes : []);
-        $mcoLog->setPf($environment->getNormalizedName());
-        $mcoLog->setParameters(json_encode($args));
+        $mcoLog = new McollectiveLog($actionResult ? $actionResult->actionid : $actionid, $user->getLogin(),$user->getName() , $params['agent'] . '::' . $params['action'], $filter, $actionResult ? $actionResult->discovered_nodes : [], $environment->getNormalizedName(),json_encode($args));
         try {
-            $logRepository = $this->getServiceLocator()->get('McollectiveLogRepository');
-            $logRepository->add($mcoLog);
+            $this->getServiceLocator()->get('McollectiveLogRepository')->add($mcoLog);
         } catch (\Exception $e) {
             $this->debug($e->getMessage());
             $this->debug($e->getTraceAsString());

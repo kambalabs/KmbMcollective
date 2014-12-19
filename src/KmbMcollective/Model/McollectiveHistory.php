@@ -55,6 +55,8 @@ class McollectiveHistory implements McollectiveHistoryInterface
     /** @var McollectiveLog[] */
     protected $ihmlogs;
 
+    protected $actionSummary;
+
     /**
      * @param string $actionid
      * @param string $requestid
@@ -212,6 +214,27 @@ class McollectiveHistory implements McollectiveHistoryInterface
     public function getAgent()
     {
         return $this->agent;
+    }
+
+
+    /**
+     * Set Summary.
+     *
+     */
+    public function setSummary($summary)
+    {
+        $this->actionSummary = $summary;
+        return $this;
+    }
+
+    /**
+     * Get Summary.
+     *
+     * @return string
+     */
+    public function getSummary()
+    {
+        return $this->actionSummary;
     }
 
      /**

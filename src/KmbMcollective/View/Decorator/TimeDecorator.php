@@ -44,7 +44,7 @@ class TimeDecorator extends AbstractDecorator
         if(abs($now - $time) <= 300 ) {
             return $this->escapeHtml($object->getReceivedAt()).'<span class="label label-info pull-right">NEW</span>';
         } else {
-            return $this->escapeHtml($object->getReceivedAt());
+            return $this->escapeHtml(strftime('%d/%m %H:%M',strtotime($object->getReceivedAt())));
         }
     }
 }

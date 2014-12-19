@@ -61,7 +61,7 @@ class McollectiveLog implements McollectiveLogInterface
      * @param string[] $discoveredNodes
      * @param string   $pf
      */
-     public function __construct($actionid = null, $login = null, $fullname = null, $agent = null, $filter = null, $discoveredNodes = [], $pf = null)
+    public function __construct($actionid = null, $login = null, $fullname = null, $agent = null, $filter = null, $discoveredNodes = [], $pf = null,$args = null)
     {
         $this->setActionid($actionid);
         $this->setLogin($login);
@@ -71,6 +71,7 @@ class McollectiveLog implements McollectiveLogInterface
         $this->setDiscoveredNodes($discoveredNodes);
         $this->setPf($pf);
         $this->setReceivedAt();
+        $this->setParameters($args);
     }
 
     /**
@@ -301,7 +302,7 @@ class McollectiveLog implements McollectiveLogInterface
 
 
 
-    
+
     /**
      * Get Received date
      *
