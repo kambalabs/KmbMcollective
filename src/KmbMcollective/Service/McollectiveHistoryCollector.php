@@ -59,17 +59,17 @@ class McollectiveHistoryCollector implements CollectorInterface
                 $agentSplit = explode('::',$detail->getIhmLog()[0]->getAgent());
                 $agent = $this->agentRepository->getByName($agentSplit[0]);
                 if(isset($agent)) {
-                    $foo = array_values(array_filter($agent->getRelatedActions(),function($action) use ($agentSplit) {
+                    $action = array_values(array_filter($agent->getRelatedActions(),function($action) use ($agentSplit) {
                             if($action->getName() == $agentSplit[1]) {
                                 return true;
                             }
                             }));
-                    $summary = $foo[0]->getShortDesc();
+                    $summary = [ 'detail' => $action[0]->getShortDesc(), 'icon' => $action[0]->getIhmIcon() ];
                     $params = json_decode($detail->getIhmLog()[0]->getParameters());
 
                     if(!empty($params)) {
                         foreach($params as $arg => $value) {
-                            $summary = str_replace('#'.$arg.'#', $value,$summary);
+                            $summary['detail'] = str_replace('#'.$arg.'#', $value,$summary['detail']);
                         }
                     }
                     $detail->setSummary($summary);

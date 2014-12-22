@@ -11,81 +11,91 @@
   <div class="col-sm-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-	<span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span>R&eacute;sultat de l'action <?= $actionid ?>
+	  <span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span>R&eacute;sultat de l'action <?= $actionid ?>
       </div>
       <div class="panel-body">
-	<blockquote>
-	  <?= sizeof($logs) ?> r&eacute;ponses ont été recues <?php if($errorcount != 0): ?> dont <font color="red"><?= $errorcount ?> </font> erreurs.
-	  <?php endif ?>.
-	</blockquote>
-	<?php if(is_array($logs)): ?>
-	<ul>
-	  <?php foreach($logs as $hostname => $log): ?>
+	  <blockquote>
+	      <?= sizeof($logs) ?> r&eacute;ponses ont été recues <?php if($errorcount != 0): ?> dont <font color="red"><?= $errorcount ?> </font> erreurs.
+	      <?php endif ?>.
+	  </blockquote>
+	  <?php if(is_array($logs)): ?>
+          <?php error_log(print_r($logs,true)); ?>
+	  <ul>
+	      <?php foreach($logs as $hostname => $log): ?>
+	      <table class="table">
+	          <tr>
+	              <th colspan="2"> <?= $hostname ?></th>
+	          </tr>
+	          <?php foreach( $log as $line): ?>
+	          <tr id="line_<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid'] ?>" class="result_line" data-target="#<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>">
+	              <td><?= $line['agent'] ?>::<?= $line['action'];?></td>
+                      <td align="right">
+		          <?php if($line['statuscode'] == 0): ?>
+		          <span class="label label-success">Success</span>
+		          <?php else: ?>
+		          <span class="label label-danger">Error</span>
+		          <?php endif ?>
+                      </td>
+
+	      <div id="<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>" class="result_detail">
+	          <?php $dataResult = json_decode($line['result']); ?>
+                  <?php if($dataResult) : ?>
+	          <?php foreach(get_object_vars($dataResult) as $name => $value): ?>
+                  <?php if ($value === "") { continue; } ?>
+	          <span class="label label-default result-mco"><?= $name ?></span>
+                  <?php if( is_string($value)) : ?>
+	          <pre><?= trim($value) ?></pre>
+                  <?php else : ?>
+                  <pre><?= json_encode($value) ?></pre>
+                  <?php endif ?>
+	          <?php endforeach ?>
+                  <?php endif ?>
+	      </div>
+              	  </tr>
+	          <?php endforeach ?>
+              </table>
+	      <?php endforeach ?>
+	  </ul>
+	  <?php else: ?>
 	  <table class="table">
-	    <tr>
-	      <th colspan="3"> <?= $hostname ?></th>
-	    </tr>
-	    <?php foreach( $log as $line): ?>
-	    <tr id="line_<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid'] ?>" class="result_line" data-target="#<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>">
-	      <td><?= $line['agent'] ?>::<?= $line['action'];?></td><td align="right">
-		<?php if($line['statuscode'] == 0): ?>
-		<span class="label label-success">Success</span>
-		<?php else: ?>
-		<span class="label label-danger">Error</span>
-		<?php endif ?></td>
-	    </tr>
+	      <thead>
+	          <th colspan="2"> <?= $logs->getHostname(); ?></th>
+	      </thead>
+              <tbody>
+	          <tr>
+	              <td><?= $logs->getAgent() ?>::<?= $logs->getAction();?></td><td align="right">
+	                  <?php if($logs->getStatusCode == 0): ?>
+	                  <span class="label label-success">Success</span>
+	                  <?php else: ?>
+	                  <span class="label label-danger">Danger</span>
+	                  <?php endif ?></td>
+	          </tr>
+              </tbody>
 	  </table>
-	  <div id="<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>" class="result_detail">
-	    <?php $dataResult = json_decode($line['result']); ?>
-	    <?php foreach($dataResult as $name => $value): ?>
-            <?php if ($value === "") { continue; } ?>
-	    <span class="label label-default result-mco"><?= $name ?></span>
-	    <pre><?= trim($value) ?></pre>
-	    <?php endforeach ?>
+	  <div id="<?= str_replace('.','_',$hostname) ?>_<?= $logs->getRequestId(); ?>" class="result_detail">
 	  </div>
-	  <?php endforeach ?>
-	  <?php endforeach ?>
-	</ul>
-	<?php else: ?>
-	<table class="table">
-	  <tr>
-	    <th colspan="3"> <?= $logs->getHostname(); ?></th>
-	  </tr>
-	  <tr>
-	    <td><?= $logs->getAgent() ?>::<?= $logs->getAction();?></td><td align="right">
-	      <?php if($logs->getStatusCode == 0): ?>
-	      <span class="label label-success">Success</span>
-	      <?php else: ?>
-	      <span class="label label-danger">Danger</span>
-	      <?php endif ?></td>
-
-	  </tr>
-	</table>
-	<div id="<?= str_replace('.','_',$hostname) ?>_<?= $logs->getRequestId(); ?>" class="result_detail">
-
-	</div>
-	<?php endif ?>
+	  <?php endif ?>
       </div>
     </div>
   </div>
   <div class="col-sm-6">
-    <div id="details" data-spy="affix" data-offset-top="0">
-      <h2>D&eacute;tails</h2>
-      <blockquote>
-	Cliquer sur les actions sous les serveurs pour obtenir la sortie de la commande.
-      </blockquote>
-      <div id="result">
+      <div id="details" data-spy="affix" data-offset-top="0">
+          <h2>D&eacute;tails</h2>
+          <blockquote>
+	      Cliquer sur les actions sous les serveurs pour obtenir la sortie de la commande.
+          </blockquote>
+          <div id="result">
+          </div>
       </div>
-    </div>
   </div>
 </div>
 <?php else: ?>
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.logs.js'); ?>
 <div class="panel-heading">
-  <span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span>Historique des actions mcollectives
+    <span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span>Historique des actions mcollectives
 </div>
 <div class="panel-body">
-     <?php echo $this->datatable('historyDatatable')->renderHtml(); ?>
+    <?php echo $this->datatable('historyDatatable')->renderHtml(); ?>
 </div>
 
 

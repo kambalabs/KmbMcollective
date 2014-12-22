@@ -39,6 +39,6 @@ class SummaryDecorator extends AbstractDecorator
      */
     public function decorateValue($object)
     {
-        return '<span>'.$object->getSummary().'</span>';
+        return '<span class="glyphicon '. $object->getSummary()['icon'].'"></span> <span>'.$object->getSummary()['detail'] .'</span>';
     }
 }
