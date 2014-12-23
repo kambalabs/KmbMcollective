@@ -103,7 +103,6 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         $selectLogs->where([
             'mcollective_actions_logs.actionid' => $actionids,
         ]);
-        error_log($selectLogs->getSqlString());
         $res = $this->hydrateAggregateRootsFromResultGroupByActionid($this->performRead($selectLogs));
         return $res;
     }
@@ -150,7 +149,6 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
             ->and
             ->isNotNull('statuscode');
         $select = $this->getSelect()->where($where);
-        error_log($select->getSqlString());
         return $this->getResultSetFor($select,$expectedResults,$maxiteration);
     }
 

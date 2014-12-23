@@ -8,6 +8,6 @@ $(document).on('click','.result_line', function(){
     var mcol      = $(this).text();
     $("#details > h2").html(title[0].replace('#','') + "." + title[1]  + "." + title[1]);
     $("#details > blockquote").html("Voici le résultat de la commande " + mcol.match(/(\S+::\S+)\s+\S+/)[1]);
-    $('#result').html($(detaildiv));
+    $('#result').html($(detaildiv).html()).css('');
     $($(detaildiv)).show();
 });

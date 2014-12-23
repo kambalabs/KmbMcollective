@@ -19,7 +19,7 @@
 	      <?php endif ?>.
 	  </blockquote>
 	  <?php if(is_array($logs)): ?>
-          <?php error_log(print_r($logs,true)); ?>
+          <!-- <?php error_log(print_r($logs,true)); ?> -->
 	  <ul>
 	      <?php foreach($logs as $hostname => $log): ?>
 	      <table class="table">
@@ -27,6 +27,8 @@
 	              <th colspan="2"> <?= $hostname ?></th>
 	          </tr>
 	          <?php foreach( $log as $line): ?>
+                  <?php $results = json_decode($line['result']); ?>
+                  <?php error_log(print_r($line,true)); ?>
 	          <tr id="line_<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid'] ?>" class="result_line" data-target="#<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>">
 	              <td><?= $line['agent'] ?>::<?= $line['action'];?></td>
                       <td align="right">
