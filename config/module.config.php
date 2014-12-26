@@ -223,10 +223,6 @@ return [
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\SummaryDecorator',
                 ],
-                // [
-                //     'decorator' => 'KmbMcollective\View\Decorator\FilterDecorator',
-                //     'key'       => 'filter',
-                // ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
                 ],
