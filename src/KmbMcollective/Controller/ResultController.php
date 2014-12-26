@@ -55,9 +55,10 @@ class ResultController extends AbstractActionController implements Authenticated
                 $status = $result->getStatusCode() == 0 ? 'success' : 'failure' ;
                 $log = $securityLogsRepository->getLogForHostByActionIdRequestId($result->getActionId(),$result->getRequestId(),$result->getHostname());
                 if(isset($log) && count($log) > 0 ) {
-                    $log->setStatus($status);
-                    $this->debug(print_r($log,true));
-                    $securityLogsRepository->update($log);
+                    foreach ($log as $entry) {
+                        $entry->setStatus($status);
+                        $securityLogsRepository->update($entry);
+                    }
                 }
             }
         }else{
