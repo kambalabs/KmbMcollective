@@ -20,6 +20,18 @@ return [
                     ],
                 ],
             ],
+            'mcollective_proxy_reply' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/mcollective/proxy/reply',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Reply',
+                        'action' => 'process',
+                        'envId' => '0',
+                    ],
+                ],
+            ],
             'mcollective_history' => [
                 'type' => 'Segment',
                 'options' => [
@@ -176,7 +188,8 @@ return [
     'controllers' => [
         'invokables' => [
             'KmbMcollective\Controller\Index' => 'KmbMcollective\Controller\IndexController',
-            'KmbMcollective\Controller\Result' => 'KmbMcollective\Controller\ResultController'
+            'KmbMcollective\Controller\Result' => 'KmbMcollective\Controller\ResultController',
+            'KmbMcollective\Controller\Reply' => 'KmbMcollective\Controller\ReplyController'
         ],
     ],
     'view_manager' => [
@@ -241,8 +254,14 @@ return [
         ],
     ],
     'service_manager' => [
+        'invokables' => [
+            'KmbMcollective\Service\ReplyHandler' => 'KmbMcollective\Service\ReplyHandler',
+        ],
         'factories' => [
             'KmbMcollective\Service\McollectiveHistory' => 'KmbMcollective\Service\McollectiveHistoryFactory',
+        ],
+        'abstract_factories' => [
+            'KmbMcollective\Service\AbstractHandlerFactory',
         ],
     ],
 ];

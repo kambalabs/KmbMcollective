@@ -22,6 +22,10 @@ namespace KmbMcollective\Model;
 
 class McollectiveHistory implements McollectiveHistoryInterface
 {
+
+    /** @var int */
+    protected $id;
+
     /** @var int */
     protected $actionid;
 
@@ -55,6 +59,8 @@ class McollectiveHistory implements McollectiveHistoryInterface
     /** @var McollectiveLog[] */
     protected $ihmlogs;
 
+    protected $type;
+
     protected $actionSummary;
 
     /**
@@ -69,7 +75,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
      * @param string $result
      * @param string $receivedAt
      */
-    public function __construct($actionid = null, $requestid = null, $caller = null, $hostname = null, $agent = null, $action = null, $sender = null, $statuscode = null, $result = null, $receivedAt = null)
+    public function __construct($actionid = null, $requestid = null, $caller = null, $hostname = null, $agent = null, $action = null, $sender = null, $statuscode = null, $result = null, $receivedAt = null,$type = null)
     {
         $this->setActionid($actionid);
         $this->setRequestId($requestid);
@@ -81,6 +87,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
         $this->setStatusCode($statuscode);
         $this->setResult($result);
         $this->setReceivedAt($receivedAt);
+        $this->setType($type);
     }
 
     /**
@@ -91,7 +98,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
      */
     public function setId($id)
     {
-        $this->actionid = $id;
+        $this->id = $id;
         return $this;
     }
 
@@ -102,7 +109,30 @@ class McollectiveHistory implements McollectiveHistoryInterface
      */
     public function getId()
     {
-        return $this->actionid;
+        return $this->id;
+    }
+
+
+    /**
+     * Set Type.
+     *
+     * @param string $type
+     * @return McollectiveHistory
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * Get Type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
 

@@ -196,6 +196,16 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return $result;
     }
 
+    public function getRequestResponse($requestid, $hostname) {
+        $select = $this->getSelect();
+        $select->where
+            ->equalTo('requestid', $requestid)
+            ->and
+            ->equalTo('hostname',$hostname);
+        $select->limit(1);
+        return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+
     /**
      * @param integer $nlogs
      * @return array

@@ -31,6 +31,7 @@ CREATE TABLE mcollective_actions_logs (
   id          SERIAL PRIMARY KEY,
   actionid    VARCHAR(33)  NOT NULL,
   requestid   VARCHAR(50)  NOT NULL,
+  type        VARCHAR(30),
   caller      VARCHAR(50),
   hostname    VARCHAR(50),
   agent       VARCHAR(30),

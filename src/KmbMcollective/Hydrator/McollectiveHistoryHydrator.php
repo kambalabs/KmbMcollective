@@ -43,6 +43,7 @@ class McollectiveHistoryHydrator implements HydratorInterface
             'sender' => $object->getSender(),
             'statuscode' => $object->getStatusCode(),
             'result' => $object->getResult(),
+            'type' => $object->getType(),
             'received_at' => $object->getReceivedAt(),
         ];
         return $data;
@@ -66,6 +67,7 @@ class McollectiveHistoryHydrator implements HydratorInterface
         $object->setAction($data['action']);
         $object->setSender($data['sender']);
         $object->setStatusCode($data['statuscode']);
+        $object->setType($data['type']);
         $object->setResult($data['result']);
         $object->setReceivedAt($data['received_at']);
         return $object;

@@ -15,7 +15,7 @@ CREATE INDEX mcollective_logs_actionid ON mcollective_logs (actionid);
 CREATE INDEX mcollective_logs_username ON mcollective_logs (login);
 CREATE INDEX mcollective_logs_pf ON mcollective_logs (pf);
 
--- List of mco discovered nodes for actions 
+-- List of mco discovered nodes for actions
 DROP TABLE IF EXISTS mcollective_logs_discovered CASCADE;
 CREATE TABLE mcollective_logs_discovered (
   id       SERIAL PRIMARY KEY,
@@ -26,12 +26,13 @@ CREATE INDEX mcollective_logs_discovered_logid ON mcollective_logs_discovered (i
 CREATE INDEX mcollective_logs_discovered_hostname ON mcollective_logs_discovered (hostname);
 
 
--- Result logs 
+-- Result logs
 DROP TABLE IF EXISTS mcollective_actions_logs CASCADE;
 CREATE TABLE mcollective_actions_logs (
   id          SERIAL PRIMARY KEY,
   actionid    VARCHAR(33)  NOT NULL,
   requestid   VARCHAR(50)  NOT NULL,
+  type        VARCHAR(30),
   caller      VARCHAR(50),
   hostname    VARCHAR(50),
   agent       VARCHAR(30),
