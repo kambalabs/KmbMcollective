@@ -257,7 +257,8 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
             }
 
             if (isset($row['log.actionid'])) {
-                if(empty($aggregateRoot->getIhmLog())) {
+                $agLog = $aggregateRoot->getIhmLog();
+                if(empty($agLog)) {
                     $log = new $logClassName;
                     $this->logHydrator->hydrateFromJoin($row, $log);
                     $aggregateRoot->addIhmLogs($log);
