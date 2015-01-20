@@ -136,7 +136,9 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         if(!empty($state)) {
             $where
                 ->and
-                ->isNotNull('statuscode');
+                ->isNotNull('statuscode')
+                ->and
+                ->equalTo('finished','t');
         }
         $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
@@ -160,7 +162,9 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         if(!empty($state)) {
             $where
                 ->and
-                ->isNotNull('statuscode');
+                ->isNotNull('statuscode')
+                ->and
+                ->equalTo('finished','t');
         }
         $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));

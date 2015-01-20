@@ -63,6 +63,8 @@ class McollectiveHistory implements McollectiveHistoryInterface
 
     protected $actionSummary;
 
+    protected $finished;
+
     /**
      * @param string $actionid
      * @param string $requestid
@@ -376,6 +378,28 @@ class McollectiveHistory implements McollectiveHistoryInterface
     public function getReceivedAt()
     {
         return $this->receivedAt;
+    }
+
+
+    /**
+     * Set finished statusB.
+     *
+     * @return McollectiveHistoryInterface
+     */
+    public function setFinished()
+    {
+        $this->finished = true;
+        return $this;
+    }
+
+    /**
+     * Get termination status.
+     *
+     * @return string
+     */
+    public function isFinished()
+    {
+        return $this->finished;
     }
 
     /**

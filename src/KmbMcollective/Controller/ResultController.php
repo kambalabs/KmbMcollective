@@ -51,16 +51,6 @@ class ResultController extends AbstractActionController implements Authenticated
         $requestid = $this->params()->fromRoute('requestid');
         if(isset($requestid)) {
             $results = $historyRepository->getAllByActionidRequestId($actionid,$requestid,'finished');
-            // foreach($results as $index => $result) {
-                // $status = $result->getStatusCode() == 0 ? 'success' : 'failure' ;
-                // $log = $securityLogsRepository->getLogForHostByActionIdRequestId($result->getActionId(),$result->getRequestId(),$result->getHostname());
-                // if(isset($log) && count($log) > 0 ) {
-                //     foreach ($log as $entry) {
-                //         $entry->setStatus($status);
-                //         $securityLogsRepository->update($entry);
-                //     }
-                // }
-            // }
         }else{
             $results = $historyRepository->getByActionid($actionid,'finished');
         }

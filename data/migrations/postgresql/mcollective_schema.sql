@@ -40,6 +40,7 @@ CREATE TABLE mcollective_actions_logs (
   sender      VARCHAR(256) NOT NULL,
   statuscode  INTEGER,
   result      TEXT,
+  finished    BOOLEAN,
   received_at TIMESTAMP    NOT NULL
 );
 CREATE INDEX mcollective_actions_logs_actionid ON mcollective_actions_logs (actionid);

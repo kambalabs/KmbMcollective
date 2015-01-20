@@ -60,6 +60,9 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
             $handler = $this->serviceLocator->get($handlerName);
             $handler->process($log);
         }
+        $log->setFinished();
+        error_log(print_r($log,true));
+        $repository->update($log);
 
     }
 
