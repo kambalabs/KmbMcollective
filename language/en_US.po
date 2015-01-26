@@ -2,172 +2,285 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-01 12:19+0100\n"
-"PO-Revision-Date: 2014-12-01 12:19+0100\n"
-"Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
+"POT-Creation-Date: 2015-01-26 10:20+0100\n"
+"PO-Revision-Date: 2015-01-26 10:20+0100\n"
+"Last-Translator: slaws\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
-"Language: \n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate;translatePlural:1,2\n"
-"X-Poedit-Language: English\n"
-"X-Poedit-Country: FRANCE\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"X-Generator: Poedit 1.7.3\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:134
+#: ../config/module.config.php:110
+msgid "Mcollective"
+msgstr "Mcollective"
+
+#: ../config/module.config.php:115
+msgid "Actions"
+msgstr "Actions"
+
+#: ../config/module.config.php:123
+msgid "History"
+msgstr "History"
+
+#: ../config/module.config.php:131
+msgid "Metadatas"
+msgstr "Metadatas"
+
+#: ../src/KmbMcollective/Controller/IndexController.php:136
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
+msgstr "<h4>Warning !</h4><p>You have to select an environment first !</p>"
+
+#: ../src/KmbMcollective/Controller/IndexController.php:222
+msgid "Server name filter"
+msgstr "Server name filter"
+
+#: ../src/KmbMcollective/Controller/IndexController.php:223
+#, php-format
+msgid "Receiving Data: %d of %d nodes"
+msgstr "Receiving Data: %d of %d nodes"
+
+#: ../src/KmbMcollective/Controller/IndexController.php:224
+msgid "Receiving data : receiving..."
+msgstr "Receiving data : receiving..."
+
+#: ../src/KmbMcollective/Controller/IndexController.php:225
+msgid "Receiving data : done."
+msgstr "Receiving data : done."
+
+#: ../src/KmbMcollective/Controller/IndexController.php:226
+msgid "Starting request : <span class=\"label label-primary\">Running</span>"
 msgstr ""
+"Starting request : <span class=\"label label-primary\">Running</span>"
+
+#: ../src/KmbMcollective/Controller/IndexController.php:227
+msgid "Request started <span class=\"label label-success\">OK</span>"
+msgstr "Request started <span class=\"label label-success\">OK</span>"
+
+#: ../src/KmbMcollective/View/Decorator/ActionDecorator.php:33
+#: ../view/kmb-mcollective/index/show.phtml:23
+msgid "Action"
+msgstr "Action"
+
+#: ../src/KmbMcollective/View/Decorator/AgentDecorator.php:33
+#: ../view/kmb-mcollective/index/show.phtml:13
+msgid "Agent"
+msgstr "Agent"
 
 #: ../src/KmbMcollective/View/Decorator/FilterDecorator.php:33
 msgid "Filter"
-msgstr ""
-
-#: ../src/KmbMcollective/View/Decorator/TimeDecorator.php:33
-msgid "Date"
-msgstr ""
-
-#: ../src/KmbMcollective/View/Decorator/ActionDecorator.php:33
-msgid "Action"
-msgstr ""
-
-#: ../src/KmbMcollective/View/Decorator/AgentDecorator.php:33
-msgid "Agent"
-msgstr ""
-
-#: ../src/KmbMcollective/View/Decorator/ServersDecorator.php:33
-msgid "Nombre de serveurs"
-msgstr ""
+msgstr "Filter"
 
 #: ../src/KmbMcollective/View/Decorator/FullNameDecorator.php:33
 msgid "User"
-msgstr ""
+msgstr "User"
 
-#: ../config/module.config.php:81
-msgid "Mcollective"
-msgstr ""
+#: ../src/KmbMcollective/View/Decorator/ServersDecorator.php:33
+msgid "Servers"
+msgstr "Servers"
 
-#: ../config/module.config.php:86
-msgid "Actions"
-msgstr ""
+#: ../src/KmbMcollective/View/Decorator/SummaryDecorator.php:33
+msgid "Summary"
+msgstr "Summary"
 
-#: ../config/module.config.php:94
-msgid "History"
-msgstr ""
+#: ../src/KmbMcollective/View/Decorator/TimeDecorator.php:33
+msgid "Date"
+msgstr "Date"
 
-#: ../config/module.config.php:102
-msgid "Metadatas"
-msgstr ""
+#: ../view/kmb-mcollective/index/history.phtml:5
+#: ../view/kmb-mcollective/index/metadata.phtml:26
+msgid "Back"
+msgstr "Back"
+
+#: ../view/kmb-mcollective/index/history.phtml:14
+#, php-format
+msgid "Execution summary for action %s"
+msgstr "Execution summary for action %s"
+
+#: ../view/kmb-mcollective/index/history.phtml:18
+#, php-format
+msgid "%d response received"
+msgid_plural "%d responses received"
+msgstr[0] "%d response received"
+msgstr[1] "%d responses received"
+
+#: ../view/kmb-mcollective/index/history.phtml:18
+#, php-format
+msgid "(with <span style=\"color:red;\">%d</span> error)"
+msgid_plural "(with <span style=\"color:red;\">%d</span> errors)"
+msgstr[0] "(with <span style=\"color:red;\">%d</span> error)"
+msgstr[1] "(with <span style=\"color:red;\">%d</span> errors)"
+
+#: ../view/kmb-mcollective/index/history.phtml:42
+#, php-format
+msgid "Result for action %s"
+msgstr "Result for action %s"
+
+#: ../view/kmb-mcollective/index/history.phtml:87
+#: ../view/kmb-mcollective/index/metadata.phtml:54
+#: ../view/kmb-mcollective/index/metadata.phtml:193
+msgid "Help"
+msgstr "Help"
+
+#: ../view/kmb-mcollective/index/history.phtml:89
+msgid "Click on action name to see action output"
+msgstr "Click on action name to see action output"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:13
+#: ../view/kmb-mcollective/index/show.phtml:48
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:14
 msgid "Save"
-msgstr ""
+msgstr "Save"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:19
 #, php-format
 msgid "%s agent description"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:26
-msgid "Back"
-msgstr ""
+msgstr "%s agent description"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:35
 msgid "Associated Actions"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:54
-#: ../view/kmb-mcollective/index/metadata.phtml:209
-msgid "Help"
-msgstr ""
+msgstr "Associated Actions"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:55
-#: ../view/kmb-mcollective/index/metadata.phtml:210
+#: ../view/kmb-mcollective/index/metadata.phtml:194
 msgid "Click on an agent's name to edit its metadata"
-msgstr ""
+msgstr "Click on an agent's name to edit its metadata"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:72
-#: ../view/kmb-mcollective/index/metadata.phtml:141
+#: ../view/kmb-mcollective/index/metadata.phtml:133
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:75
-#: ../view/kmb-mcollective/index/metadata.phtml:77
+#: ../view/kmb-mcollective/index/metadata.phtml:74
 msgid "Type a description for this action"
-msgstr ""
+msgstr "Type a description for this action"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:82
+#: ../view/kmb-mcollective/index/metadata.phtml:78
 msgid "Action icon"
-msgstr ""
+msgstr "Action icon"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:89
+#: ../view/kmb-mcollective/index/metadata.phtml:85
 msgid "Long details"
-msgstr ""
+msgstr "Long details"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:92
-#: ../view/kmb-mcollective/index/metadata.phtml:94
+#: ../view/kmb-mcollective/index/metadata.phtml:87
 msgid "Type long details for this action"
-msgstr ""
+msgstr "Type long details for this action"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:99
+#: ../view/kmb-mcollective/index/metadata.phtml:91
 msgid "Details summary"
-msgstr ""
+msgstr "Details summary"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:94
+#: ../view/kmb-mcollective/index/metadata.phtml:96
+msgid "Type details summary for this action"
+msgstr "Type details summary for this action"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:102
-#: ../view/kmb-mcollective/index/metadata.phtml:104
-msgid "Type details summary for this action"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:110
 msgid "Restrict action to"
-msgstr ""
+msgstr "Restrict action to"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:104
+msgid "Max number of discovered servers"
+msgstr "Max number of discovered servers"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:109
+msgid "and / or"
+msgstr "and / or"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:112
-msgid "Max number of discovered servers"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:117
-msgid "and / or"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:120
 msgid "Coma separated list of allowed servers"
-msgstr ""
+msgstr "Coma separated list of allowed servers"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:130
+#: ../view/kmb-mcollective/index/metadata.phtml:122
 #, php-format
 msgid "%s argument"
-msgstr ""
+msgstr "%s argument"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:133
+#: ../view/kmb-mcollective/index/metadata.phtml:125
 msgid "required"
-msgstr ""
+msgstr "required"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:144
-#: ../view/kmb-mcollective/index/metadata.phtml:146
+#: ../view/kmb-mcollective/index/metadata.phtml:135
 msgid "Type a description for this argument"
-msgstr ""
+msgstr "Type a description for this argument"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:139
+msgid "Type"
+msgstr "Type"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:142
+msgid "string"
+msgstr "string"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:143
+msgid "list"
+msgstr "list"
+
+#: ../view/kmb-mcollective/index/metadata.phtml:149
+msgid "List values"
+msgstr "List values"
 
 #: ../view/kmb-mcollective/index/metadata.phtml:151
-msgid "Type"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:161
-msgid "List values"
-msgstr ""
-
-#: ../view/kmb-mcollective/index/metadata.phtml:164
-#: ../view/kmb-mcollective/index/metadata.phtml:166
 msgid "Coma separated values"
-msgstr ""
+msgstr "Coma separated values"
 
-#: ../view/kmb-mcollective/index/metadata.phtml:188
+#: ../view/kmb-mcollective/index/metadata.phtml:172
 msgid "Mcollective Agents"
-msgstr ""
+msgstr "Mcollective Agents"
 
+#: ../view/kmb-mcollective/index/show.phtml:8
+msgid "Mcollective Actions"
+msgstr "Mcollective Actions"
+
+#: ../view/kmb-mcollective/index/show.phtml:16
+msgid "Choose an agent..."
+msgstr "Choose an agent..."
+
+#: ../view/kmb-mcollective/index/show.phtml:26
+msgid "Choose an action..."
+msgstr "Choose an action..."
+
+#: ../view/kmb-mcollective/index/show.phtml:37
+msgid "Server Name Filter"
+msgstr "Server Name Filter"
+
+#: ../view/kmb-mcollective/index/show.phtml:41
+msgid "Limit action on X nodes"
+msgstr "Limit action on X nodes"
+
+#: ../view/kmb-mcollective/index/show.phtml:47
+msgid "Run"
+msgstr "Run"
+
+#: ../view/kmb-mcollective/index/show.phtml:56
+msgid "Infos"
+msgstr "Infos"
+
+#: ../view/kmb-mcollective/index/show.phtml:57
+msgid ""
+"Choose an action to run through mcollective in the select box. Filter "
+"impacted servers ( regex are allowed). then click on the 'Run' button."
+msgstr ""
+"Choose an action to run through mcollective in the select box. Filter "
+"impacted servers ( regex are allowed). then click on the 'Run' button."
+
+#: ../view/kmb-mcollective/index/show.phtml:58
+msgid ""
+"Buttons will be greyed out while the command is running. You will be "
+"notified of each step during this process."
+msgstr ""
+"Buttons will be greyed out while the command is running. You will be "
+"notified of each step during this process."
+
+#: ../view/kmb-mcollective/index/show.phtml:59
+msgid "You can also limit the command on the X first nodes available"
+msgstr "You can also limit the command on the X first nodes available"

@@ -217,6 +217,18 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         }
     }
 
+    public function translationAction() {
+        $translation = [
+            'nameFilter' => $this->translate('Server name filter'),
+            'receivingDataNr' => $this->translate('Receiving Data: %d of %d nodes'),
+            'receivingDataPending' => $this->translate('Receiving data : receiving...'),
+            'receivingDataDone' => $this->translate('Receiving data : done.'),
+            'startingRequest' => $this->translate('Starting request : <span class="label label-primary">Running</span>'),
+            'requestStarted' => $this->translate('Request started <span class="label label-success">OK</span>'),
+        ];
+        return new JsonModel($translation);
+    }
+
     public function historyAction()
     {
         $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);

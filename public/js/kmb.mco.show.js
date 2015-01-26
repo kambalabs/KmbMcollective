@@ -22,13 +22,13 @@ function addSelectBox(object,argname, details)
     $("#"+argname+'list_arg_chosen').chosen();
 }
 
-function setFilterField(type, options, maxselect) {
+function setFilterField(type, options, maxselect,translation) {
     target=$("#form_filtre_mcol");
     if(type == "limited") {
 	if(parseInt(maxselect) >1) {
 	    multiple="multiple";
 	}
-	select = '<label class="control-label" for="filtre_mcol">Filtre serveurs</label><select id="filtre_mcol" data-placeholder="---" class="form-control" name="filter[]" data-rel="chosen"'+ multiple +'> <option value="default"></option></select>'
+	select = '<label class="control-label" for="filtre_mcol">'+translation['nameFilter']+'</label><select id="filtre_mcol" data-placeholder="---" class="form-control" name="filter[]" data-rel="chosen"'+ multiple +'> <option value="default"></option></select>'
 	target.html(select);
 	$.each(options, function(index,host) {
 	    $("#filtre_mcol").append(
@@ -41,11 +41,11 @@ function setFilterField(type, options, maxselect) {
 	    $("#filtre_mcol").chosen();
 	}
     }else{
-	target.html('<label class="control-label" for="filtre_mcol">Filtre serveurs</label><input type="text" class="form-control" name="filter" id="filtre_mcol" required>');
+	target.html('<label class="control-label" for="filtre_mcol">'+ translation['nameFilter']  +'</label><input type="text" class="form-control" name="filter" id="filtre_mcol" required>');
     }
 }
 
-function getResult(data,target,discovered_nodes,refreshResult)
+function getResult(data,target,discovered_nodes,refreshResult,translation)
 {
     $ .ajax({
         type: 'GET',
@@ -53,21 +53,18 @@ function getResult(data,target,discovered_nodes,refreshResult)
 	dataType: 'json',
 	success: function(data,status) {
             resultsReceived = Object.keys(data).length;
-	    console.log("Success in resultUrl : " + resultsReceived);
             NProgress.set(resultsReceived/discovered_nodes);
-            // console.log('polling... Received : ' + resultsReceived + ' - Discovered : ' + discovered_nodes);
 
-            $legend.html('Ex&eacute;cution de la requ&ecirc;te <span class="label label-success">OK</span><br/>');
+            $legend.html('Request started <span class="label label-success">OK</span><br/>');
 
             if (resultsReceived == discovered_nodes) {
-                $legend.append('<strong>Réception des données : done</strong><br/>');
-                // console.log('Stopping polling... Received : ' + resultsReceived + ' - Discovered : ' + discovered_nodes);
+                $legend.append('<strong>'+ translation['receivingDataDone'] +'</strong><br/>');
                 clearInterval(refreshResult);
                 NProgress.done();
             }
             else
             {
-                $legend.append('<strong>Réception des données : ' + resultsReceived + ' sur ' + discovered_nodes + ' serveurs.</strong><br/>');
+                $legend.append('<strong>' + sprintf(translation['receivingDataNr'], resultsReceived ,discovered_nodes)  +'</strong><br/>');
             }
 
             target.html('');
@@ -106,6 +103,17 @@ function getResult(data,target,discovered_nodes,refreshResult)
 
 $(document).ready(function(){
     var agents = null;
+    var translation = null;
+
+    $.ajax({
+	'async': false,
+	'global': false,
+	'url' : '/mcollective/translation',
+	'dataType' : 'json',
+	'success' : function(json){
+	    translation = json;
+	}
+    });
     $legend = $("#legende_mcol");
     NProgress.configure({ trickle: false });
 
@@ -156,9 +164,9 @@ $(document).ready(function(){
 	    $("#limit_mcol").removeAttr("disabled");
 	}
 	if(agents[agent]['actions'][action]['limithosts'] != null && agents[agent]['actions'][action]['limithosts'].length > 0 && agents[agent]['actions'][action]['limithosts'][0] != "") {
-	    setFilterField('limited', agents[agent]['actions'][action]['limithosts'],agents[agent]['actions'][action]['limitnum']);
+	    setFilterField('limited', agents[agent]['actions'][action]['limithosts'],agents[agent]['actions'][action]['limitnum'],translation);
 	}else{
-	    setFilterField('normal',null,null);
+	    setFilterField('normal',null,null,translation);
 	}
 	$.each(agents[agent]['actions'][action]['input'], function(inputargname, indetail){
 	    arglist += inputargname +' ';
@@ -178,23 +186,22 @@ $(document).ready(function(){
 	var $form = $(this);
 	var $target = $($form.attr('data-target'));
 	$target.html('');
-        $legend.html('Ex&eacute;cution de la requ&ecirc;te <span class="label label-primary">UP</span>');
+        $legend.html(translation['startingRequest']);
 	$.ajax({
 	    type: $form.attr('method'),
 	    url: $form.attr('action'),
 	    data: $form.serialize(),
 	    dataType: 'json',
 	    success: function(data, status) {
-		console.log("Success in run");
-                $legend.html('Ex&eacute;cution de la requ&ecirc;te <span class="label label-success">OK</span><br/>');
-                $legend.append('<strong>Réception des données : en cours...</strong><br/>');
+                $legend.html(translation['requestStarted']+'<br/>');
+                $legend.append('<strong>'+translation['receivingDataPending']+'</strong><br/>');
                 var discovered_nodes = data['discovered_nodes'].length;
 
                 var refreshResult = setInterval(function() {
-                                        getResult(data,$target,discovered_nodes,refreshResult);
-                                    }, 10000);
+                                        getResult(data,$target,discovered_nodes,refreshResult,translation);
+                                    }, 2000);
 
-                getResult(data,$target,discovered_nodes,refreshResult);
+                getResult(data,$target,discovered_nodes,refreshResult,translation);
 
                 $("#action_mcol :input").prop("disabled", false);
 	    },

@@ -11,11 +11,11 @@
   <div class="col-sm-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-	  <span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span>R&eacute;sultat de l'action <?= $actionid ?>
+	  <span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span><?= sprintf($this->translate("Execution summary for action %s"),$actionid); ?>
       </div>
       <div class="panel-body">
 	  <blockquote>
-	      <?= sizeof($logs) ?> r&eacute;ponses ont été recues <?php if($errorcount != 0): ?> dont <font color="red"><?= $errorcount ?> </font> erreurs.
+	      <?= sprintf($this->translatePlural("%d response received","%d responses received",sizeof($logs)),sizeof($logs)) ?> <?php if($errorcount != 0): ?> <?= sprintf($this->translatePlural("(with <span style=\"color:red;\">%d</span> error)","(with <span style=\"color:red;\">%d</span> errors)",$errorcount),$errorcount); ?>
 	      <?php endif ?>.
 	  </blockquote>
 	  <?php if(is_array($logs)): ?>
@@ -38,21 +38,23 @@
 		          <span class="label label-danger">Error</span>
 		          <?php endif ?>
                       </td>
-
-	      <div id="<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>" class="result_detail">
-	          <?php $dataResult = json_decode($line['result']); ?>
-                  <?php if($dataResult) : ?>
-	          <?php foreach(get_object_vars($dataResult) as $name => $value): ?>
-                  <?php if ($value === "") { continue; } ?>
-	          <span class="label label-default result-mco"><?= $name ?></span>
-                  <?php if( is_string($value)) : ?>
-	          <pre><?= trim($value) ?></pre>
-                  <?php else : ?>
-                  <pre><?= json_encode($value) ?></pre>
-                  <?php endif ?>
-	          <?php endforeach ?>
-                  <?php endif ?>
-	      </div>
+                      <div id="<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>_title" style="display:none">
+                          <?= sprintf($this->translate("Result for action %s"),$line['agent']. "::".$line['action']); ?>
+                      </div>
+	              <div id="<?= str_replace('.','_',$hostname) ?>_<?= $line['requestid']; ?>" class="result_detail">
+	                  <?php $dataResult = json_decode($line['result']); ?>
+                          <?php if($dataResult) : ?>
+	                  <?php foreach(get_object_vars($dataResult) as $name => $value): ?>
+                          <?php if ($value === "") { continue; } ?>
+	                  <span class="label label-default result-mco"><?= $name ?></span>
+                          <?php if( is_string($value)) : ?>
+	                  <pre><?= trim($value) ?></pre>
+                          <?php else : ?>
+                          <pre><?= json_encode($value) ?></pre>
+                          <?php endif ?>
+	                  <?php endforeach ?>
+                          <?php endif ?>
+	              </div>
               	  </tr>
 	          <?php endforeach ?>
               </table>
@@ -82,9 +84,9 @@
   </div>
   <div class="col-sm-6">
       <div id="details" data-spy="affix" data-offset-top="0">
-          <h2>D&eacute;tails</h2>
+          <h2><?= $this->translate("Help"); ?></h2>
           <blockquote>
-	      Cliquer sur les actions sous les serveurs pour obtenir la sortie de la commande.
+	      <?= $this->translate("Click on action name to see action output"); ?>
           </blockquote>
           <div id="result">
           </div>

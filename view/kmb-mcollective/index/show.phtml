@@ -1,28 +1,29 @@
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/sprintf.js'); ?>
 <?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.show.js'); ?>
 <?php $this->headLink()->prependStylesheet($this->basePath() . '/css/kmb.mco.css'); ?>
 
 <div class="row">
   <div class="col-sm-7">
     <div class="panel panel-default">
-      <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span>Actions Mcollective</div>
+    <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span><span class="panel-break"></span><?= $this->translate('Mcollective Actions') ?></div>
       <div class="panel-body">
 	<form class="form-horizontal" data-async data-target="#resultat_action_mcol" action="<?php echo $this->url('mcollective', ['action' => 'run'], [], true) ?>" method="POST" id="action_mcol">
 	  <fieldset class="col-sm-12">
 	    <div class="form-group">
-	      <label class="control-label" for="selectAgent">Agent</label>
+    <label class="control-label" for="selectAgent"><?= $this->translate('Agent') ?></label>
 	      <div class="controls row">
 		<div class="col-lg-12">
-		  <select id="selectAgent" data-placeholder="Selectionnez un Agent..." class="form-control" name="agent" data-rel="chosen" <?php if(is_null($this->environment)):?> disabled <?php endif ?>>
+		  <select id="selectAgent" data-placeholder="<?= $this->translate('Choose an agent...') ?>" class="form-control" name="agent" data-rel="chosen" <?php if(is_null($this->environment)):?> disabled <?php endif ?>>
 		    <option value="default"></option>
                   </select>
                 </div>
               </div>
             </div>
             <div id="form_act_mcol" class="form-group act_mcol">
-              <label class="control-label" for="selectAction">Action</label>
+    <label class="control-label" for="selectAction"><?= $this->translate('Action')?></label>
               <div class="controls row">
                 <div class="col-lg-12">
-                  <select id="selectAction" data-placeholder="Selectionnez une Action..." class="form-control selectAction" name="action" data-rel="chosen" <?php if(is_null($this->environment)):?> disabled <?php endif ?>>
+                  <select id="selectAction" data-placeholder="<?= $this->translate('Choose an action...') ?>" class="form-control selectAction" name="action" data-rel="chosen" <?php if(is_null($this->environment)):?> disabled <?php endif ?>>
 		    <option value="default"></option>
                   </select>
                 </div>
@@ -33,18 +34,18 @@
 	    <div class="form-group">
 	      <div class="controls row">
 		<div class="col-lg-6" id="form_filtre_mcol">
-		  <label class="control-label" for="filtre_mcol">Filtre serveurs</label>
+    <label class="control-label" for="filtre_mcol"><?= $this->translate('Server Name Filter') ?></label>
 		  <input type="text" class="form-control" name="filter" id="filtre_mcol" required <?php if(is_null($this->environment)):?> disabled <?php endif ?>>
 		</div>
 		<div class="col-lg-6" id="form_limit_mcol">
-		  <label class="control-label" for="limit_mcol">Limiter l'action sur X serveurs</label>
+    <label class="control-label" for="limit_mcol"><?= $this->translate('Limit action on X nodes') ?></label>
 		  <input type="text" class="form-control" name="limit" id="limit_mcol" <?php if(is_null($this->environment)):?> disabled <?php endif ?>>
 		</div>
 	      </div>
 	    </div>
 	    <div class="form-actions">
-	      <button type="submit" class="btn btn-primary<?php if(is_null($this->environment)):?> disabled <?php endif ?>" id="mcol-form-submit">Exécuter</button>
-	      <button type="reset" class="btn">Annuler</button>
+    <button type="submit" class="btn btn-primary<?php if(is_null($this->environment)):?> disabled <?php endif ?>" id="mcol-form-submit"><?= $this->translate('Run')?></button>
+    <button type="reset" class="btn"><?= $this->translate('Cancel') ?></button>
 	    </div>
 	  </fieldset>
 	</form>
@@ -52,10 +53,10 @@
     </div>
   </div>
   <div class="col-sm-5" id="legend">
-    <h1>Infos</h1>
-    <blockquote id="legende_mcol"><p>Choisissez l&lsquo;action à réaliser via mcollective dans le menu déroulant. Filtrez ensuite les serveurs ciblés par la commande (accepte les expressions régulières) puis cliquez sur le bouton exécuter.</p>
-      <p>Le bouton sera grisé le temps de la validation de la commande. Une notification apparaitra pour indiquer si la commande a été acceptée ou pas.</p>
-      <p>Vous pouvez limiter la commande à X serveurs qui répondront au filtre donné.</p>
+    <h1><?= $this->translate('Infos')?></h1>
+    <blockquote id="legende_mcol"><p><?= $this->translate('Choose an action to run through mcollective in the select box. Filter impacted servers ( regex are allowed). then click on the \'Run\' button.')?></p>
+    <p><?= $this->translate('Buttons will be greyed out while the command is running. You will be notified of each step during this process.')?></p>
+    <p><?= $this->translate('You can also limit the command on the X first nodes available')?></p>
     </blockquote>
     <!-- <blockquote id="pending_mcol"></blockquote> -->
   </div>
