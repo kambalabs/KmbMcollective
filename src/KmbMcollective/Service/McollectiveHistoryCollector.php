@@ -28,6 +28,7 @@ class McollectiveHistoryCollector implements CollectorInterface
     /** @var Service\NodeInterface */
     protected $historyRepository;
     protected $agentRepository;
+    protected $specificMetadata;
 
     /**
      * @param array $params
@@ -57,24 +58,43 @@ class McollectiveHistoryCollector implements CollectorInterface
         foreach($logsCollection as $actionid => $detail) {
             if($detail->getIhmLog() != null) {
                 $agentSplit = explode('::',$detail->getIhmLog()[0]->getAgent());
-                $agent = $this->agentRepository->getByName($agentSplit[0]);
-                if(isset($agent)) {
-                    $action = array_values(array_filter($agent->getRelatedActions(),function($action) use ($agentSplit) {
-                            if($action->getName() == $agentSplit[1]) {
-                                return true;
-                            }
-                            }));
-                    $summary = [ 'detail' => $action[0]->getShortDesc(), 'icon' => $action[0]->getIhmIcon() ];
+                if(array_key_exists($agentSplit[0], $this->specificMetadata)){
                     $params = json_decode($detail->getIhmLog()[0]->getParameters());
-
+                    $summary = $this->specificMetadata[$agentSplit[0]];
                     if(!empty($params)) {
                         foreach($params as $arg => $value) {
-                            $summary['detail'] = str_replace('#'.$arg.'#', $value,$summary['detail']);
+                            error_log( print_r($params,true));
+                            if(is_int($arg)){
+                                foreach(get_object_vars($value) as $name => $info) {
+                                    $summary['detail'] = str_replace('#'.$name.'#', $info,$summary['detail']);
+                                }
+                            }else{
+                                $summary['detail'] = str_replace('#'.$arg.'#', $value,$summary['detail']);
+                            }
                         }
                     }
                     $detail->setSummary($summary);
                 }else{
-                    error_log($agentSplit[0]." not found..");
+                    $agent = $this->agentRepository->getByName($agentSplit[0]);
+                    if(isset($agent)) {
+                        $action = array_values(array_filter($agent->getRelatedActions(),function($action) use ($agentSplit) {
+                                    if($action->getName() == $agentSplit[1]) {
+                                        return true;
+                                    }
+                                }));
+                        $summary = [ 'detail' => $action[0]->getShortDesc(), 'icon' => $action[0]->getIhmIcon() ];
+                        $params = json_decode($detail->getIhmLog()[0]->getParameters());
+
+                        if(!empty($params)) {
+                            foreach($params as $arg => $value) {
+                                $summary['detail'] = str_replace('#'.$arg.'#', $value,$summary['detail']);
+                            }
+                        }
+                        $detail->setSummary($summary);
+
+                    }else{
+                        error_log($agentSplit[0]." not found..");
+                    }
                 }
             }else{
                 error_log("Agent MCO : ".$detail->getAction());
@@ -121,6 +141,17 @@ class McollectiveHistoryCollector implements CollectorInterface
     public function setAgentRepository($agentRepository)
     {
         $this->agentRepository = $agentRepository;
+        return $this;
+    }
+
+    public function getSpecificMetadata()
+    {
+        return $this->specificMetadata;
+    }
+
+    public function setSpecificMetadata($metadatas)
+    {
+        $this->specificMetadata = $metadatas;
         return $this;
     }
 

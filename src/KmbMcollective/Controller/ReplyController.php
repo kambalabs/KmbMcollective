@@ -44,7 +44,6 @@ class ReplyController extends AbstractActionController
         $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
         $historyRepository = $this->getServiceLocator()->get('McollectiveHistoryRepository');
         $handler = $this->getServiceLocator()->get('KmbMcollective\Service\ReplyHandler');
-
         $response = json_decode($this->getRequest()->getContent());
         $handler->process($response,$historyRepository);
 

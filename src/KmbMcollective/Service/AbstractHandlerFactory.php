@@ -26,15 +26,85 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class AbstractHandlerFactory implements AbstractFactoryInterface
 {
 
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName) {
-        if(preg_match('/Patch/', $requestedName)) {
-            error_log('Can create service with name '. $name .' or '. $requestedName);
+    /**
+     * @var array
+     */
+    protected $config;
+
+    protected $configKey = 'mcollective';
+    protected $configHandler = 'handler';
+
+    /**
+     * Determine if we can create a service with name
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param                         $name
+     * @param                         $requestedName
+     * @return bool
+     */
+    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        $config = $this->getConfig($serviceLocator);
+        if (empty($config)) {
+            return false;
         }
-        return (fnmatch('*ReplyHandlerFactory', $requestedName) && $serviceLocator->has($requestedName)) ? true : false;
+
+        return (isset($config[$this->configHandler][$requestedName]) && is_array($config[$this->configHandler][$requestedName]));
     }
 
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName) {
-        error_log('Call create service with name '. $name .' or '. $requestedName);
-        return $serviceLocator->get($requestedName);
+    /**
+     * Create service with name
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param                         $name
+     * @param                         $requestedName
+     * @return mixed
+     * @throws MissingConfigurationException
+     */
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        error_log("Calling createServiceWithName : ".$requestedName);
+        $config = $this->getConfig($serviceLocator);
+        $config = $config[$this->configHandler][$requestedName];
+
+
+        /** @var FactoryInterface $collectorFactory */
+        $replyHandlerFactory = new $config['factory'];
+
+        // $datatable = new DataTable(isset($config['id']) ? $config['id'] : $requestedName);
+        // $datatable->setCollector($collectorFactory->createService($serviceLocator));
+        // $columns = array();
+        // foreach ($config['columns'] as $columnConfig) {
+        //     $columns[] = Column::factory($serviceLocator, $columnConfig);
+        // }
+        // $datatable->setColumns($columns);
+        // if (isset($config['classes'])) {
+        //     $datatable->setClasses($config['classes']);
+        // }
+
+        // return $datatable;
+
+        return $replyHandlerFactory->createService($serviceLocator);
+    }
+
+    protected function getConfig(ServiceLocatorInterface $serviceLocator)
+    {
+        if ($this->config !== null) {
+            return $this->config;
+        }
+
+        if (!$serviceLocator->has('Config')) {
+            $this->config = array();
+            return $this->config;
+        }
+
+        $config = $serviceLocator->get('Config');
+        if (!isset($config[$this->configKey])) {
+            $this->config = array();
+            return $this->config;
+        }
+
+        $this->config = $config[$this->configKey];
+        return $this->config;
     }
 }

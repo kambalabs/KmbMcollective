@@ -399,6 +399,7 @@ class McollectiveHistory implements McollectiveHistoryInterface
      */
     public function isFinished()
     {
+        error_log(print_r($this->finished,true));
         return $this->finished;
     }
 
@@ -465,7 +466,8 @@ class McollectiveHistory implements McollectiveHistoryInterface
             'sender' => $this->getSender(),
             'statuscode' => $this->getStatusCode(),
             'result' => $this->getResult(),
-            'received_at' => $this->getReceivedAt()
+            'received_at' => $this->getReceivedAt(),
+            'finished' => $this->isFinished(),
         ];
     }
 

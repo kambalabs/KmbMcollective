@@ -30,7 +30,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
-
 class ReplyHandler implements ServiceLocatorAwareInterface {
 
     protected $serviceLocator;
@@ -38,9 +37,11 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
     public function process($historyLog,$repository) {
         $log = $repository->getRequestResponse($historyLog->requestid, $historyLog->hostname);
         if(is_bool($log) || empty($log)) {
+            error_log('Creating new McollectiveHistory');
             $log = new McollectiveHistory(isset($historyLog->actionid) ? $historyLog->actionid : $historyLog->requestid , $historyLog->requestid, isset($historyLog->caller) ? $historyLog->caller : 'unknown' , isset($historyLog->hostname) ? $historyLog->hostname : null , isset($historyLog->agent) ? $historyLog->agent : null, isset($historyLog->senderaction) ? $historyLog->senderaction : null, isset($historyLog->senderid) ? $historyLog->senderid : 'unknown', isset($historyLog->statuscode) ? $historyLog->statuscode : null, isset($historyLog->data) ? $historyLog->data : null, date('Y-m-d G:i:s'), isset($historyLog->type) ? $historyLog->type : null);
             $repository->add($log);
         }else{
+            error_log('Updating McollectiveHistory');
             $log = $log[0];
             // Merging existing infos with new ones
             if(isset($historyLog->actionid) && ($log->getActionid() == $log->getRequestId())) {
@@ -55,15 +56,16 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
             if($log->getType() == null && isset($historyLog->type)) { $log->setType($historyLog->type); };
             $repository->update($log);
         }
-        if( $log->getAction() != null && $log->getStatusCode() != null && $log->getType() != 'default' && $log->getType() != '') {
-            $handlerName = ucfirst($log->getType()).'ReplyHandlerFactory';
+        if ($log->getAction() && $log->getAgent()) {
+            $log->setFinished();
+            error_log(print_r($log,true));
+            $repository->update($log);
+        }
+        if( $log->isFinished() && $log->getType() != 'default' ) {
+            error_log('Specific type found...');
+            $handlerName = ucfirst($log->getType()).'ReplyHandler';
             $handler = $this->serviceLocator->get($handlerName);
             $handler->process($log);
-        }
-        if ($log->getAction() && $log->getAgent()) {
-        $log->setFinished();
-        error_log(print_r($log,true));
-        $repository->update($log);
         }
 
     }

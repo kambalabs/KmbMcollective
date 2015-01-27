@@ -46,7 +46,6 @@ class ResultController extends AbstractActionController implements Authenticated
     public function getResultsAction() {
         $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
         $historyRepository = $this->getServiceLocator()->get('McollectiveHistoryRepository');
-        //        $securityLogsRepository = $this->getServiceLocator()->get('SecurityLogsRepository');
         $actionid = $this->params()->fromRoute('actionid');
         $requestid = $this->params()->fromRoute('requestid');
         if(isset($requestid)) {

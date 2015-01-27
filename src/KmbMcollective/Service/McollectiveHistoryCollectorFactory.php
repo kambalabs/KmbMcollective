@@ -41,6 +41,7 @@ class McollectiveHistoryCollectorFactory implements FactoryInterface
         try {
         $historyRepositoryService = $serviceLocator->get('KmbMcollective\Service\McollectiveHistory');
         $agentRepository = $serviceLocator->get('McollectiveAgentRepository');
+        $metadatas = $serviceLocator->get('Config')['mcollective']['translation'];
         } catch (\Exception $e) {
             do {
                 var_dump($e->getMessage());
@@ -49,6 +50,7 @@ class McollectiveHistoryCollectorFactory implements FactoryInterface
 
         $service->setHistoryRepositoryService($historyRepositoryService);
         $service->setAgentRepository($agentRepository);
+        $service->setSpecificMetadata($metadatas);
 
         return $service;
     }
