@@ -21,14 +21,13 @@
 namespace KmbMcollective\Service;
 
 use GtnPersistZendDb\Infrastructure\ZendDb;
-use GtnPersistZendDb\Service\AggregateRootProxyFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class McollectiveHistoryRepositoryFactory extends ZendDb\RepositoryFactory
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var RevisionRepository $service */
+        /** @var McollectiveHistoryRepository $service */
         $service = parent::createService($serviceLocator);
 
         $service->setLogClass($this->getStrict('log_class'));

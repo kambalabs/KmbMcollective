@@ -21,83 +21,52 @@
 namespace KmbMcollective\Service;
 
 use GtnPersistZendDb\Infrastructure\ZendDb\Repository;
-use GtnPersistBase\Model\AggregateRootInterface;
-use GtnPersistBase\Model\RepositoryInterface;
 use KmbMcollective\Model\McollectiveHistoryInterface;
 use KmbMcollective\Model\McollectiveHistoryRepositoryInterface;
+use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Expression;
-use Zend\Db\Adapter\Driver\ResultInterface;
-
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class McollectiveHistoryRepository extends Repository implements McollectiveHistoryRepositoryInterface
 {
-
-
+    /** @var  string */
     protected $logTableName;
+
+    /** @var  string */
     protected $logTableSequenceName;
+
+    /** @var  HydratorInterface */
     protected $logHydrator;
+
+    /** @var  string */
     protected $logClass;
+
+    /** @var string */
     protected $discoveredNodesTableName = 'mcollective_logs_discovered';
 
-    /**
-     * @param AggregateRootInterface $aggregateRoot
-     * @return McollectiveHistoryInterface
-     * @throws \Zend\Db\Exception\ExceptionInterface
-     */
-    public function add(AggregateRootInterface $aggregateRoot)
-    {
-        /** @var McollectiveHistoryInterface $aggregateRoot */
-        $connection = $this->getDbAdapter()->getDriver()->getConnection()->beginTransaction();
-        try {
-            /** @var RevisionInterface $aggregateRoot */
-            parent::add($aggregateRoot);
-            $connection->commit();
-        } catch (ExceptionInterface $e) {
-            $connection->rollback();
-            throw $e;
-        }
-
-        return $this;
-    }
-
-    public function applyConstraintOnQuery($request, $offset = null, $limit = null, $orderBy = null,$hostlist=[]) {
-        if($offset != null) {
-            $request->offset($offset);
-        }
-        if($limit != null) {
-            $request->limit($limit);
-        }
-        if($orderBy != null) {
-            $request->order($orderBy);
-        } else {
-            $request->order('received_at DESC');
-        }
-        return $request;
-    }
-
-    public function getFilteredLogs($query = null,$offset = null, $limit = null, $orderBy = null,$hostlist=[])
+    public function getFilteredLogs($query = null, $offset = null, $limit = null, $orderBy = null, $hostlist = [])
     {
         $selectActionid = $this->getSlaveSql()->select()->quantifier('DISTINCT')->columns(['actionid' => 'actionid', 'received_at' => new Expression('min(received_at)')])->from($this->tableName)->group('actionid');
-        $selectActionid = $this->applyConstraintOnQuery($selectActionid, $offset, $limit, $orderBy,$hostlist);
+        $selectActionid = $this->applyConstraintOnQuery($selectActionid, $offset, $limit, $orderBy, $hostlist);
 
         $actionids = [];
-        foreach($this->performRead($selectActionid) as $result) {
+        foreach ($this->performRead($selectActionid) as $result) {
             $actionids[] = $result['actionid'];
         }
 
         $selectLogs = $this->getJoinSelect();
-        $selectLogs = $this->applyConstraintOnQuery($selectLogs, null, null, $orderBy,$hostlist);
-        if($query != null) {
-                $selectLogs->where
-                ->like('agent','%'.$query.'%')
+        $selectLogs = $this->applyConstraintOnQuery($selectLogs, null, null, $orderBy, $hostlist);
+        if ($query != null) {
+            $selectLogs->where
+                ->like('agent', '%' . $query . '%')
                 ->or
-                ->like('filter','%'.$query.'%')
+                ->like('filter', '%' . $query . '%')
                 ->or
-                ->like('fullname', '%'.$query.'%')
+                ->like('fullname', '%' . $query . '%')
                 ->or
-                ->like('login','%'.$query.'%');
+                ->like('login', '%' . $query . '%');
         }
 
         $selectLogs->where([
@@ -110,87 +79,88 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
     public function getNumberOfRows($query)
     {
         $selectLogs = $this->getSlaveSql()->select()->from($this->tableName)->columns(array('number' => new \Zend\Db\Sql\Expression('COUNT(*)')));;
-        if($query != null) {
-                $selectLogs->where
-                ->like('agent','%'.$query.'%')
+        if ($query != null) {
+            $selectLogs->where
+                ->like('agent', '%' . $query . '%')
                 ->or
-                ->like('filter','%'.$query.'%')
+                ->like('filter', '%' . $query . '%')
                 ->or
-                ->like('fullname', '%'.$query.'%')
+                ->like('fullname', '%' . $query . '%')
                 ->or
-                ->like('login','%'.$query.'%');
+                ->like('login', '%' . $query . '%');
         }
         return $this->performRead($selectLogs);
     }
-
-
 
     /**
      * @param $actionid
      * @return McollectiveHistoryInterface
      */
-    public function getByActionid($actionid,$state = null)
+    public function getByActionid($actionid, $state = null)
     {
         $where = new Where();
-        $where -> equalTo('actionid',$actionid);
-        if(!empty($state)) {
+        $where->equalTo('actionid', $actionid);
+        if (!empty($state)) {
             $where
                 ->and
                 ->isNotNull('statuscode')
                 ->and
-                ->equalTo('finished','t');
+                ->equalTo('finished', 't');
         }
         $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
-    public function getResultsByActionid($actionid,$expectedResults,$maxiteration=null) {
+    public function getResultsByActionid($actionid, $expectedResults, $maxiteration = null)
+    {
         $where = new Where();
-        $where -> equalTo('actionid',$actionid);
+        $where->equalTo('actionid', $actionid);
         $where
             ->and
             ->isNotNull('statuscode');
         $select = $this->getSelect()->where($where);
-        return $this->getResultSetFor($select,$expectedResults,$maxiteration);
+        return $this->getResultSetFor($select, $expectedResults, $maxiteration);
     }
 
-    public function getAllByActionidRequestId($actionid,$requestid,$state = null)
+    public function getAllByActionidRequestId($actionid, $requestid, $state = null)
     {
         $where = new Where();
-        $where -> equalTo('actionid',$actionid);
-        $where -> equalTo('requestid',$requestid);
-        if(!empty($state)) {
+        $where->equalTo('actionid', $actionid);
+        $where->equalTo('requestid', $requestid);
+        if (!empty($state)) {
             $where
                 ->and
                 ->isNotNull('statuscode')
                 ->and
-                ->equalTo('finished','t');
+                ->equalTo('finished', 't');
         }
         $select = $this->getSelect()->where($where);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
 
-    public function getResultsByActionidRequestId($actionid, $requestid, $expectedResults,$maxiteration=null) {
+    public function getResultsByActionidRequestId($actionid, $requestid, $expectedResults, $maxiteration = null)
+    {
         $where = new Where();
-        $where -> equalTo('actionid',$actionid);
-        $where -> equalTo('requestid',$requestid);
+        $where->equalTo('actionid', $actionid);
+        $where->equalTo('requestid', $requestid);
         $where
             ->and
             ->isNotNull('statuscode');
         $select = $this->getSelect()->where($where);
-        return $this->getResultSetFor($select,$expectedResults,$maxiteration);
+        return $this->getResultSetFor($select, $expectedResults, $maxiteration);
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->hydrateAggregateRootsFromResult($this->performRead($this->getSelect()));
     }
 
-
-    public function getResultSetFor($request, $expectedResult, $maxiteration=null) {
+    public function getResultSetFor($request, $expectedResult, $maxiteration = null)
+    {
         $result = $this->hydrateAggregateRootsFromResult($this->performRead($request));
-        for($i=0; count($result) < $expectedResult ; $i++) {
-            if(isset($maxiteration)) {
-                if($i > $maxiteration) {
+        for ($i = 0; count($result) < $expectedResult; $i++) {
+            if (isset($maxiteration)) {
+                if ($i > $maxiteration) {
                     break;
                 }
             }
@@ -200,12 +170,13 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return $result;
     }
 
-    public function getRequestResponse($requestid, $hostname) {
+    public function getRequestResponse($requestid, $hostname)
+    {
         $select = $this->getSelect();
         $select->where
             ->equalTo('requestid', $requestid)
             ->and
-            ->equalTo('hostname',$hostname);
+            ->equalTo('hostname', $hostname);
         $select->limit(1);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
     }
@@ -218,6 +189,22 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
     {
         $select = $this->getSelect()->order('received_at DESC')->limit($nlogs);
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
+    }
+
+    protected function applyConstraintOnQuery($request, $offset = null, $limit = null, $orderBy = null, $hostlist = [])
+    {
+        if ($offset != null) {
+            $request->offset($offset);
+        }
+        if ($limit != null) {
+            $request->limit($limit);
+        }
+        if ($orderBy != null) {
+            $request->order($orderBy);
+        } else {
+            $request->order('received_at DESC');
+        }
+        return $request;
     }
 
     protected function getJoinSelect()
@@ -238,13 +225,12 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
             ],
             Select::JOIN_LEFT
         )->join(
-            ['dn' => $this->discoveredNodesTableName],
-            'log.id = dn.log_id',
-            ['dn.hostname' => 'hostname'],
-            Select::JOIN_LEFT
+                ['dn' => $this->discoveredNodesTableName],
+                'log.id = dn.log_id',
+                ['dn.hostname' => 'hostname'],
+                Select::JOIN_LEFT
             );
     }
-
 
     protected function hydrateAggregateRootsFromResultGroupByActionid(ResultInterface $result)
     {
@@ -262,13 +248,13 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
 
             if (isset($row['log.actionid'])) {
                 $agLog = $aggregateRoot->getIhmLog();
-                if(empty($agLog)) {
+                if (empty($agLog)) {
                     $log = new $logClassName;
                     $this->logHydrator->hydrateFromJoin($row, $log);
                     $aggregateRoot->addIhmLogs($log);
                 }
-                if(isset($row['dn.hostname'])) {
-                    if(! in_array( $row['dn.hostname'],$log->getDiscoveredNodes())) {
+                if (isset($row['dn.hostname'])) {
+                    if (!in_array($row['dn.hostname'], $log->getDiscoveredNodes())) {
                         $log->addDiscoveredNode($row['dn.hostname']);
                     }
                 }
@@ -277,41 +263,47 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
         return array_values($aggregateRoots);
     }
 
-
-    public function setLogTableName($logtable) {
+    public function setLogTableName($logtable)
+    {
         $this->logTableName = $logtable;
         return $this;
     }
 
-    public function getLogTableName() {
+    public function getLogTableName()
+    {
         return $this->logTableName;
     }
 
-    public function setLogTableSequenceName($logtableseq) {
+    public function setLogTableSequenceName($logtableseq)
+    {
         $this->logTableSequenceName = $logtableseq;
         return $this;
     }
 
-    public function getLogTableSequenceName() {
+    public function getLogTableSequenceName()
+    {
         return $this->logTableSequenceName;
     }
 
-    public function setLogClass($logclass) {
+    public function setLogClass($logclass)
+    {
         $this->logClassName = $logclass;
         return $this;
     }
 
-    public function getLogClass() {
+    public function getLogClass()
+    {
         return $this->logClassName;
     }
 
-    public function setLogHydrator($loghydrator) {
+    public function setLogHydrator($loghydrator)
+    {
         $this->logHydrator = $loghydrator;
         return $this;
     }
 
-    public function getLogHydrator() {
+    public function getLogHydrator()
+    {
         return $this->logHydrator;
     }
-
 }
