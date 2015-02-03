@@ -34,7 +34,7 @@ class McollectiveAction implements McollectiveActionInterface
     /** @var McollectiveAgent */
     protected $relatedAgent;
 
-    protected $arguments;
+    protected $arguments = [];
 
     protected $longDetail;
 
@@ -132,7 +132,7 @@ class McollectiveAction implements McollectiveActionInterface
         $this->relatedAgent = $relatedagent;
         return $this;
     }
-        
+
 
     /**
      * Get Agent's related actions
@@ -178,8 +178,8 @@ class McollectiveAction implements McollectiveActionInterface
         return null;
     }
 
-    
-    
+
+
     /**
      * Add an agent related action.
      *
@@ -204,7 +204,7 @@ class McollectiveAction implements McollectiveActionInterface
     }
 
 
-    
+
 
     /**
      * Set Action long description.
@@ -216,7 +216,7 @@ class McollectiveAction implements McollectiveActionInterface
         $this->longDetail = $longdesc;
         return $this;
     }
-  
+
 
     /**
      * Get Action long description.
@@ -247,7 +247,7 @@ class McollectiveAction implements McollectiveActionInterface
         return $this->shortDetail;
     }
 
-    
+
     /**
      * Set Agent ihm icon
      *
@@ -287,7 +287,7 @@ class McollectiveAction implements McollectiveActionInterface
     public function getLimitNumber() {
         return $this->limitNum;
     }
-       
+
 
     /**
      * Set Action's allowed host

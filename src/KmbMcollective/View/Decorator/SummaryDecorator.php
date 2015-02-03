@@ -37,8 +37,8 @@ class SummaryDecorator extends AbstractDecorator
      * @param McollectiveLogInterface $object
      * @return string
      */
-    public function decorateValue($object)
+    public function decorateValue($object,$context = null)
     {
-        return '<span class="glyphicon '. $object->getSummary()['icon'].'"></span> <span>'.$object->getSummary()['detail'] .'</span>';
+        return '<span class="glyphicon '. $object->getSummary()['icon'].'"></span> <span>'. $object->getSummary()['detail'] .'</span>';
     }
 }

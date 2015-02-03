@@ -37,8 +37,8 @@ class FullNameDecorator extends AbstractDecorator
      * @param McollectiveLogInterface $object
      * @return string
      */
-    public function decorateValue($object)
+    public function decorateValue($object,$context = null)
     {
-        return '<span title="' . $this->escapeHtml($object->getCaller()) . '">' . $this->escapeHtml($object->getIhmLog()!= null ? $object->getIhmLog()[0]->getFullName() : $object->getCaller() ) . '</span>';
+        return '<span title="' . $this->escapeHtml($object->getCaller()) . '">' . $object->getCaller() . '</span>';
     }
 }

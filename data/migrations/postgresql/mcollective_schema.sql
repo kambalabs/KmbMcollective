@@ -78,7 +78,7 @@ CREATE TABLE mcollective_actions_arguments_metadata (
   action_id	 INTEGER references mcollective_actions_metadata (id) ON DELETE CASCADE,
   name 	   	 VARCHAR(256) NOT NULL,
   description 	 VARCHAR(256),
-  mandatory	 SMALLINT,
+  mandatory	 BOOLEAN,
   type		 VARCHAR(16),
   value		 VARCHAR(128)
 );

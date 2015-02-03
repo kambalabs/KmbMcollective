@@ -37,11 +37,10 @@ class ServersDecorator extends AbstractDecorator
      * @param McollectiveLogInterface $object
      * @return string
      */
-    public function decorateValue($object)
+    public function decorateValue($object,$context = null)
     {
         $value = '<a href="'.$this->url('mcollective_history',['action' => 'history','id' => $object->getActionId()],[],true) .'">';
         if($object->getIhmLog()) {
-            error_log('=============>'. print_r($object,true));
             $value .=  '<span class="label label-success">'.count($object->getIhmLog()[0]->getDiscoveredNodes()).' serveurs</span></a>';
         }else{
             $value .= '<span class="label label-default">see details</span></a>';

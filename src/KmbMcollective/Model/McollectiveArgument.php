@@ -141,7 +141,7 @@ class McollectiveArgument implements McollectiveArgumentInterface
      * @return McollectiveAgent
      */
     public function setMandatory($required) {
-        $this->mandatory = $required;
+        $this->mandatory = $required == 'on' ? true : false;
         return $this;
     }
 
@@ -174,7 +174,7 @@ class McollectiveArgument implements McollectiveArgumentInterface
         return $this->type;
     }
 
-    
+
     /**
      * Set arg value
      *

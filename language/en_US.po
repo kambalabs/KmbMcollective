@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-26 10:20+0100\n"
-"PO-Revision-Date: 2015-01-26 10:20+0100\n"
+"POT-Creation-Date: 2015-02-03 17:49+0100\n"
+"PO-Revision-Date: 2015-02-03 17:49+0100\n"
 "Last-Translator: slaws\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: en_US\n"
@@ -55,8 +55,7 @@ msgstr "Receiving data : done."
 
 #: ../src/KmbMcollective/Controller/IndexController.php:226
 msgid "Starting request : <span class=\"label label-primary\">Running</span>"
-msgstr ""
-"Starting request : <span class=\"label label-primary\">Running</span>"
+msgstr "Starting request : <span class=\"label label-primary\">Running</span>"
 
 #: ../src/KmbMcollective/Controller/IndexController.php:227
 msgid "Request started <span class=\"label label-success\">OK</span>"

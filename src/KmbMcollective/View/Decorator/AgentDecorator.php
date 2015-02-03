@@ -37,7 +37,7 @@ class AgentDecorator extends AbstractDecorator
      * @param McollectiveLogInterface $object
      * @return string
      */
-    public function decorateValue($object)
+    public function decorateValue($object,$context = null)
     {
         return '<span class="badge">' . $this->escapeHtml($object->getIhmLog() != null ? $object->getIhmLog()[0]->getAgent() : $object->getAgent().'::'.$object->getAction()) . '</span>';
     }

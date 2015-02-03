@@ -28,7 +28,9 @@ class McollectiveHistoryCollector implements CollectorInterface
     /** @var Service\NodeInterface */
     protected $historyRepository;
     protected $agentRepository;
+    protected $userRepository;
     protected $specificMetadata;
+    protected $viewHelperManager;
 
     /**
      * @param array $params
@@ -56,49 +58,16 @@ class McollectiveHistoryCollector implements CollectorInterface
 
         // Add metadata
         foreach($logsCollection as $actionid => $detail) {
-            if($detail->getIhmLog() != null) {
-                $agentSplit = explode('::',$detail->getIhmLog()[0]->getAgent());
-                if(array_key_exists($agentSplit[0], $this->specificMetadata)){
-                    $params = json_decode($detail->getIhmLog()[0]->getParameters());
-                    $summary = $this->specificMetadata[$agentSplit[0]];
-                    if(!empty($params)) {
-                        foreach($params as $arg => $value) {
-                            error_log( print_r($params,true));
-                            if(is_int($arg)){
-                                foreach(get_object_vars($value) as $name => $info) {
-                                    $summary['detail'] = str_replace('#'.$name.'#', $info,$summary['detail']);
-                                }
-                            }else{
-                                $summary['detail'] = str_replace('#'.$arg.'#', $value,$summary['detail']);
-                            }
-                        }
-                    }
-                    $detail->setSummary($summary);
-                }else{
-                    $agent = $this->agentRepository->getByName($agentSplit[0]);
-                    if(isset($agent)) {
-                        $action = array_values(array_filter($agent->getRelatedActions(),function($action) use ($agentSplit) {
-                                    if($action->getName() == $agentSplit[1]) {
-                                        return true;
-                                    }
-                                }));
-                        $summary = [ 'detail' => $action[0]->getShortDesc(), 'icon' => $action[0]->getIhmIcon() ];
-                        $params = json_decode($detail->getIhmLog()[0]->getParameters());
+            $agentName = $detail->getIhmLog() ? $detail->getIhmLog()[0]->getAgent() : $detail->getAgent();
+            $formatter = isset($this->specificMetadata[$agentName]) ? new $this->specificMetadata[$agentName]['formatter']() : new DefaultFormatter($this->agentRepository);
+            $formatter->setViewHelperManager($this->viewHelperManager);
+            $detail = $formatter->format($detail);
 
-                        if(!empty($params)) {
-                            foreach($params as $arg => $value) {
-                                $summary['detail'] = str_replace('#'.$arg.'#', $value,$summary['detail']);
-                            }
-                        }
-                        $detail->setSummary($summary);
-
-                    }else{
-                        error_log($agentSplit[0]." not found..");
-                    }
-                }
-            }else{
-                error_log("Agent MCO : ".$detail->getAction());
+            $user = $this->userRepository->getByLogin($detail->getCaller());
+            if(isset($user)){
+                $detail->setCaller($user->getName());
             }
+
         }
         return $logsCollection;
     }
@@ -144,6 +113,26 @@ class McollectiveHistoryCollector implements CollectorInterface
         return $this;
     }
 
+
+    /**
+     * Get UserRepository.
+     *
+     */
+    public function getUserRepositoryService()
+    {
+        return $this->userRepository;
+    }
+
+    /**
+     * Set UserRepository.
+     *
+     */
+    public function setUserRepository($userRepository)
+    {
+        $this->userRepository = $userRepository;
+        return $this;
+    }
+
     public function getSpecificMetadata()
     {
         return $this->specificMetadata;
@@ -152,6 +141,17 @@ class McollectiveHistoryCollector implements CollectorInterface
     public function setSpecificMetadata($metadatas)
     {
         $this->specificMetadata = $metadatas;
+        return $this;
+    }
+
+    public function getViewHelperManager()
+    {
+        return $this->viewHelperManager;
+    }
+
+    public function setViewHelperManager($vhm)
+    {
+        $this->viewHelperManager = $vhm;
         return $this;
     }
 
