@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2014 Orange Applications for Business
+ * @copyright Copyright (c) 2014, 2015 Orange Applications for Business
  * @link      http://github.com/kambalabs for the sources repositories
  *
  * This file is part of Kamba.
@@ -56,6 +56,10 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
             $actionids[] = $result['actionid'];
         }
 
+        if(empty($actionids)) {
+            return null;
+        }
+
         $selectLogs = $this->getJoinSelect();
         $selectLogs = $this->applyConstraintOnQuery($selectLogs, null, null, $orderBy, $hostlist);
         if ($query != null) {
@@ -78,7 +82,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
 
     public function getNumberOfRows($query)
     {
-        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName)->columns(array('number' => new \Zend\Db\Sql\Expression('COUNT(*)')));;
+        $selectLogs = $this->getSlaveSql()->select()->from($this->tableName);
         if ($query != null) {
             $selectLogs->where
                 ->like('agent', '%' . $query . '%')
@@ -89,6 +93,7 @@ class McollectiveHistoryRepository extends Repository implements McollectiveHist
                 ->or
                 ->like('login', '%' . $query . '%');
         }
+        $selectLogs->columns(array('number' => new \Zend\Db\Sql\Expression('COUNT(DISTINCT(actionid))')));
         return $this->performRead($selectLogs);
     }
 

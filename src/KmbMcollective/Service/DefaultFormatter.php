@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2014 Orange Applications for Business
+ * @copyright Copyright (c) 2014, 2015 Orange Applications for Business
  * @link      http://github.com/kambalabs for the sources repositories
  *
  * This file is part of Kamba.
@@ -39,7 +39,12 @@ class DefaultFormatter extends AbstractFormatter
                             return true;
                         }
                     }));
-            $summary = [ 'detail' => $action[0]->getShortDesc(), 'icon' => $action[0]->getIhmIcon() ];
+            if(! empty($action)) {
+                $summary = [ 'detail' => $action[0]->getShortDesc(), 'icon' => $action[0]->getIhmIcon() ];
+            }else{
+                $summary = [ 'detail' => 'unfinished action', 'icon' => '' ];
+            }
+
 
             if($object->getIhmLog() !== null) {
                 $params = json_decode($object->getIhmLog()[0]->getParameters());
