@@ -57,7 +57,7 @@ class DefaultFormatter extends AbstractFormatter
             }
             $object->setSummary($summary);
         }else{
-            error_log($agent." not found..");
+            error_log("Agent '" .$agent."' not found..");
         }
         return $object;
     }

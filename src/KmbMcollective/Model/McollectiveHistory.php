@@ -399,7 +399,6 @@ class McollectiveHistory implements McollectiveHistoryInterface
      */
     public function isFinished()
     {
-        error_log(print_r($this->finished,true));
         return $this->finished;
     }
 

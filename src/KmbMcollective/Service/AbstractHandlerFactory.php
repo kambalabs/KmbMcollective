@@ -63,7 +63,6 @@ class AbstractHandlerFactory implements AbstractFactoryInterface
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        error_log("Calling createServiceWithName : ".$requestedName);
         $config = $this->getConfig($serviceLocator);
         $config = $config[$this->configHandler][$requestedName];
 
