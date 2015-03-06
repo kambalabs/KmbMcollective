@@ -69,9 +69,8 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
             if($log->getType() == null && isset($historyLog->type)) { $log->setType($historyLog->type); };
             $repository->update($log);
         }
-        if ($log->getAction() && $log->getAgent()) {
+        if ($log->getAgent() != null && $log->getResult() != null) {
             $log->setFinished();
-            error_log(print_r($log,true));
             $repository->update($log);
         }
         if( $log->isFinished() && $log->getType() != 'default' ) {
