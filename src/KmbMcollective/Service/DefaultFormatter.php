@@ -33,6 +33,12 @@ class DefaultFormatter extends AbstractFormatter
     public function format($object){
         $agent = $this->agentRepository->getByName($object->getAgent());
         $actionName = $object->getAction();
+        if ( empty($actionName) ) {
+            if($object->getIhmLog() != null) {
+                $fullagent = explode('::',$object->getIhmLog()[0]->getAgent()) ;
+                $actionName = $fullagent[1];
+            }
+        }
         if(isset($agent)) {
             $action = array_values(array_filter($agent->getRelatedActions(),function($action) use ($actionName) {
                         if($action->getName() == $actionName) {

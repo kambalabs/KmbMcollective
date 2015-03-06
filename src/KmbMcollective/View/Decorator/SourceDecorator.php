@@ -39,6 +39,6 @@ class SourceDecorator extends AbstractDecorator
      */
     public function decorateValue($object,$context = null)
     {
-        return $object->getType() != null ? '<img src="/images/logo.png" alt="kamba" title="kamba"></img>' : '<img src="/images/server.png" alt='.$object->getSender().' title='.$object->getSender().'></img>';
+        return $object->getType() != null || $object->getIhmLog() ? '<img src="/images/logo.png" alt="kamba" title="kamba"></img>' : '<img src="/images/server.png" alt='.$object->getSender().' title='.$object->getSender().'></img>';
     }
 }
