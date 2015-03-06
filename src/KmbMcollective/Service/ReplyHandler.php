@@ -37,8 +37,21 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
     public function process($historyLog,$repository) {
         $log = $repository->getRequestResponse($historyLog->requestid, $historyLog->hostname);
         if(is_bool($log) || empty($log)) {
+            $actionid = null;
+            if(!isset($historyLog->actionid) && isset($historyLog->statuscode)) {
+                if($historyLog->statuscode != 0)
+                {
+                    $capture = preg_match('/^\[Action id\: ([a-f0-9]+)\].*/', $historyLog->data, $match);
+                    error_log(print_r($match,true));
+                    if($capture) {
+                        $actionid = $match[1];
+                    }
+                }
+            } else {
+                $actionid = isset($historyLog->actionid) ? $historyLog->actionid : $historyLog->requestid;
+            }
             error_log('Creating new McollectiveHistory');
-            $log = new McollectiveHistory(isset($historyLog->actionid) ? $historyLog->actionid : $historyLog->requestid , $historyLog->requestid, isset($historyLog->caller) ? $historyLog->caller : 'unknown' , isset($historyLog->hostname) ? $historyLog->hostname : null , isset($historyLog->agent) ? $historyLog->agent : null, isset($historyLog->senderaction) ? $historyLog->senderaction : null, isset($historyLog->senderid) ? $historyLog->senderid : 'unknown', isset($historyLog->statuscode) ? $historyLog->statuscode : null, isset($historyLog->data) ? $historyLog->data : null, date('Y-m-d G:i:s'), isset($historyLog->type) ? $historyLog->type : null);
+            $log = new McollectiveHistory($actionid , $historyLog->requestid, isset($historyLog->caller) ? $historyLog->caller : 'unknown' , isset($historyLog->hostname) ? $historyLog->hostname : null , isset($historyLog->agent) ? $historyLog->agent : null, isset($historyLog->senderaction) ? $historyLog->senderaction : null, isset($historyLog->senderid) ? $historyLog->senderid : 'unknown', isset($historyLog->statuscode) ? $historyLog->statuscode : null, isset($historyLog->data) ? $historyLog->data : null, date('Y-m-d G:i:s'), isset($historyLog->type) ? $historyLog->type : null);
             $repository->add($log);
         }else{
             error_log('Updating McollectiveHistory');
