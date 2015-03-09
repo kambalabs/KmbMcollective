@@ -122,6 +122,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             if ($agentDetail == null) {
                 $agentDetail = new McollectiveAgent($agent);
             }
+            $this->getServiceLocator()->get('breadcrumb')->findBy('id', 'metadata')->setLabel($agent);
             return new ViewModel(['agent' => $agent, 'agentList' => $agentList, 'agentDetail' => $agentDetail]);
         }
     }
@@ -254,6 +255,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             if ($viewModel instanceof JsonModel) {
                 return new JsonModel($resultList, [], true);
             } elseif ($viewModel instanceof ViewModel) {
+                $this->getServiceLocator()->get('breadcrumb')->findBy('id', 'history')->setLabel($actionid);
                 return new ViewModel(['environment' => $environment, 'actionid' => $actionid, 'logs' => $resultList, 'errorcount' => $errorcount]);
             }
         } else {

@@ -131,9 +131,64 @@ return [
                         'label' => $translate('Metadatas'),
                         'route' => 'mcollective_metadatas',
                         'controller' => 'Index',
-                        'action' => 'metadatas',
+                        'action' => 'metadata',
                         'useRouteMatch' => true,
                         'tabindex' => 83,
+                    ],
+                ],
+            ],
+        ],
+        'breadcrumb' => [
+            'home' => [
+                'pages' => [
+                    'mcollective' => [
+                        'label' => $translate('Mcollective'),
+                        'route' => 'mcollective',
+                        'action' => 'show',
+                        'useRouteMatch' => true,
+                        'pages' => [
+                            [
+                                'label' => $translate('Actions'),
+                                'route' => 'mcollective',
+                                'controller' => 'Index',
+                                'action' => 'show',
+                                'useRouteMatch' => true,
+                            ],
+                            [
+                                'label' => $translate('History'),
+                                'route' => 'mcollective_history',
+                                'controller' => 'Index',
+                                'action' => 'history',
+                                'useRouteMatch' => true,
+                                'pages' => [
+                                    [
+                                        'id' => 'history',
+                                        'label' => $translate('History'),
+                                        'route' => 'mcollective_history',
+                                        'controller' => 'Index',
+                                        'action' => 'history',
+                                        'useRouteMatch' => true,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'label' => $translate('Metadatas'),
+                                'route' => 'mcollective_metadatas',
+                                'controller' => 'Index',
+                                'action' => 'metadata',
+                                'useRouteMatch' => true,
+                                'pages' => [
+                                    [
+                                        'id' => 'metadata',
+                                        'label' => $translate('Metadatas'),
+                                        'route' => 'mcollective_metadatas',
+                                        'controller' => 'Index',
+                                        'action' => 'metadata',
+                                        'useRouteMatch' => true,
+                                    ]
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
