@@ -223,7 +223,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             'nameFilter' => $this->translate('Server name filter'),
             'receivingDataNr' => $this->translate('Receiving Data: %d of %d nodes'),
             'receivingDataPending' => $this->translate('Receiving data : receiving...'),
-            'receivingDataDone' => $this->translate('Receiving data : done.'),
+            'receivingDataDone' => $this->translate('Receiving data : %d nodes done.'),
             'startingRequest' => $this->translate('Starting request : <span class="label label-primary">Running</span>'),
             'requestStarted' => $this->translate('Request started <span class="label label-success">OK</span>'),
         ];

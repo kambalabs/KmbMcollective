@@ -55,10 +55,10 @@ function getResult(data,target,discovered_nodes,refreshResult,translation)
             resultsReceived = Object.keys(data).length;
             NProgress.set(resultsReceived/discovered_nodes);
 
-            $legend.html('Request started <span class="label label-success">OK</span><br/>');
+            $legend.html(translation['requestStarted'] + '<br/>');
 
             if (resultsReceived == discovered_nodes) {
-                $legend.append('<strong>'+ translation['receivingDataDone'] +'</strong><br/>');
+                $legend.append('<strong>'+ sprintf(translation['receivingDataDone'], resultsReceived) +'</strong><br/>');
                 clearInterval(refreshResult);
                 NProgress.done();
             }
@@ -66,6 +66,8 @@ function getResult(data,target,discovered_nodes,refreshResult,translation)
             {
                 $legend.append('<strong>' + sprintf(translation['receivingDataNr'], resultsReceived ,discovered_nodes)  +'</strong><br/>');
             }
+            var requests = $('<p></p>');
+            $legend.append(requests);
 
             target.html('');
 
@@ -76,25 +78,24 @@ function getResult(data,target,discovered_nodes,refreshResult,translation)
 			if(obj['statuscode'] != 0)
 			{
 			    var tag = '<span class="label label-danger" id="serveurs_security">Error : '+ obj['result']+'</span>';
-                            $legend.append('<span class="label label-danger">KO</span> <a href="#' + hostname + '">' + hostname + '</a><br/>');
+                requests.prepend('<span class="label label-danger">KO</span> <a href="#' + hostname + '">' + hostname + '</a><br/>');
 			}else{
 			    var tag = '<span class="label label-success" id="serveurs_security">OK</span>';
-                            $legend.append('<span class="label label-success">OK</span> <a href="#' + hostname + '">' + hostname + '</a><br/>');
+                requests.prepend('<span class="label label-success">OK</span> <a href="#' + hostname + '">' + hostname + '</a><br/>');
 			}
 
-                        var results = '<div class="tab-content">';
+            var results = '<div class="tab-content">';
 
-			$.each(JSON.parse(obj['result']),function(name,value){
-                            if (name == 'status') { return true; }
-                            if (value == '') { return true; }
-                            results += '<div class="result-mco"><span class="label label-default result-mco">' + name + '</span></div>';
-                            results += '<pre>' + value + '</pre>';
-                        });
+            $.each(JSON.parse(obj['result']),function(name,value){
+                if (name == 'status') { return true; }
+                if (value == '') { return true; }
+                results += '<div class="result-mco"><span class="label label-default result-mco">' + name + '</span></div>';
+                results += '<pre>' + value + '</pre>';
+            });
+            results += '</div>';
 
-                        results += '</div>';
-
-			target.append('<div class="panel panel-default"><div class="panel-heading"><h4 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+results+'</h4>');
-                    }
+			target.prepend('<div class="panel panel-default"><div class="panel-heading"><h4 id=' + hostname + '><i class="glyphicon glyphicon-remove"></i>&nbsp;'+ hostname +'&nbsp;'+tag+'</div>'+results+'</h4>');
+            }
 		});
 	    });
 	}
@@ -180,44 +181,49 @@ $(document).ready(function(){
 	$("#form_arg_mcol").append('<div class="form-group"><input id="arglist" type="hidden" name="args" value="'+ arglist +'"></input></div>');
     });
 
+    var refreshResult;
     $(document).on('submit', 'form[data-async]',function(event) {
         NProgress.start();
         $legend.css('font-size','10.5px');
-	var $form = $(this);
-	var $target = $($form.attr('data-target'));
-	$target.html('');
+	    var $form = $(this);
+	    var $target = $($form.attr('data-target'));
+	    $target.html('');
         $legend.html(translation['startingRequest']);
-	$.ajax({
-	    type: $form.attr('method'),
-	    url: $form.attr('action'),
-	    data: $form.serialize(),
-	    dataType: 'json',
-	    success: function(data, status) {
+	    $.ajax({
+            type: $form.attr('method'),
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            dataType: 'json',
+            success: function(data, status) {
                 $legend.html(translation['requestStarted']+'<br/>');
                 $legend.append('<strong>'+translation['receivingDataPending']+'</strong><br/>');
                 var discovered_nodes = data['discovered_nodes'].length;
 
-                var refreshResult = setInterval(function() {
-                                        getResult(data,$target,discovered_nodes,refreshResult,translation);
-                                    }, 2000);
+                if (typeof refreshResult != 'undefined') {
+                    clearInterval(refreshResult);
+                }
+                refreshResult = setInterval(function() {
+                    getResult(data,$target,discovered_nodes,refreshResult,translation);
+                }, 2000);
 
                 getResult(data,$target,discovered_nodes,refreshResult,translation);
 
                 $("#action_mcol :input").prop("disabled", false);
-	    },
-	    error: function(data,status) {
-		$.gritter.add({
-		    title: data['statusText'],
-		    text: data['responseText'],
-		    class_name: 'gritter-danger',
-		});
-		$("#wait_img").remove();
-		$("#action_mcol :input").prop("disabled", false);
+            },
+            error: function(data,status) {
+                $.gritter.add({
+                    title: data['statusText'],
+                    text: data['responseText'],
+                    class_name: 'gritter-danger',
+                    sticky: true
+                });
+                $("#wait_img").remove();
+                $("#action_mcol :input").prop("disabled", false);
                 NProgress.done();
-	    }
-	});
+            }
+        });
 
-	$("#action_mcol :input").prop("disabled", true);
-	event.preventDefault();
+	    $("#action_mcol :input").prop("disabled", true);
+	    event.preventDefault();
     });
 });

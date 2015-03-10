@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-04 14:47+0100\n"
-"PO-Revision-Date: 2015-02-04 14:47+0100\n"
+"POT-Creation-Date: 2015-03-10 09:56+0100\n"
+"PO-Revision-Date: 2015-03-10 09:56+0100\n"
 "Last-Translator: slaws\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: en_US\n"
@@ -13,51 +13,53 @@ msgstr ""
 "X-Poedit-KeywordsList: translate;translatePlural:1,2\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../config/module.config.php:110
+#: ../config/module.config.php:110 ../config/module.config.php:145
 msgid "Mcollective"
 msgstr "Mcollective"
 
-#: ../config/module.config.php:115
+#: ../config/module.config.php:115 ../config/module.config.php:151
 msgid "Actions"
 msgstr "Actions"
 
-#: ../config/module.config.php:123
+#: ../config/module.config.php:123 ../config/module.config.php:158
+#: ../config/module.config.php:166
 msgid "History"
 msgstr "History"
 
-#: ../config/module.config.php:131
+#: ../config/module.config.php:131 ../config/module.config.php:175
+#: ../config/module.config.php:183
 msgid "Metadatas"
 msgstr "Metadatas"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:136
+#: ../src/KmbMcollective/Controller/IndexController.php:137
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
 msgstr "<h4>Warning !</h4><p>You have to select an environment first !</p>"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:222
+#: ../src/KmbMcollective/Controller/IndexController.php:223
 msgid "Server name filter"
 msgstr "Server name filter"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:223
+#: ../src/KmbMcollective/Controller/IndexController.php:224
 #, php-format
 msgid "Receiving Data: %d of %d nodes"
 msgstr "Receiving Data: %d of %d nodes"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:224
+#: ../src/KmbMcollective/Controller/IndexController.php:225
 msgid "Receiving data : receiving..."
 msgstr "Receiving data : receiving..."
 
-#: ../src/KmbMcollective/Controller/IndexController.php:225
+#: ../src/KmbMcollective/Controller/IndexController.php:226
 msgid "Receiving data : done."
 msgstr "Receiving data : done."
 
-#: ../src/KmbMcollective/Controller/IndexController.php:226
+#: ../src/KmbMcollective/Controller/IndexController.php:227
 msgid "Starting request : <span class=\"label label-primary\">Running</span>"
 msgstr "Starting request : <span class=\"label label-primary\">Running</span>"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:227
+#: ../src/KmbMcollective/Controller/IndexController.php:228
 msgid "Request started <span class=\"label label-success\">OK</span>"
 msgstr "Request started <span class=\"label label-success\">OK</span>"
 
@@ -115,18 +117,18 @@ msgid_plural "(with <span style=\"color:red;\">%d</span> errors)"
 msgstr[0] "(with <span style=\"color:red;\">%d</span> error)"
 msgstr[1] "(with <span style=\"color:red;\">%d</span> errors)"
 
-#: ../view/kmb-mcollective/index/history.phtml:42
+#: ../view/kmb-mcollective/index/history.phtml:40
 #, php-format
 msgid "Result for action %s"
 msgstr "Result for action %s"
 
-#: ../view/kmb-mcollective/index/history.phtml:87
+#: ../view/kmb-mcollective/index/history.phtml:85
 #: ../view/kmb-mcollective/index/metadata.phtml:54
 #: ../view/kmb-mcollective/index/metadata.phtml:193
 msgid "Help"
 msgstr "Help"
 
-#: ../view/kmb-mcollective/index/history.phtml:89
+#: ../view/kmb-mcollective/index/history.phtml:87
 msgid "Click on action name to see action output"
 msgstr "Click on action name to see action output"
 

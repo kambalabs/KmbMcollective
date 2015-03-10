@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kamba\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-04 14:47+0100\n"
-"PO-Revision-Date: 2015-02-04 14:47+0100\n"
-"Last-Translator: slaws\n"
+"POT-Creation-Date: 2015-03-10 18:01+0100\n"
+"PO-Revision-Date: 2015-03-10 18:21+0100\n"
+"Last-Translator: Emmanuel Bouton <goten4@gmail.com>\n"
 "Language-Team: Kamba Contibutors <devteam@kamba.org>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -13,52 +13,55 @@ msgstr ""
 "X-Poedit-KeywordsList: translate;translatePlural:1,2\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../config/module.config.php:110
+#: ../config/module.config.php:110 ../config/module.config.php:145
 msgid "Mcollective"
 msgstr "Mcollective"
 
-#: ../config/module.config.php:115
+#: ../config/module.config.php:115 ../config/module.config.php:151
 msgid "Actions"
 msgstr "Actions"
 
-#: ../config/module.config.php:123
+#: ../config/module.config.php:123 ../config/module.config.php:158
+#: ../config/module.config.php:166
 msgid "History"
 msgstr "Historique"
 
-#: ../config/module.config.php:131
+#: ../config/module.config.php:131 ../config/module.config.php:175
+#: ../config/module.config.php:183
 msgid "Metadatas"
 msgstr "Metadonnées"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:136
+#: ../src/KmbMcollective/Controller/IndexController.php:137
 msgid "<h4>Warning !</h4><p>You have to select an environment first !</p>"
 msgstr ""
 "<h4>Attention !</h4><p>Vous devez d'abord choisir un environnement !</p>"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:222
+#: ../src/KmbMcollective/Controller/IndexController.php:223
 msgid "Server name filter"
 msgstr "Filtre (par nom)"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:223
+#: ../src/KmbMcollective/Controller/IndexController.php:224
 #, php-format
 msgid "Receiving Data: %d of %d nodes"
-msgstr "Réception des données %d de %d noeuds"
+msgstr "Réception des données %d de %d serveurs"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:224
+#: ../src/KmbMcollective/Controller/IndexController.php:225
 msgid "Receiving data : receiving..."
 msgstr "Réception des données : en cours..."
 
-#: ../src/KmbMcollective/Controller/IndexController.php:225
-msgid "Receiving data : done."
-msgstr "Réception des données : terminé."
-
 #: ../src/KmbMcollective/Controller/IndexController.php:226
+#, php-format
+msgid "Receiving data : %d nodes done."
+msgstr "Réception des données : %d serveurs terminés."
+
+#: ../src/KmbMcollective/Controller/IndexController.php:227
 msgid "Starting request : <span class=\"label label-primary\">Running</span>"
 msgstr "Requête : <span class=\"label label-primary\">En cours...</span>"
 
-#: ../src/KmbMcollective/Controller/IndexController.php:227
+#: ../src/KmbMcollective/Controller/IndexController.php:228
 msgid "Request started <span class=\"label label-success\">OK</span>"
 msgstr "Requête <span class=\"label label-success\">OK</span>"
 
@@ -116,18 +119,18 @@ msgid_plural "(with <span style=\"color:red;\">%d</span> errors)"
 msgstr[0] "(dont <span style=\"color:red;\">%d</span> erreur)"
 msgstr[1] "(dont <span style=\"color:red;\">%d</span> erreurs)"
 
-#: ../view/kmb-mcollective/index/history.phtml:42
+#: ../view/kmb-mcollective/index/history.phtml:40
 #, php-format
 msgid "Result for action %s"
 msgstr "Résultat de l'action %s"
 
-#: ../view/kmb-mcollective/index/history.phtml:87
+#: ../view/kmb-mcollective/index/history.phtml:85
 #: ../view/kmb-mcollective/index/metadata.phtml:54
 #: ../view/kmb-mcollective/index/metadata.phtml:193
 msgid "Help"
 msgstr "Aide"
 
-#: ../view/kmb-mcollective/index/history.phtml:89
+#: ../view/kmb-mcollective/index/history.phtml:87
 msgid "Click on action name to see action output"
 msgstr "Cliquez sur les actions pour obtenir le résultat"
 
@@ -255,7 +258,7 @@ msgstr "Filtre serveur (par nom)"
 
 #: ../view/kmb-mcollective/index/show.phtml:41
 msgid "Limit action on X nodes"
-msgstr "Limiter l'action à X noeuds"
+msgstr "Limiter l'action à X serveurs"
 
 #: ../view/kmb-mcollective/index/show.phtml:47
 msgid "Run"
@@ -284,7 +287,7 @@ msgstr ""
 
 #: ../view/kmb-mcollective/index/show.phtml:59
 msgid "You can also limit the command on the X first nodes available"
-msgstr "Vous pouvez limiter la commande aux X premiers noeuds disponibles."
+msgstr "Vous pouvez limiter la commande aux X premiers serveurs disponibles."
 
 #~ msgid "Nombre de serveurs"
 #~ msgstr "Nombre de serveurs"
