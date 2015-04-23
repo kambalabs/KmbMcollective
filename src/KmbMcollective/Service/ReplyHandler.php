@@ -21,14 +21,9 @@
 namespace KmbMcollective\Service;
 
 use KmbMcollective\Model\McollectiveHistory;
-use KmbMcollective\Service\ReplyHandler;
 use KmbMcProxy\Service;
-use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
 
 class ReplyHandler implements ServiceLocatorAwareInterface {
 
@@ -42,7 +37,7 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
                 if($historyLog->statuscode != 0)
                 {
                     $capture = preg_match('/^\[Action id\: ([a-f0-9]+)\].*/', $historyLog->data, $match);
-                    error_log(print_r($match,true));
+                    //error_log(print_r($match,true));
                     if($capture) {
                         $actionid = $match[1];
                     }
