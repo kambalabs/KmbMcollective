@@ -20,6 +20,7 @@ return [
                     ],
                 ],
             ],
+            // rewritten
             'mcollective_proxy_reply' => [
                 'type' => 'Segment',
                 'options' => [
@@ -28,6 +29,18 @@ return [
                         '__NAMESPACE__' => 'KmbMcollective\Controller',
                         'controller' => 'Reply',
                         'action' => 'process',
+                        'envId' => '0',
+                    ],
+                ],
+            ],
+            'newmcollective_proxy_reply' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/mcollective/proxy/newreply',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Reply',
+                        'action' => 'newprocess',
                         'envId' => '0',
                     ],
                 ],
@@ -68,6 +81,7 @@ return [
                     ],
                 ],
             ],
+            // rewritten
             'mcollective_results' => [
                 'type' => 'Segment',
                 'options' => [
@@ -81,6 +95,23 @@ return [
                         '__NAMESPACE__' => 'KmbMcollective\Controller',
                         'controller' => 'Result',
                         'action' => 'getResults',
+                        'envId' => 0,
+                    ],
+                ],
+            ],
+            'new_mcollective_results' => [
+                'type' => 'Segment',
+                'options' => [
+                    'verb' => 'get',
+                    'route' => '/mcollective/newresults/:actionid[/requestid/:requestid]',
+                    'constraints' => [
+                        'actionid' => '[a-fA-F0-9]{32}',
+                        'requestid' => '[a-fA-F0-9]{32}',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Result',
+                        'action' => 'newgetResults',
                         'envId' => 0,
                     ],
                 ],
@@ -201,8 +232,43 @@ return [
             'table_name' => 'mcollective_logs',
             'table_sequence_name' => 'mcollective_logs_id_seq',
             'repository_class' => 'KmbMcollective\Service\McollectiveLogRepository',
-            ],
-	 'McollectiveHistoryRepository' => [
+        ],
+        'ActionLogRepository' => [
+            'aggregate_root_class' => 'KmbMcollective\Model\ActionLog',
+            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\ActionLogHydrator',
+            'table_name' => 'action_logs',
+            'table_id' => 'actionid',
+            'table_sequence_name' => 'action_logs_id_seq',
+            'command_log_table' => 'command_logs',
+            'command_log_sequence_name' => 'command_logs_id_seq',
+            'command_log_repository' => 'KmbMcollective\Service\CommandLogRepository',
+            'command_log_hydrator' => 'KmbMcollective\Hydrator\CommandLogHydrator',
+            'command_log_class' => 'KmbMcollective\Model\CommandLog',
+            'repository_class' => 'KmbMcollective\Service\ActionLogRepository',
+            'factory' => 'KmbMcollective\Service\ActionLogRepositoryFactory'
+        ],
+        'CommandLogRepository' => [
+            'aggregate_root_class' => 'KmbMcollective\Model\CommandLog',
+            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\CommandLogHydrator',
+            'table_name' => 'command_logs',
+            'table_id' => 'requestid',
+            'table_sequence_name' => 'command_logs_id_seq',
+            'reply_class' => 'KmbMcollective\Model\CommandReply',
+            'reply_repository' => 'KmbMcollective\Service\CommandReplyRepository',
+            'reply_hydrator_class' => 'KmbMcollective\Hydrator\CommandReplyHydrator',
+            'reply_table_name' => 'command_reply_logs',
+            'reply_table_sequence_name' => 'command_reply_id_seq',
+            'factory' => 'KmbMcollective\Service\CommandLogRepositoryFactory',
+            'repository_class' => 'KmbMcollective\Service\CommandLogRepository',
+        ],
+        'CommandReplyRepository' => [
+            'aggregate_root_class' => 'KmbMcollective\Model\CommandReply',
+            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\CommandReplyHydrator',
+            'table_name' => 'command_reply_logs',
+            'table_sequence_name' => 'command_reply_logs_id_seq',
+            'repository_class' => 'KmbMcollective\Service\CommandReplyRepository',
+        ],
+        'McollectiveHistoryRepository' => [
             'aggregate_root_class' => 'KmbMcollective\Model\McollectiveHistory',
             'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveHistoryHydrator',
             'table_name' => 'mcollective_actions_logs',
@@ -299,6 +365,34 @@ return [
                     'key'       => 'received_at',
                 ],
             ]
+        ],
+        'ActionDatatable' => [
+            'id' => 'action_logs',
+            'classes' => ['table', 'table-striped', 'table-hover', 'table-condensed', 'bootstrap-datatable'],
+            'collectorFactory' => 'KmbMcollective\Service\ActionCollectorFactory',
+            'columns' => [
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\SourceDecorator',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
+                    'key'       => 'fullname',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
+    		    'key'       => 'agent',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\SummaryDecorator',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
+                ],
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
+                    'key'       => 'received_at',
+                ],
+            ]
         ]
     ],
     'asset_manager' => [
@@ -309,11 +403,12 @@ return [
         ],
     ],
     'service_manager' => [
-        'invokables' => [
-            'KmbMcollective\Service\ReplyHandler' => 'KmbMcollective\Service\ReplyHandler',
-        ],
+        // 'invokables' => [
+        //     'KmbMcollective\Service\ReplyHandler' => 'KmbMcollective\Service\ReplyHandler',
+        // ],
         'factories' => [
             'KmbMcollective\Service\McollectiveHistory' => 'KmbMcollective\Service\McollectiveHistoryFactory',
+            'ReplyHandler' => 'KmbMcollective\Service\ReplyHandlerFactory',
         ],
         'abstract_factories' => [
             'KmbMcollective\Service\AbstractHandlerFactory',

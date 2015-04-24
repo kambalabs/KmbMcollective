@@ -277,6 +277,32 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         }
     }
 
+    public function newhistoryAction(){
+        // new history only for SSDatatable
+        $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
+        $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
+        $actionid = $this->params()->fromRoute('id');
+
+        $variables = [];
+        if ($viewModel instanceof JsonModel) {
+            /** @var DataTable $datatable */
+            $datatable = $this->getServiceLocator()->get('ActionDatatable');
+            $params = $this->params()->fromQuery();
+            $result = $datatable->getResult($params);
+            $variables = [
+                'draw' => $result->getDraw(),
+                'recordsTotal' => $result->getRecordsTotal(),
+                'recordsFiltered' => $result->getRecordsFiltered(),
+                'data' => $result->getData(),
+            ];
+        }
+        $viewModel->setVariables($variables);
+        return $viewModel;
+
+    }
+
+
+
     /**
      * @param string $message
      * @return IndexController

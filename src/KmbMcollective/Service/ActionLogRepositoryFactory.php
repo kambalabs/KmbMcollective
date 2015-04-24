@@ -20,24 +20,21 @@
  */
 namespace KmbMcollective\Service;
 
-use Zend\Log\Logger;
-use Zend\ServiceManager\FactoryInterface;
+use GtnPersistZendDb\Infrastructure\ZendDb;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ReplyHandlerFactory implements FactoryInterface
+class ActionLogRepositoryFactory  extends ZendDb\RepositoryFactory
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new ReplyHandler();
-
-        $service->setActionLogRepository($serviceLocator->get('ActionLogRepository'));
+        /** @var ActionLogRepository $service */
+        $service = parent::createService($serviceLocator);
+        $service->setCommandLogTable($this->getStrict('command_log_table'));
+        $service->setCommandLogSequenceName($this->getStrict('command_log_sequence_name'));
         $service->setCommandLogRepository($serviceLocator->get('CommandLogRepository'));
+        $commandLogHydrator = $this->getStrict('command_log_hydrator');
+        $service->setCommandLogHydrator(new $commandLogHydrator);
+        $service->setCommandLogClass($this->getStrict('command_log_class'));
         return $service;
     }
 }

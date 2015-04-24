@@ -58,6 +58,29 @@ class ResultController extends AbstractActionController implements Authenticated
         },$results));
     }
 
+    public function newgetResultsAction() {
+        $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
+        $actionLogRepository = $this->getServiceLocator()->get('ActionLogRepository');
+        $actionid = $this->params()->fromRoute('actionid');
+        $requestid = $this->params()->fromRoute('requestid');
+
+        $action = $actionLogRepository->getById($actionid);
+
+        if(isset($requestid)) {
+            $results = $action->getByRequestId($requestid)->getAllFinishedReplies();
+        }else{
+            $replies = [];
+            foreach($action->getCommands() as $command){
+                $replies = array_merge($replies, $command->getAllFinishedReplies());
+            }
+
+            $results = $replies;
+        }
+        return new JsonModel(array_map(function($item){
+            return $item->toArray();
+        },$results));
+    }
+
     /**
      * @param string $message
      * @return IndexController

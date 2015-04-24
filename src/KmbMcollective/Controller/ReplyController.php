@@ -51,6 +51,15 @@ class ReplyController extends AbstractActionController
         return new $viewModel;
     }
 
+    public function newprocessAction(){
+        $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
+        $handler = $this->getServiceLocator()->get('ReplyHandler');
+        $response = json_decode($this->getRequest()->getContent());
+        $handler->newprocess($response);
+
+        $viewModel->setVariable("status", 'ok');
+        return new $viewModel;
+    }
 
     public function getHandlerList() {
         return $this->handlerList;

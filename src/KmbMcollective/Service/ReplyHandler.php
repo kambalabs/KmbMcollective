@@ -21,6 +21,9 @@
 namespace KmbMcollective\Service;
 
 use KmbMcollective\Model\McollectiveHistory;
+use KmbMcollective\Model\ActionLog;
+use KmbMcollective\Model\CommandLog;
+use KmbMcollective\Model\CommandReply;
 use KmbMcollective\Service\ReplyHandler;
 use KmbMcProxy\Service;
 use Zend\Log\Logger;
@@ -33,6 +36,8 @@ use Zend\View\Model\ViewModel;
 class ReplyHandler implements ServiceLocatorAwareInterface {
 
     protected $serviceLocator;
+    protected $actionLogRepository;
+    protected $commandLogRepository;
 
     public function process($historyLog,$repository) {
         $log = $repository->getRequestResponse($historyLog->requestid, $historyLog->hostname);
@@ -82,6 +87,60 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
 
     }
 
+    public function newprocess($log){
+        if(!isset($log->requestid)){
+            error_log('[!!!] No requestid found in message!');
+            return;
+        }
+        $command = $this->commandLogRepository->getById($log->requestid);
+        $action = null;
+        if(! isset($command)){
+            $action = new ActionLog($log->requestid);
+            $action->setDescription('CLI command from '. $log->hostname);
+            $command = new CommandLog($log->requestid);
+            $action->addCommand($command);
+            $this->actionLogRepository->add($action);
+        }else{
+            $action = $this->actionLogRepository->getById($command->getActionId());
+        }
+        $reply = $command->getReplyFor($log->hostname);
+        if( ! isset($reply)){
+            // No reply inserted for this host
+            $reply = new CommandReply();
+            $reply->setRequestId($log->requestid);
+            $reply->setHostname($log->hostname);
+            $command->addReply($reply);
+            $this->commandLogRepository->getReplyRepository()->add($reply);
+        }
+
+        // Updating infos
+        // Warning : ugly code ... must be reviewed...
+        if(isset($log->agent) && $reply->getAgent() == null) {
+            $reply->setAgent($log->agent);
+        }
+        if(isset($log->senderagent) && $reply->getAgent() == null) {
+            $reply->setAgent($log->senderagent);
+        }
+        if(isset($log->action) && $reply->getAction() == null) {
+            $reply->setAction($log->action);
+        }
+        if(isset($log->senderaction) && $reply->getAction() == null) {
+            $reply->setAction($log->senderaction);
+        }
+        if(isset($log->caller) && $reply->getUser() == null) {
+            $reply->setUser($log->caller);
+        }
+        if(isset($log->statuscode) && $log->statuscode !== null && $reply->getStatusCode() == null){
+            $reply->setStatusCode($log->statuscode);
+            $reply->finish(true);
+        }
+        if(isset($log->data) && $reply->getResult() == null){
+            $reply->setResult($log->data);
+        }
+        $this->commandLogRepository->getReplyRepository()->update($reply);
+    }
+
+
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
         $this->serviceLocator = $serviceLocator;
     }
@@ -90,4 +149,21 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
         return $this->serviceLocator;
     }
 
+    public function setActionLogRepository($repository){
+        $this->actionLogRepository = $repository;
+        return $this;
+    }
+
+    public function getActionLogRepository(){
+        return $this->actionLogRepository;
+    }
+
+    public function setCommandLogRepository($repository){
+        $this->commandLogRepository = $repository;
+        return $this;
+    }
+
+    public function getCommandLogRepository(){
+        return $this->commandLogRepository;
+    }
 }

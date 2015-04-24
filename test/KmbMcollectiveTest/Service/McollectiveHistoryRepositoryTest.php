@@ -45,4 +45,10 @@ class McollectiveHistoryRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('KmbMcollective\Model\McollectiveHistory', $firstLog);
         $this->assertEquals('df', $firstLog->getAction());
     }
+
+    public function canLimitFilterlogs()
+    {
+        $logs = static::$repository->getFilteredLogs(null,null,1);
+        $this->assertEquals(1, count($logs));
+    }
 }

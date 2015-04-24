@@ -3,7 +3,7 @@
         bootstrap="./KmbMcollectiveTest/Bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
+        convertNoticesToExceptions="false"
         convertWarningsToExceptions="true"
         verbose="true"
         stopOnFailure="false"

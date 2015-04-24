@@ -15,6 +15,52 @@ CREATE INDEX mcollective_logs_actionid ON mcollective_logs (actionid);
 CREATE INDEX mcollective_logs_username ON mcollective_logs (login);
 CREATE INDEX mcollective_logs_pf ON mcollective_logs (pf);
 
+
+-- New mcollective actions
+DROP TABLE IF EXISTS action_logs;
+CREATE TABLE action_logs (
+  actionid               VARCHAR(33) NOT NULL,
+  environment            VARCHAR(256),
+  parameters             TEXT,
+  description            TEXT,
+  login                  VARCHAR(50),
+  fullname               VARCHAR(255),
+  created_at             TIMESTAMP NOT NULL,
+  finished               BOOLEAN NOT NULL DEFAULT false
+);
+CREATE INDEX action_logs_actionid ON action_logs (actionid);
+CREATE INDEX action_logs_login ON action_logs (login);
+CREATE INDEX action_logs_env ON action_logs (environment);
+
+-- New mcollective command tables
+DROP TABLE IF EXISTS command_logs;
+CREATE TABLE command_logs (
+       requestid          VARCHAR(50) NOT NULL PRIMARY KEY,
+       actionid           VARCHAR(33)
+);
+CREATE INDEX command_logs_requestid ON command_logs (requestid);
+CREATE INDEX command_logs_actionid ON command_logs (actionid);
+
+-- New mcollective reply tables
+DROP TABLE IF EXISTS command_reply_logs;
+CREATE TABLE command_reply_logs (
+  id                     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  hostname               VARCHAR(256),
+  username                   VARCHAR(256),
+  statuscode             INTEGER,
+  result                 TEXT,
+  requestid              VARCHAR(50),
+  agent                  VARCHAR(50),
+  action                 VARCHAR(50),
+  finished               BOOLEAN NOT NULL DEFAULT false
+);
+CREATE INDEX command_reply_logs_id ON command_reply_logs (id);
+CREATE INDEX command_reply_logs_user ON command_reply_logs (username);
+CREATE INDEX command_reply_logs_hostname ON command_reply_logs (hostname);
+
+
+
+
 -- List of mco discovered nodes for actions
 DROP TABLE IF EXISTS mcollective_logs_discovered;
 CREATE TABLE mcollective_logs_discovered (
