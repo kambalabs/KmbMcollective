@@ -21,6 +21,7 @@ CREATE TABLE action_logs (
   actionid               VARCHAR(33) NOT NULL,
   environment            VARCHAR(256),
   parameters             TEXT,
+  ihm_icon               VARCHAR(256),
   description            TEXT,
   login                  VARCHAR(50),
   fullname               VARCHAR(255),

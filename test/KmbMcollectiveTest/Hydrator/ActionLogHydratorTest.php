@@ -12,7 +12,7 @@ class ActionLogHydratorTest extends \PHPUnit_Framework_TestCase
     {
         $log = new ActionLog();
         $hydrator = new ActionLogHydrator();
-        $obj = $hydrator->hydrate(['actionid' => 'eca4a144446d853f94b6bbdfe6cfbd76', 'environment' => 'FOO_STABLE', 'parameters' => '{"foo": "bar"}', 'description' => 'test action','login' => 'ABCD1234', 'fullname' => 'AB CD','created_at' => time(), 'finished'=>false ],$log);
+        $obj = $hydrator->hydrate(['actionid' => 'eca4a144446d853f94b6bbdfe6cfbd76', 'environment' => 'FOO_STABLE', 'parameters' => '{"foo": "bar"}', 'description' => 'test action','login' => 'ABCD1234', 'fullname' => 'AB CD','created_at' => time(), 'finished'=>false, 'ihm_icon' => 'glyphicon-plus' ],$log);
         $this->assertInstanceOf('KmbMcollective\Model\ActionLog',$obj);
         $this->assertEquals('eca4a144446d853f94b6bbdfe6cfbd76', $obj->getId());
         $this->assertEquals('FOO_STABLE',$obj->getEnvironment());
@@ -21,14 +21,15 @@ class ActionLogHydratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ABCD1234',$obj->getLogin());
         $this->assertEquals('AB CD',$obj->getFullName());
         $this->assertFalse($obj->is_finished());
+        $this->assertEquals('glyphicon-plus',$obj->getIhmIcon());
     }
 
     /** @test */
     public function canExtract(){
         $log = new ActionLog();
         $hydrator = new ActionLogHydrator();
-        $obj = $hydrator->hydrate(['actionid' => 'eca4a144446d853f94b6bbdfe6cfbd76', 'environment' => 'FOO_STABLE', 'parameters' => '{"foo": "bar"}', 'description' => 'test action','login' => 'ABCD1234', 'fullname' => 'AB CD','created_at' => date('Y-m-d H:i:s'), 'finished'=>false ],$log);
-        $this->assertEquals(['actionid' => 'eca4a144446d853f94b6bbdfe6cfbd76', 'environment' => 'FOO_STABLE', 'parameters' => '{"foo": "bar"}', 'description' => 'test action','login' => 'ABCD1234', 'fullname' => 'AB CD','created_at' => date('Y-m-d H:i:s'), 'finished'=>false ], $hydrator->extract($obj));
+        $obj = $hydrator->hydrate(['actionid' => 'eca4a144446d853f94b6bbdfe6cfbd76', 'environment' => 'FOO_STABLE', 'parameters' => '{"foo": "bar"}', 'description' => 'test action','login' => 'ABCD1234', 'fullname' => 'AB CD','created_at' => date('Y-m-d H:i:s'), 'finished'=>false, 'ihm_icon' => 'glyphicon-plus' ],$log);
+        $this->assertEquals(['actionid' => 'eca4a144446d853f94b6bbdfe6cfbd76', 'environment' => 'FOO_STABLE', 'parameters' => '{"foo": "bar"}', 'description' => 'test action','login' => 'ABCD1234', 'fullname' => 'AB CD','created_at' => date('Y-m-d H:i:s'), 'finished'=>false, 'ihm_icon' => 'glyphicon-plus' ], $hydrator->extract($obj));
     }
 
 }

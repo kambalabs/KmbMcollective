@@ -45,6 +45,7 @@ return [
                     ],
                 ],
             ],
+            // replaced by newmcollective_history and mcollective_show
             'mcollective_history' => [
                 'type' => 'Segment',
                 'options' => [
@@ -59,10 +60,46 @@ return [
                         'controller' => 'Index',
                         'action' => 'history',
                         'envId' => '0',
-			'id' => '0',
+                        'id' => '0',
                     ],
                 ],
 
+            ],
+            'newmcollective_history' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '[/env/:envId]/mcollective/newhistory[/[:id]]',
+                    'constraints' => [
+                        'envId' => '[0-9]+',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-fA-F0-9]+',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Index',
+                        'action' => 'historyTable',
+                        'envId' => '0',
+                        'id' => '0',
+                    ],
+                ],
+            ],
+            'mcollective_show' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '[/env/:envId]/mcollective/actionid/:id',
+                    'constraints' => [
+                        'envId' => '[0-9]+',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-fA-F0-9]+',
+                    ],
+                    'defaults' => [
+                        '__NAMESPACE__' => 'KmbMcollective\Controller',
+                        'controller' => 'Index',
+                        'action' => 'showDetail',
+                        'envId' => '0',
+                        'id' => '0',
+                    ],
+                ],
             ],
             'mcollective_metadatas' => [
                 'type' => 'Segment',
@@ -372,25 +409,18 @@ return [
             'collectorFactory' => 'KmbMcollective\Service\ActionCollectorFactory',
             'columns' => [
                 [
-                    'decorator' => 'KmbMcollective\View\Decorator\SourceDecorator',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
+                    'decorator' => 'KmbMcollective\View\Decorator\NewFullNameDecorator',
                     'key'       => 'fullname',
                 ],
                 [
-                    'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
-    		    'key'       => 'agent',
+                    'decorator' => 'KmbMcollective\View\Decorator\NewSummaryDecorator',
                 ],
                 [
-                    'decorator' => 'KmbMcollective\View\Decorator\SummaryDecorator',
+                    'decorator' => 'KmbMcollective\View\Decorator\ReplyDecorator',
                 ],
                 [
-                    'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
-                    'key'       => 'received_at',
+                    'decorator' => 'KmbMcollective\View\Decorator\NewTimeDecorator',
+                    'key' => 'created_at',
                 ],
             ]
         ]

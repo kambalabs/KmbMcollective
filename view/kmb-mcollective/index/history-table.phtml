@@ -1,0 +1,15 @@
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.history.js'); ?>
+<?php $this->headLink()->prependStylesheet($this->basePath() . '/css/kmb.mco.history.css'); ?>
+<div class="row">
+    <div class="col-md-12">
+	<a tabindex="900" href="<?= $this->url('mcollective', [ 'action' => 'history', 'agent' => null ], [], true) ?>" class="btn btn-info"><i class="glyphicon glyphicon-chevron-left"></i><?= $this->translate('Back') ?></a>
+    </div>
+    </div>
+    <hr />
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/kmb.mco.logs.js'); ?>
+<div class="panel-heading">
+    <span class="glyphicon glyphicon-tasks"></span><span class="panel-break"></span>Historique des actions mcollectives
+</div>
+<div class="panel-body">
+    <?php echo $this->datatable('ActionDatatable')->renderHtml(); ?>
+</div>

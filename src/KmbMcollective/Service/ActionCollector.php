@@ -39,6 +39,7 @@ class ActionCollector implements CollectorInterface
     public function findAll(array $params = null)
     {
         $offset = isset($params['start']) ? $params['start'] : null;
+
         $limit = isset($params['length']) ? $params['length'] : null;
         $query = null;
 
@@ -55,20 +56,6 @@ class ActionCollector implements CollectorInterface
             }
         }
         $logsCollection = $this->getActionLogRepository()->getFiltered($query, $offset, $limit, $orderBy);
-
-        // Add metadata
-        // foreach($logsCollection as $actionid => $detail) {
-        //     $agentName = $detail->getIhmLog() ? $detail->getIhmLog()[0]->getAgent() : $detail->getAgent();
-        //     $formatter = isset($this->specificMetadata[$agentName]) ? new $this->specificMetadata[$agentName]['formatter']() : new DefaultFormatter($this->agentRepository);
-        //     $formatter->setViewHelperManager($this->viewHelperManager);
-        //     $detail = $formatter->format($detail);
-
-        //     $user = $this->userRepository->getByLogin($detail->getCaller());
-        //     if(isset($user)){
-        //         $detail->setCaller($user->getName());
-        //     }
-
-        // }
 
         return Collection::factory($logsCollection,sizeof($logsCollection),$this->getActionLogRepository()->getCountFor($query));
     }

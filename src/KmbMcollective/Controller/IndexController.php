@@ -25,6 +25,8 @@ use KmbMcollective\Model\McollectiveAgent;
 use KmbMcollective\Model\McollectiveAction;
 use KmbMcollective\Model\McollectiveArgument;
 use KmbMcollective\Model\McollectiveLog;
+use KmbMcollective\Model\ActionLog;
+use KmbMcollective\Model\CommandLog;
 use KmbMcProxy\Service;
 use Zend\Log\Logger;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -177,12 +179,13 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
         /** @var Service\Agent $mcProxyAgentService */
         $mcProxyAgentService = $this->getServiceLocator()->get('mcProxyAgentService');
+
+        $agentsRepository = $this->getServiceLocator()->get('McollectiveAgentRepository');
         /** @var UserInterface $user */
         $user = $this->identity();
         $actionid = md5($user->getLogin() . time());
         $params = $this->getRequest()->getPost();
         $this->debug('KmbMcollective/IndexController::runAction(' . $environment . ')');
-        $this->debug('Parameters :'. print_r($params,true));
         if(is_a($params['filter'],"Array")) {
             $filter = implode(",",$params['filter']);
         }else{
@@ -192,7 +195,6 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         foreach (explode(' ', trim($params['args'])) as $argname) {
             $args[$argname] = $params[$argname];
         }
-        $this->debug('arguments: ' . print_r(json_encode($args),true));
         try {
             $actionResult = $mcProxyAgentService->doRequest($params['agent'], $params['action'], $filter, $environment->getNormalizedName(), $user->getLogin(), $args);
         } catch (\Exception $e) {
@@ -201,8 +203,40 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             $actionResult = null;
         }
         $mcoLog = new McollectiveLog($actionResult ? $actionResult->actionid : $actionid, $user->getLogin(),$user->getName() , $params['agent'] . '::' . $params['action'], $filter, $actionResult ? $actionResult->discovered_nodes : [], $environment->getNormalizedName(),json_encode($args));
+
+
+        // new way
+        $actionLog = new ActionLog($actionResult ? $actionResult->actionid : $actionid);
+        $actionLog->setLogin($user->getLogin());
+        $actionLog->setFullName($user->getName());
+        $actionLog->setParameters(json_encode($args));
+        $actionLog->setEnvironment($environment->getId());
+        $commandLog = new CommandLog($actionResult->result[0]);
+        $actionLog->addCommand($commandLog);
+
+        $agent = $agentsRepository->getByName($params['agent']);
+        $actionName = $params['action'];
+        $action = array_values(array_filter($agent->getRelatedActions(),function($action) use ($actionName) {
+                    if($action->getName() == $actionName) {
+                        return true;
+                    }
+                }));
+
+        $summary = $action[0]->getShortDesc();
+        if(isset($args)){
+            foreach($args as $arg => $value){
+                $summary = str_replace('#'.$arg.'#', $value,$summary);
+            }
+        }
+        if(isset($summary) && $summary != ""){
+            $actionLog->setDescription($summary);
+        }else{
+            $actionLog->setDescription($params['agent'].'::'.$params['action']);
+        }
+        $actionLog->setIhmIcon($action[0]->getIhmIcon());
         try {
             $this->getServiceLocator()->get('McollectiveLogRepository')->add($mcoLog);
+            $this->getServiceLocator()->get('ActionLogRepository')->add($actionLog);
         } catch (\Exception $e) {
             $this->debug($e->getMessage());
             $this->debug($e->getTraceAsString());
@@ -277,7 +311,27 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         }
     }
 
-    public function newhistoryAction(){
+    public function showDetailAction(){
+        // new history only for SSDatatable
+        $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
+        $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));
+        $actionid = $this->params()->fromRoute('id');
+        $actionLogRepository = $this->getServiceLocator()->get('ActionLogRepository');
+
+        $action = $actionLogRepository->getById($actionid);
+        $status = $action->getGlobalStatus();
+
+
+        if ($viewModel instanceof JsonModel) {
+            return new JsonModel($action->getResultByHost(), [], true);
+        } elseif ($viewModel instanceof ViewModel) {
+            $this->getServiceLocator()->get('breadcrumb')->findBy('id', 'history')->setLabel($actionid);
+            return new ViewModel(['environment' => $environment, 'actionid' => $actionid, 'logs' => $action->getResultByHost(), 'errorcount' => $status['errors']]);
+        }
+    }
+
+
+    public function historyTableAction(){
         // new history only for SSDatatable
         $viewModel = $this->acceptableViewModelSelector($this->acceptCriteria);
         $environment = $this->getServiceLocator()->get('EnvironmentRepository')->getById($this->params()->fromRoute('envId'));

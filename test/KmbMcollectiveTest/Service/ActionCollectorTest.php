@@ -2,6 +2,7 @@
 namespace KmbMcollectiveTest\Service;
 
 use KmbMcollective\Service\ActionCollector;
+use KmbMcollective\Service\ActionCollectorFactory;
 use KmbMcollectiveTest\Bootstrap;
 
 use KmbMcollectiveTest\DatabaseInitTrait;
@@ -30,8 +31,11 @@ class ActionCollectorTest extends \PHPUnit_Framework_TestCase
     }
     protected function setUp()
     {
-        $this->actionCollector = new ActionCollector();
-        $this->actionCollector->setActionLogRepository(static::$actionLogRepository);
+        // $this->actionCollector = new ActionCollector();
+        // $this->actionCollector->setActionLogRepository(static::$actionLogRepository);
+        $factory = new ActionCollectorFactory();
+        $this->actionCollector = $factory->createService(Bootstrap::getServiceManager());
+
         static::initFixtures(static::$connection);
     }
 
@@ -42,7 +46,6 @@ class ActionCollectorTest extends \PHPUnit_Framework_TestCase
             'start' => 0,
             'length' => 2,
         ]);
-
         $this->assertInstanceOf('GtnDataTables\Model\Collection', $collection);
         $this->assertEquals(2, count($collection->getData()));
         $this->assertEquals(2, $collection->getTotal());

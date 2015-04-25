@@ -36,6 +36,7 @@ class ActionLogHydrator implements HydratorInterface
             'fullname' => $object->getFullName(),
             'created_at' => $object->getCreationDate(),
             'finished' => $object->is_finished(),
+            'ihm_icon' => $object->getIhmIcon(),
         ];
         return $data;
     }
@@ -49,10 +50,8 @@ class ActionLogHydrator implements HydratorInterface
         $object->setLogin($this->getData('login', $data));
         $object->setFullName($this->getData('fullname', $data));
         $object->finish($this->getData('finished',$data));
-        if($object->getCreationDate() == null)
-        {
-            $object->setCreationDate($this->getData('created_at',$data));
-        }
+        $object->setCreationDate($this->getData('created_at',$data));
+        $object->setIhmIcon($this->getData('ihm_icon',$data));
         return $object;
     }
 

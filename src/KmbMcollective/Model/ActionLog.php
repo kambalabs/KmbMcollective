@@ -31,6 +31,7 @@ class ActionLog implements ActionLogInterface
     protected $finished;
     protected $createdAt;
     protected $commands = [];
+    protected $ihmIcon;
 
 
     public function getId(){
@@ -49,6 +50,14 @@ class ActionLog implements ActionLogInterface
     public function setParameters($params){
         $this->parameters = $params;
         return $this;
+    }
+
+    public function setIhmIcon($icon){
+        $this->ihmIcon = $icon;
+        return $this;
+    }
+    public function getIhmIcon(){
+        return $this->ihmIcon;
     }
     public function getDescription(){
         return $this->description;
@@ -142,9 +151,57 @@ class ActionLog implements ActionLogInterface
         return;
     }
 
+    public function getServerReplyCount(){
+        $servers = [];
+        foreach($this->getCommands() as $command){
+            foreach($command->getReplies() as $reply){
+                if(! in_array($reply->getHostname(), $servers)){
+                    $servers[] = $reply->getHostname();
+                }
+            }
+        }
+        return count($servers);
+    }
+
+    public function getGlobalStatus(){
+        $status = '';
+        $errorCount = 0;
+        foreach($this->getCommands() as $command){
+            foreach($command->getReplies() as $reply){
+                if($reply->getStatusCode() != 0){
+                    $errorCount++;
+                    if($status === 'success'){
+                        $status = 'partial';
+                    }elseif($status === ''){
+                        $status = 'error';
+                    }
+                }else{
+                    if($status === 'error'){
+                        $status = 'partial';
+                    }elseif( $status === ''){
+                        $status = 'success';
+                    }
+                }
+            }
+        }
+        return ['status' => $status, 'errors' => $errorCount];
+    }
+
+    public function getResultByHost(){
+        $result = [];
+        foreach($this->getCommands() as $command){
+            foreach($command->getReplies() as $reply){
+                $result[$reply->getHostname()][] = $reply->toArray();
+            }
+        }
+        return $result;
+    }
+
     public function __construct($actionid = null){
         $this->setId($actionid);
-        $this->setCreationDate(date('Y-m-d H:i:s'));
+        if(!isset($this->createdAt)){
+            $this->setCreationDate(date('Y-m-d H:i:s'));
+        }
         $this->finish(false);
     }
 }

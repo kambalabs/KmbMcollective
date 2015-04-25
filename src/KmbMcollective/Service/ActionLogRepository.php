@@ -26,6 +26,7 @@ use Zend\Db\Adapter\Driver\ResultInterface;
 use KmbMcollective\Models\CommandLog;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Expression;
 
 
 
@@ -87,44 +88,57 @@ class ActionLogRepository extends Repository
     }
 
 
-    public function getAllByIds($ids){
+    public function getAllByIds($ids, $order = 'created_at'){
         $select = $this->getSelect();
         $select->where([$this->tableName.'.actionid'=>$ids]);
+        $select->order( $order != "" ? $order : 'created_at DESC');
         return $this->hydrateAggregateRootsFromResult($this->performRead($select));
 
     }
 
-    public function getFiltered($query,$offset,$limit,$order){
+    public function getFiltered($query,$offset,$limit,$order = 'created_at'){
         $actionids = $this->getActionIdWith($query,$offset,$limit,$order);
-        return $this->getAllByIds($actionids);
+        if(empty($actionids)){
+            return [];
+        }else{
+            return $this->getAllByIds($actionids,$order);
+        }
     }
 
     public function getActionIdWith($query,$offset,$limit,$order) {
         $select = $this->getSelect();
-        $select->where
-            ->like('r.username','%'.$query.'%')
-            ->or
-            ->like('r.hostname','%'.$query.'%')
-            ->like($this->tableName.'.description','%'.$query.'%');
+        if($query != ""){
+            $where = new Where();
+            $where->nest
+                ->like('r.username','%'.$query.'%')
+                ->or
+                ->like('fullname','%'.$query.'%')
+                ->or
+                ->like('r.hostname','%'.$query.'%')
+                ->or
+                ->like('description','%'.$query.'%')
+                ->unnest;
+            $select->where($where);
+        }
         $select->order((isset($order) && $order != "") ? $order : 'created_at');
-        $select->offset($offset)->limit($limit);
+
+        $sub = new Select();
+        $sub->from(['f' => $select]);
+        $sub->columns([new Expression('Distinct actionid,created_at')]);
+        if(isset($limit)){
+            $sub->offset($offset)->limit($limit);
+        }
+
 
         $result = [];
-        foreach($this->performRead($select) as $row){
+        foreach($this->performRead($sub) as $row){
             $result[] = $row['actionid'];
         }
         return $result;
     }
 
     public function getCountFor($query){
-        $select = $this->getSelect();
-        $select->where
-            ->like('r.username','%'.$query.'%')
-            ->or
-            ->like('r.hostname','%'.$query.'%')
-            ->like($this->tableName.'.description','%'.$query.'%');
-        $result = $this->performRead($select);
-        return sizeof($this->hydrateAggregateRootsFromResult($result));
+        return count($this->getFiltered($query,null,null,null));
     }
 
     /**
