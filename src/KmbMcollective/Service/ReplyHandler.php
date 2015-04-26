@@ -39,64 +39,74 @@ class ReplyHandler implements ServiceLocatorAwareInterface {
     protected $actionLogRepository;
     protected $commandLogRepository;
 
-    public function process($historyLog,$repository) {
-        $log = $repository->getRequestResponse($historyLog->requestid, $historyLog->hostname);
-        if(is_bool($log) || empty($log)) {
-            $actionid = null;
-            if(!isset($historyLog->actionid) && isset($historyLog->statuscode)) {
-                if($historyLog->statuscode != 0)
-                {
-                    $capture = preg_match('/^\[Action id\: ([a-f0-9]+)\].*/', $historyLog->data, $match);
-                    error_log(print_r($match,true));
-                    if($capture) {
-                        $actionid = $match[1];
-                    }
-                }
-            } else {
-                $actionid = isset($historyLog->actionid) ? $historyLog->actionid : $historyLog->requestid;
-            }
-            error_log('Creating new McollectiveHistory');
-            $log = new McollectiveHistory($actionid , $historyLog->requestid, isset($historyLog->caller) ? $historyLog->caller : 'unknown' , isset($historyLog->hostname) ? $historyLog->hostname : null , isset($historyLog->agent) ? $historyLog->agent : null, isset($historyLog->senderaction) ? $historyLog->senderaction : null, isset($historyLog->senderid) ? $historyLog->senderid : 'unknown', isset($historyLog->statuscode) ? $historyLog->statuscode : null, isset($historyLog->data) ? $historyLog->data : null, date('Y-m-d G:i:s'), isset($historyLog->type) ? $historyLog->type : null);
-            $repository->add($log);
-        }else{
-            error_log('Updating McollectiveHistory');
-            $log = $log[0];
-            // Merging existing infos with new ones
-            if(isset($historyLog->actionid) && ($log->getActionid() == $log->getRequestId())) {
-                $log->setActionId($historyLog->actionid);
-            }
-            if($log->getCaller() == 'unknown' && isset($historyLog->caller)) { $log->setCaller($historyLog->caller); };
-            if($log->getAgent() == null && isset($historyLog->agent)) { $log->setAgent($historyLog->agent); };
-            if($log->getAction() == null && isset($historyLog->senderaction)) { $log->setAction($historyLog->senderaction); };
-            if($log->getSender() == 'unknown' && isset($historyLog->senderid)) { $log->setSender($historyLog->senderid); };
-            if($log->getStatusCode() == null && isset($historyLog->statuscode)) { $log->setStatusCode($historyLog->statuscode); };
-            if($log->getResult() == null && isset($historyLog->data)) { $log->setResult($historyLog->data); };
-            if($log->getType() == null && isset($historyLog->type)) { $log->setType($historyLog->type); };
-            $repository->update($log);
-        }
-        if ($log->getAgent() != null && $log->getResult() != null) {
-            $log->setFinished();
-            $repository->update($log);
-        }
-        if( $log->isFinished() && $log->getType() != 'default' ) {
-            error_log('Specific type found...');
-            $handlerName = ucfirst($log->getType()).'ReplyHandler';
-            $handler = $this->serviceLocator->get($handlerName);
-            $handler->process($log);
-        }
+    // public function process($historyLog,$repository) {
+    //     $log = $repository->getRequestResponse($historyLog->requestid, $historyLog->hostname);
+    //     if(is_bool($log) || empty($log)) {
+    //         $actionid = null;
+    //         if(!isset($historyLog->actionid) && isset($historyLog->statuscode)) {
+    //             if($historyLog->statuscode != 0)
+    //             {
+    //                 $capture = preg_match('/^\[Action id\: ([a-f0-9]+)\].*/', $historyLog->data, $match);
+    //                 error_log(print_r($match,true));
+    //                 if($capture) {
+    //                     $actionid = $match[1];
+    //                 }
+    //             }
+    //         } else {
+    //             $actionid = isset($historyLog->actionid) ? $historyLog->actionid : $historyLog->requestid;
+    //         }
+    //         error_log('Creating new McollectiveHistory');
+    //         $log = new McollectiveHistory($actionid , $historyLog->requestid, isset($historyLog->caller) ? $historyLog->caller : 'unknown' , isset($historyLog->hostname) ? $historyLog->hostname : null , isset($historyLog->agent) ? $historyLog->agent : null, isset($historyLog->senderaction) ? $historyLog->senderaction : null, isset($historyLog->senderid) ? $historyLog->senderid : 'unknown', isset($historyLog->statuscode) ? $historyLog->statuscode : null, isset($historyLog->data) ? $historyLog->data : null, date('Y-m-d G:i:s'), isset($historyLog->type) ? $historyLog->type : null);
+    //         $repository->add($log);
+    //     }else{
+    //         error_log('Updating McollectiveHistory');
+    //         $log = $log[0];
+    //         // Merging existing infos with new ones
+    //         if(isset($historyLog->actionid) && ($log->getActionid() == $log->getRequestId())) {
+    //             $log->setActionId($historyLog->actionid);
+    //         }
+    //         if($log->getCaller() == 'unknown' && isset($historyLog->caller)) { $log->setCaller($historyLog->caller); };
+    //         if($log->getAgent() == null && isset($historyLog->agent)) { $log->setAgent($historyLog->agent); };
+    //         if($log->getAction() == null && isset($historyLog->senderaction)) { $log->setAction($historyLog->senderaction); };
+    //         if($log->getSender() == 'unknown' && isset($historyLog->senderid)) { $log->setSender($historyLog->senderid); };
+    //         if($log->getStatusCode() == null && isset($historyLog->statuscode)) { $log->setStatusCode($historyLog->statuscode); };
+    //         if($log->getResult() == null && isset($historyLog->data)) { $log->setResult($historyLog->data); };
+    //         if($log->getType() == null && isset($historyLog->type)) { $log->setType($historyLog->type); };
+    //         $repository->update($log);
+    //     }
+    //     if ($log->getAgent() != null && $log->getResult() != null) {
+    //         $log->setFinished();
+    //         $repository->update($log);
+    //     }
+    //     if( $log->isFinished() && $log->getType() != 'default' ) {
+    //         error_log('Specific type found...');
+    //         $handlerName = ucfirst($log->getType()).'ReplyHandler';
+    //         $handler = $this->serviceLocator->get($handlerName);
+    //         $handler->process($log);
+    //     }
 
-    }
+    // }
 
     public function newprocess($log){
         if(!isset($log->requestid)){
             error_log('[!!!] No requestid found in message!');
             return;
         }
-        $command = $this->commandLogRepository->getById($log->requestid);
+
+        for( $i = 0; $i < 3 ; $i++){
+            $command = $this->commandLogRepository->getById($log->requestid);
+            if($command != null){
+                break;
+            }
+            sleep(1);
+        }
         $action = null;
         if(! isset($command)){
+            $source = isset($log->senderid) ? 'from '. $log->senderid : null;
+
             $action = new ActionLog($log->requestid);
-            $action->setDescription('CLI command from '. $log->hostname);
+            $action->setDescription('CLI command '.$source);
+            $action->setIhmIcon('glyphicon-console');
             $command = new CommandLog($log->requestid);
             $action->addCommand($command);
             $this->actionLogRepository->add($action);

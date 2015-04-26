@@ -46,7 +46,7 @@ class ReplyHandlerTest extends \PHPUnit_Framework_TestCase
         $reply = $command->getReplies();
         $this->assertInstanceOf('KmbMcollective\Model\CommandLog',$command);
         $this->assertInstanceOf('KmbMcollective\Model\ActionLog',$action);
-        $this->assertEquals('CLI command from puppet-batch01-prod.admin.cloud.mbs',$handler->getActionLogRepository()->getById("132f4a6ecc8b5667b72e70c5b9f0d28b")->getDescription());
+        $this->assertEquals('CLI command from mco01.puppet.mbs',$handler->getActionLogRepository()->getById("132f4a6ecc8b5667b72e70c5b9f0d28b")->getDescription());
         $this->assertEquals(1,sizeof($reply));
         $this->assertEquals('admin',$reply[0]->getAgent());
         $this->assertEquals('df',$reply[0]->getAction());
