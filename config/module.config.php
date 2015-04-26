@@ -226,15 +226,15 @@ return [
                                 'label' => $translate('History'),
                                 'route' => 'mcollective_history',
                                 'controller' => 'Index',
-                                'action' => 'history',
+                                'action' => 'historyTable',
                                 'useRouteMatch' => true,
                                 'pages' => [
                                     [
                                         'id' => 'history',
                                         'label' => $translate('History'),
-                                        'route' => 'mcollective_history',
+                                        'route' => 'mcollective_show',
                                         'controller' => 'Index',
-                                        'action' => 'history',
+                                        'action' => 'showDetail',
                                         'useRouteMatch' => true,
                                     ],
                                 ],
