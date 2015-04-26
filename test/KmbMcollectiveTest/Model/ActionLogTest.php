@@ -146,4 +146,5 @@ class ActionLogTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['foo1' => [$reply->toArray(),$reply3->toArray()],'foo2' => [$reply2->toArray()]],$this->action->getResultByHost());
     }
+
 }

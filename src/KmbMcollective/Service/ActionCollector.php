@@ -56,7 +56,6 @@ class ActionCollector implements CollectorInterface
             }
         }
         $logsCollection = $this->getActionLogRepository()->getFiltered($query, $offset, $limit, $orderBy);
-
         return Collection::factory($logsCollection,sizeof($logsCollection),$this->getActionLogRepository()->getCountFor($query));
     }
 

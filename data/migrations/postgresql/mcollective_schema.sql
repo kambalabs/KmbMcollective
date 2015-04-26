@@ -23,6 +23,7 @@ CREATE TABLE action_logs (
   parameters             TEXT,
   ihm_icon               VARCHAR(256),
   description            TEXT,
+  source                 VARCHAR(256),
   login                  VARCHAR(50),
   fullname               VARCHAR(255),
   created_at             TIMESTAMP NOT NULL,

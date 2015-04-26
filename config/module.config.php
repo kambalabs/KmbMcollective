@@ -21,22 +21,22 @@ return [
                 ],
             ],
             // rewritten
+            // 'mcollective_proxy_reply' => [
+            //     'type' => 'Segment',
+            //     'options' => [
+            //         'route' => '/mcollective/proxy/reply',
+            //         'defaults' => [
+            //             '__NAMESPACE__' => 'KmbMcollective\Controller',
+            //             'controller' => 'Reply',
+            //             'action' => 'process',
+            //             'envId' => '0',
+            //         ],
+            //     ],
+            // ],
             'mcollective_proxy_reply' => [
                 'type' => 'Segment',
                 'options' => [
                     'route' => '/mcollective/proxy/reply',
-                    'defaults' => [
-                        '__NAMESPACE__' => 'KmbMcollective\Controller',
-                        'controller' => 'Reply',
-                        'action' => 'process',
-                        'envId' => '0',
-                    ],
-                ],
-            ],
-            'newmcollective_proxy_reply' => [
-                'type' => 'Segment',
-                'options' => [
-                    'route' => '/mcollective/proxy/newreply',
                     'defaults' => [
                         '__NAMESPACE__' => 'KmbMcollective\Controller',
                         'controller' => 'Reply',
@@ -46,29 +46,29 @@ return [
                 ],
             ],
             // replaced by newmcollective_history and mcollective_show
+            // 'mcollective_history' => [
+            //     'type' => 'Segment',
+            //     'options' => [
+            //         'route' => '[/env/:envId]/mcollective/history[/[:id]]',
+            //         'constraints' => [
+            //             'envId' => '[0-9]+',
+            //             'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+            //             'id' => '[a-fA-F0-9]+',
+            //         ],
+            //         'defaults' => [
+            //             '__NAMESPACE__' => 'KmbMcollective\Controller',
+            //             'controller' => 'Index',
+            //             'action' => 'history',
+            //             'envId' => '0',
+            //             'id' => '0',
+            //         ],
+            //     ],
+
+            // ],
             'mcollective_history' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '[/env/:envId]/mcollective/history[/[:id]]',
-                    'constraints' => [
-                        'envId' => '[0-9]+',
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[a-fA-F0-9]+',
-                    ],
-                    'defaults' => [
-                        '__NAMESPACE__' => 'KmbMcollective\Controller',
-                        'controller' => 'Index',
-                        'action' => 'history',
-                        'envId' => '0',
-                        'id' => '0',
-                    ],
-                ],
-
-            ],
-            'newmcollective_history' => [
-                'type' => 'Segment',
-                'options' => [
-                    'route' => '[/env/:envId]/mcollective/newhistory[/[:id]]',
+                    'route' => '[/env/:envId]/mcollective/history',
                     'constraints' => [
                         'envId' => '[0-9]+',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -86,7 +86,7 @@ return [
             'mcollective_show' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '[/env/:envId]/mcollective/actionid/:id',
+                    'route' => '[/env/:envId]/mcollective/history/:id',
                     'constraints' => [
                         'envId' => '[0-9]+',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -119,28 +119,28 @@ return [
                 ],
             ],
             // rewritten
+            // 'mcollective_results' => [
+            //     'type' => 'Segment',
+            //     'options' => [
+            //         'verb' => 'get',
+            //         'route' => '/mcollective/results/:actionid[/requestid/:requestid]',
+            //         'constraints' => [
+            //             'actionid' => '[a-fA-F0-9]{32}',
+            //             'requestid' => '[a-fA-F0-9]{32}',
+            //         ],
+            //         'defaults' => [
+            //             '__NAMESPACE__' => 'KmbMcollective\Controller',
+            //             'controller' => 'Result',
+            //             'action' => 'getResults',
+            //             'envId' => 0,
+            //         ],
+            //     ],
+            // ],
             'mcollective_results' => [
                 'type' => 'Segment',
                 'options' => [
                     'verb' => 'get',
                     'route' => '/mcollective/results/:actionid[/requestid/:requestid]',
-                    'constraints' => [
-                        'actionid' => '[a-fA-F0-9]{32}',
-                        'requestid' => '[a-fA-F0-9]{32}',
-                    ],
-                    'defaults' => [
-                        '__NAMESPACE__' => 'KmbMcollective\Controller',
-                        'controller' => 'Result',
-                        'action' => 'getResults',
-                        'envId' => 0,
-                    ],
-                ],
-            ],
-            'new_mcollective_results' => [
-                'type' => 'Segment',
-                'options' => [
-                    'verb' => 'get',
-                    'route' => '/mcollective/newresults/:actionid[/requestid/:requestid]',
                     'constraints' => [
                         'actionid' => '[a-fA-F0-9]{32}',
                         'requestid' => '[a-fA-F0-9]{32}',
@@ -263,13 +263,13 @@ return [
         ],
     ],
     'zenddb_repositories' => [
-        'McollectiveLogRepository' => [
-            'aggregate_root_class' => 'KmbMcollective\Model\McollectiveLog',
-            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveLogHydrator',
-            'table_name' => 'mcollective_logs',
-            'table_sequence_name' => 'mcollective_logs_id_seq',
-            'repository_class' => 'KmbMcollective\Service\McollectiveLogRepository',
-        ],
+        // 'McollectiveLogRepository' => [
+        //     'aggregate_root_class' => 'KmbMcollective\Model\McollectiveLog',
+        //     'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveLogHydrator',
+        //     'table_name' => 'mcollective_logs',
+        //     'table_sequence_name' => 'mcollective_logs_id_seq',
+        //     'repository_class' => 'KmbMcollective\Service\McollectiveLogRepository',
+        // ],
         'ActionLogRepository' => [
             'aggregate_root_class' => 'KmbMcollective\Model\ActionLog',
             'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\ActionLogHydrator',
@@ -305,18 +305,18 @@ return [
             'table_sequence_name' => 'command_reply_logs_id_seq',
             'repository_class' => 'KmbMcollective\Service\CommandReplyRepository',
         ],
-        'McollectiveHistoryRepository' => [
-            'aggregate_root_class' => 'KmbMcollective\Model\McollectiveHistory',
-            'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveHistoryHydrator',
-            'table_name' => 'mcollective_actions_logs',
-            'table_sequence_name' => 'mcollective_actions_logs_id_seq',
-            'log_class' => 'KmbMcollective\Model\McollectiveLog',
-            'log_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveLogHydrator',
-            'log_table_name' => 'mcollective_logs',
-            'log_table_sequence_name' => 'mcollective_log_id_seq',
-            'factory' => 'KmbMcollective\Service\McollectiveHistoryRepositoryFactory',
-            'repository_class' => 'KmbMcollective\Service\McollectiveHistoryRepository',
-        ],
+        // 'McollectiveHistoryRepository' => [
+        //     'aggregate_root_class' => 'KmbMcollective\Model\McollectiveHistory',
+        //     'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveHistoryHydrator',
+        //     'table_name' => 'mcollective_actions_logs',
+        //     'table_sequence_name' => 'mcollective_actions_logs_id_seq',
+        //     'log_class' => 'KmbMcollective\Model\McollectiveLog',
+        //     'log_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveLogHydrator',
+        //     'log_table_name' => 'mcollective_logs',
+        //     'log_table_sequence_name' => 'mcollective_log_id_seq',
+        //     'factory' => 'KmbMcollective\Service\McollectiveHistoryRepositoryFactory',
+        //     'repository_class' => 'KmbMcollective\Service\McollectiveHistoryRepository',
+        // ],
         'McollectiveAgentRepository' => [
             'aggregate_root_class' => 'KmbMcollective\Model\McollectiveAgent',
             'aggregate_root_hydrator_class' => 'KmbMcollective\Hydrator\McollectiveAgentHydrator',
@@ -375,39 +375,42 @@ return [
         ],
     ],
     'datatables' => [
-        'historyDatatable' => [
-            'id' => 'mcollective_logs',
-            'classes' => ['table', 'table-striped', 'table-hover', 'table-condensed', 'bootstrap-datatable'],
-            'collectorFactory' => 'KmbMcollective\Service\McollectiveHistoryCollectorFactory',
-            'columns' => [
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\SourceDecorator',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
-                    'key'       => 'fullname',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
-    		    'key'       => 'agent',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\SummaryDecorator',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
-                ],
-                [
-                    'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
-                    'key'       => 'received_at',
-                ],
-            ]
-        ],
+        // 'historyDatatable' => [
+        //     'id' => 'mcollective_logs',
+        //     'classes' => ['table', 'table-striped', 'table-hover', 'table-condensed', 'bootstrap-datatable'],
+        //     'collectorFactory' => 'KmbMcollective\Service\McollectiveHistoryCollectorFactory',
+        //     'columns' => [
+        //         [
+        //             'decorator' => 'KmbMcollective\View\Decorator\SourceDecorator',
+        //         ],
+        //         [
+        //             'decorator' => 'KmbMcollective\View\Decorator\FullNameDecorator',
+        //             'key'       => 'fullname',
+        //         ],
+        //         [
+        //             'decorator' => 'KmbMcollective\View\Decorator\AgentDecorator',
+    	// 	    'key'       => 'agent',
+        //         ],
+        //         [
+        //             'decorator' => 'KmbMcollective\View\Decorator\SummaryDecorator',
+        //         ],
+        //         [
+        //             'decorator' => 'KmbMcollective\View\Decorator\ServersDecorator',
+        //         ],
+        //         [
+        //             'decorator' => 'KmbMcollective\View\Decorator\TimeDecorator',
+        //             'key'       => 'received_at',
+        //         ],
+        //     ]
+        // ],
         'ActionDatatable' => [
             'id' => 'action_logs',
             'classes' => ['table', 'table-striped', 'table-hover', 'table-condensed', 'bootstrap-datatable'],
             'collectorFactory' => 'KmbMcollective\Service\ActionCollectorFactory',
             'columns' => [
+                [
+                    'decorator' => 'KmbMcollective\View\Decorator\NewSourceDecorator',
+                ],
                 [
                     'decorator' => 'KmbMcollective\View\Decorator\NewFullNameDecorator',
                     'key'       => 'fullname',

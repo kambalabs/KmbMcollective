@@ -74,7 +74,7 @@ class ActionLogRepositoryTest extends \PHPUnit_Framework_TestCase
     public function canGetActionIdfromConstraints(){
         $cmdaction = static::$repository->getActionIdWith('defg', 0,1,null);
         $this->assertEquals(1,sizeof($cmdaction));
-        $this->assertEquals(['80cb13ec244531e6ccc5203a1d57a56e'],$cmdaction);
+        $this->assertEquals(['1099df8aee3e341d807f19ecbcd07ff0'],$cmdaction);
 
     }
 

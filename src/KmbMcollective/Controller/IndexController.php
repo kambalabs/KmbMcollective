@@ -202,7 +202,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
             $this->debug($e->getMessage());
             $actionResult = null;
         }
-        $mcoLog = new McollectiveLog($actionResult ? $actionResult->actionid : $actionid, $user->getLogin(),$user->getName() , $params['agent'] . '::' . $params['action'], $filter, $actionResult ? $actionResult->discovered_nodes : [], $environment->getNormalizedName(),json_encode($args));
+        //        $mcoLog = new McollectiveLog($actionResult ? $actionResult->actionid : $actionid, $user->getLogin(),$user->getName() , $params['agent'] . '::' . $params['action'], $filter, $actionResult ? $actionResult->discovered_nodes : [], $environment->getNormalizedName(),json_encode($args));
 
 
         // new way
@@ -210,6 +210,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         $actionLog->setLogin($user->getLogin());
         $actionLog->setFullName($user->getName());
         $actionLog->setParameters(json_encode($args));
+        $actionLog->setSource('kamba');
         $actionLog->setEnvironment($environment->getId());
         $commandLog = new CommandLog($actionResult->result[0]);
         $actionLog->addCommand($commandLog);
@@ -235,7 +236,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         }
         $actionLog->setIhmIcon($action[0]->getIhmIcon());
         try {
-            $this->getServiceLocator()->get('McollectiveLogRepository')->add($mcoLog);
+            //            $this->getServiceLocator()->get('McollectiveLogRepository')->add($mcoLog);
             $this->getServiceLocator()->get('ActionLogRepository')->add($actionLog);
         } catch (\Exception $e) {
             $this->debug($e->getMessage());
@@ -243,7 +244,7 @@ class IndexController extends AbstractActionController implements AuthenticatedC
         }
         if($actionResult)
         {
-            $resultUrl = (string)$this->url()->fromRoute('mcollective_history', ['action' => 'history', 'id' => $actionResult->actionid ], [], true);
+            $resultUrl = (string)$this->url()->fromRoute('mcollective_show', ['action' => 'history', 'id' => $actionResult->actionid ], [], true);
             $actionResult->resultUrl = $resultUrl;
             return new JsonModel((array)$actionResult);
         }else{

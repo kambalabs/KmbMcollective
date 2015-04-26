@@ -120,7 +120,7 @@ class ActionLogRepository extends Repository
                 ->unnest;
             $select->where($where);
         }
-        $select->order((isset($order) && $order != "") ? $order : 'created_at');
+
 
         $sub = new Select();
         $sub->from(['f' => $select]);
@@ -128,6 +128,7 @@ class ActionLogRepository extends Repository
         if(isset($limit)){
             $sub->offset($offset)->limit($limit);
         }
+        $sub->order((isset($order) && $order != "") ? $order : 'created_at DESC');
 
 
         $result = [];

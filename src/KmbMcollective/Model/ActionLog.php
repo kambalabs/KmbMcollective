@@ -32,6 +32,7 @@ class ActionLog implements ActionLogInterface
     protected $createdAt;
     protected $commands = [];
     protected $ihmIcon;
+    protected $source;
 
 
     public function getId(){
@@ -51,6 +52,16 @@ class ActionLog implements ActionLogInterface
         $this->parameters = $params;
         return $this;
     }
+
+    public function setSource($source){
+        $this->source = $source;
+        return $this;
+    }
+
+    public function getSource(){
+        return $this->source;
+    }
+
 
     public function setIhmIcon($icon){
         $this->ihmIcon = $icon;
