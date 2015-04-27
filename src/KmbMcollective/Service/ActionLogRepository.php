@@ -52,6 +52,24 @@ class ActionLogRepository extends Repository
     }
 
 
+    public function update(AggregateRootInterface $aggregateRoot)
+    {
+        parent::update($aggregateRoot);
+
+        if ($aggregateRoot->hasCommands()) {
+            foreach ($aggregateRoot->getCommands() as $cmd) {
+                $command = $this->commandLogRepository->getById($cmd->getId());
+                if($command != null){
+                    $this->commandLogRepository->update($cmd);
+                }else{
+                    $this->commandLogRepository->add($cmd);
+                }
+            }
+        }
+        return $this;
+    }
+
+
     /**
      * @return Select
      */

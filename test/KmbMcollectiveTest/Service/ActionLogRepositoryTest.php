@@ -45,6 +45,20 @@ class ActionLogRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function canUpdate(){
+        $alog = static::$repository->getById('b1ddad6cb8233287f8087dc36074b80a');
+        $command = new CommandLog('deadbeef');
+        $alog->addCommand($command);
+        static::$repository->update($alog);
+
+        $newlog = static::$repository->getById('b1ddad6cb8233287f8087dc36074b80a');
+        $this->assertEquals(2, count($newlog->getCommands()));
+
+    }
+
+
+
+    /** @test */
     public function canAddWithCommands(){
         $alog = new ActionLog('1234');
         $cmd = new CommandLog('5678');
